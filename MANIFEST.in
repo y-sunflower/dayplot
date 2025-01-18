@@ -1,0 +1,3 @@
+include dayplot/data/*.csv
+include LICENSE
+include README.md

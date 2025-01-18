@@ -111,7 +111,6 @@ def github_chart(
     else:
         p90 = 1  # fallback if no nonzero values
 
-    # 6) Draw the squares (one for each date)
     for week, weekday, count in data_for_plot:
         if count > 0:
             color = plt.get_cmap(cmap)((count + 1) / (p90 + 1))
