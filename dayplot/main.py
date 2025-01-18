@@ -6,13 +6,13 @@ import numpy as np
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import List, Tuple, Union, Optional, Dict
+from typing import List, Union, Optional, Dict
 from datetime import date
 
 from dayplot._parse_date import parse_date
 
 
-def github_chart(
+def calendar(
     dates: List[Union[date, datetime, str]],
     values: List[Union[int, float]],
     start_date: Optional[Union[date, datetime, str]] = None,
@@ -25,7 +25,8 @@ def github_chart(
     day_kws: Optional[Dict] = None,
     day_x_margin: float = 0.02,
     month_y_margin: float = 0.4,
-) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    ax: Optional[matplotlib.axes.Axes] = None,
+) -> None:
     """
     Create a GitHub-style heatmap (contribution chart) from input dates and values.
 
@@ -100,7 +101,7 @@ def github_chart(
     ...     'date': ['2024-01-01', '2024-01-02', '2024-01-03'],
     ...     'values': [5, 10, 3]
     ... })
-    >>> fig, ax = dp.github_chart(
+    >>> fig, ax = dp.calendar(
     ...     df['date'],
     ...     df['values'],
     ...     start_date='2024-01-01',
@@ -160,7 +161,8 @@ def github_chart(
 
     total_weeks = (end_date - start_date).days // 7 + 1
 
-    fig, ax = plt.subplots(figsize=(15, 6))
+    if ax is None:
+        ax = plt.gca()
     ax.set_aspect("equal")
 
     valid_counts = [val for val in date_counts.values() if val > 0]
@@ -235,8 +237,7 @@ def github_chart(
     ax.tick_params(size=0)
     ax.invert_yaxis()  # so Sunday is at the top
 
-    fig.tight_layout()
-    return fig, ax
+    plt.tight_layout()
 
 
 if __name__ == "__main__":
@@ -244,8 +245,7 @@ if __name__ == "__main__":
 
     df = dp.load_dataset()
 
-    fig, ax = github_chart(
-        df["dates"], df["values"], start_date="2024-01-01", end_date="2024-12-31"
-    )
+    fig, ax = plt.subplots(figsize=(15, 6))
+    calendar(df["dates"], df["values"], start_date="2024-01-01", end_date="2024-12-31")
     fig.savefig("test.png", dpi=300, bbox_inches="tight")
     plt.show()
