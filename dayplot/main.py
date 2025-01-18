@@ -12,11 +12,14 @@ def github_chart(
     values,
     start_date=None,
     end_date=None,
-    edgecolor="black",
     color_for_none="#e8e8e8",
+    edgecolor="black",
+    edgewidth=0.5,
     cmap="Greens",
     month_kws={},
     day_kws={},
+    day_x_margin=0.02,
+    month_y_margin=0.4,
 ):
     """
     Create a GitHub-style heatmap (contribution chart) from input dates and values.
@@ -164,14 +167,19 @@ def github_chart(
         else:
             color = color_for_none
         rect = patches.Rectangle(
-            (week, weekday), 1, 1, linewidth=0.5, edgecolor=edgecolor, facecolor=color
+            xy=(week, weekday),
+            width=1,
+            height=1,
+            linewidth=edgewidth,
+            edgecolor=edgecolor,
+            facecolor=color,
         )
         ax.add_patch(rect)
 
     month_text_style = dict(
         ha="center",
         va="center",
-        fontsize=9,
+        size=9,
     )
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
@@ -179,7 +187,7 @@ def github_chart(
         week_of_month = ((m_start - start_date).days + start_date.weekday()) // 7
         ax.text(
             week_of_month + 0.5,
-            -0.4,  # place label just outside the grid
+            -month_y_margin,  # place label just outside the grid
             m_start.strftime("%b"),
             month_text_style,
         )
@@ -200,7 +208,7 @@ def github_chart(
     labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     for y_tick, day in zip(ticks, labels):
         ax.text(
-            -0.02,
+            -day_x_margin,
             y_tick,
             day,
             **day_text_style,
