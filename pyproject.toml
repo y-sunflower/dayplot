@@ -6,12 +6,12 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "matplotlib>=3.10.0",
-    "pandas>=2.2.3",
 ]
 
 [project.optional-dependencies]
 data = [
     "pandas>=2.2.3",
+    "requests>=2.32.3",
 ]
 
 [dependency-groups]
