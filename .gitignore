@@ -15,4 +15,4 @@ wheels/
 *cache*
 .vscode/
 sandbox*
-test.png
+test*.png

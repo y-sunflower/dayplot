@@ -92,7 +92,7 @@ if __name__ == "__main__":
         end_date=end_date_iso,
     )
 
-    fig, ax = dp.github_chart(
+    fig, ax = dp.calendar(
         my_data["dates"],
         my_data["values"],
         start_date="2024-01-01",
