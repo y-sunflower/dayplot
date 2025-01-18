@@ -15,6 +15,7 @@ nav:
     - tuto/styling.md
     - tuto/combine-charts.md
     - tuto/fetch-github-contribs.md
+  - Contributing: contributing.md
 
 extra:
   analytics:

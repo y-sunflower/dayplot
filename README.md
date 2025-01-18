@@ -36,7 +36,7 @@ pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
 
 ## Related projects
 
-- [calplot](https://github.com/tomkwok/calplot){target=\_blank}
-- [july](https://github.com/e-hulten/july){target=\_blank}
+- [calplot](https://github.com/tomkwok/calplot)
+- [july](https://github.com/e-hulten/july)
 
 <br><br>
