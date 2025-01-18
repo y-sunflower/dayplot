@@ -1,0 +1,116 @@
+### Change colormap
+
+Use the `cmap` argument to use any other colormap from matplotlib. This argument can either be a string or a `matplotlib.colors.LinearSegmentedColormap` (the object behind colormaps in matplotlib).
+
+Pro tips: you can find great colormaps using [pypalettes](https://python-graph-gallery.com/color-palette-finder/){target=\_blank}.
+
+```py
+import matplotlib.pyplot as plt
+import dayplot as dp
+
+df = dp.load_dataset()
+
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    cmap="Reds", # any matplotlib colormap
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    ax=ax,
+)
+```
+
+![](../img/cmap.png)
+
+<br>
+
+### Change other colors
+
+You can change the color between squares with the `edgecolor` argument and the color for "none" (aka 0) with the `color_for_none` argument.
+
+Also, use `edgewidth` to moderate the width of the edge between squares.
+
+```py
+import matplotlib.pyplot as plt
+import dayplot as dp
+
+df = dp.load_dataset()
+
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    edgecolor="white",      # any matplotlib color
+    color_for_none="black", # any matplotlib color
+    edgewidth=1,
+    ax=ax,
+)
+```
+
+![](../img/colors.png)
+
+<br>
+
+### Text styling
+
+In order to customize the text (days and months), you have to, respectively, use the `day_kws` and `month_kws` arguments. All arguments passed to them will then be forwarded to `ax.text()`.
+
+Pro tip: when changing font size, the label positioning might get worse. In order to control that, use the `day_x_margin` argument (shift day labels to the left) and the `month_y_margin` argument (shift month labels to the top).
+
+```py
+import matplotlib.pyplot as plt
+import dayplot as dp
+
+df = dp.load_dataset()
+
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    day_kws={"weight": "bold"},
+    month_kws={"size": 18, "color": "red"},
+    day_x_margin=0.03, # default = 0.02
+    month_y_margin=0.7, # default = 0.4
+    ax=ax,
+)
+```
+
+![](../img/text.png)
+
+<br>
+
+### Dark theme
+
+We saw how to change colors, but to create a complete dark theme, we also need to change the `figure` and `axes` colors.
+
+```py
+import matplotlib.pyplot as plt
+import dayplot as dp
+
+df = dp.load_dataset()
+
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    color_for_none="black",
+    edgecolor="white",
+    edgewidth=1,
+    day_kws={"color": "white"},
+    month_kws={"color": "white"},
+    ax=ax,
+)
+fig.set_facecolor("black")
+ax.set_facecolor("black")
+```
+
+![](../img/dark.png)
+
+<br><br>
