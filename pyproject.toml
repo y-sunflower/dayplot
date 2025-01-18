@@ -8,3 +8,8 @@ dependencies = [
     "matplotlib>=3.10.0",
     "pandas>=2.2.3",
 ]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0.1",
+]

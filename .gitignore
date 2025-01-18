@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+.DS_Store
+*cache*
+.vscode/
+sandbox*
