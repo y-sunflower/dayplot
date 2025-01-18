@@ -1,26 +1,31 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.colors import LinearSegmentedColormap
+import matplotlib
 import numpy as np
 
 from collections import defaultdict
 from datetime import datetime, timedelta
+from typing import List, Tuple, Union, Optional, Dict
+from datetime import date
+
+from dayplot._parse_date import parse_date
 
 
 def github_chart(
-    dates,
-    values,
-    start_date=None,
-    end_date=None,
-    color_for_none="#e8e8e8",
-    edgecolor="black",
-    edgewidth=0.5,
-    cmap="Greens",
-    month_kws={},
-    day_kws={},
-    day_x_margin=0.02,
-    month_y_margin=0.4,
-):
+    dates: List[Union[date, datetime, str]],
+    values: List[Union[int, float]],
+    start_date: Optional[Union[date, datetime, str]] = None,
+    end_date: Optional[Union[date, datetime, str]] = None,
+    color_for_none: str = "#e8e8e8",
+    edgecolor: str = "black",
+    edgewidth: float = 0.5,
+    cmap: Union[str, LinearSegmentedColormap] = "Greens",
+    month_kws: Optional[Dict] = None,
+    day_kws: Optional[Dict] = None,
+    day_x_margin: float = 0.02,
+    month_y_margin: float = 0.4,
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
     """
     Create a GitHub-style heatmap (contribution chart) from input dates and values.
 
@@ -31,36 +36,42 @@ def github_chart(
 
     Parameters
     ----------
-    dates : list
+    dates
         A list of date-like objects (e.g., `datetime.date`, `datetime.datetime`, or
         strings in "YYYY-MM-DD" format). Must have the same length as `values`.
-    values : list of int or float
+    values
         A list of numeric values corresponding to each date in `dates`. These values
         represent contributions or counts for each day and must have the same length
         as `dates`.
-    start_date : {None, date, datetime, str}, optional
+    start_date
         The earliest date to display on the chart. Can be a `date`, `datetime`, or a
         string in "YYYY-MM-DD" format. If not provided, the minimum date found in
         `dates` will be used.
-    end_date : {None, date, datetime, str}, optional
+    end_date
         The latest date to display on the chart. Can be a `date`, `datetime`, or a
         string in "YYYY-MM-DD" format. If not provided, the maximum date found in
         `dates` will be used.
-    edgecolor : str, optional
+    edgecolor
         Color of the edges for each day's rectangle. Defaults to `"black"`.
-    color_for_none : str, optional
+    color_for_none
         Color to use for days with no contributions (i.e., count zero). Defaults to
         `"#e8e8e8"`, a light gray color.
-    cmap : {str, LinearSegmentedColormap}, optional
+    cmap
         A valid Matplotlib colormap name or a `LinearSegmentedColormap` instance.
         Defaults to `"Greens"`. The colormap is used to determine the fill color
         intensity of each day's cell based on its value.
-    month_kws : dict, optional
+    month_kws
         Additional keyword arguments passed to the matplotlib.axes.Axes.text function when
         labeling month names (outside of `x`, `y` and `s`).
-    day_kws : dict, optional
+    day_kws
         Additional keyword arguments passed to the matplotlib.axes.Axes.text function when
         labeling weekday names on the y-axis (outside of `x`, `y` and `s`).
+    day_x_margin
+        Distance between the day labels (Monday, Tuesday, etc.) and the graph. The greater
+        the distance, the further to the left the text will be.
+    month_y_margin
+        Distance between the month labels (January, February, etc.) and the graph. The greater
+        the distance, the more text will appear at the top.
 
     Returns
     -------
@@ -83,13 +94,13 @@ def github_chart(
 
     Examples
     --------
-    >>> import dayplot as dplot
+    >>> import dayplot as dp
     >>> import pandas as pd
     >>> df = pd.DataFrame({
     ...     'date': ['2024-01-01', '2024-01-02', '2024-01-03'],
     ...     'values': [5, 10, 3]
     ... })
-    >>> fig, ax = dplot.github_chart(
+    >>> fig, ax = dp.github_chart(
     ...     df['date'],
     ...     df['values'],
     ...     start_date='2024-01-01',
@@ -98,16 +109,18 @@ def github_chart(
     >>> fig.show()
     """
 
+    month_kws = month_kws or {}
+    day_kws = day_kws or {}
+
     if len(dates) != len(values):
         raise ValueError("`dates` and `values` must have the same length.")
 
+    if len(dates) == 0 or len(values) == 0:
+        raise ValueError("`dates` and `values` cannot be empty.")
+
     date_counts = defaultdict(int)
     for d, v in zip(dates, values):
-        if isinstance(d, datetime):
-            d = d.date()
-        elif isinstance(d, str):
-            d = datetime.strptime(d, "%Y-%m-%d").date()
-
+        d = parse_date(d)
         date_counts[d] += v
 
     min_data_date = min(date_counts.keys())
@@ -115,8 +128,13 @@ def github_chart(
 
     if start_date is None:
         start_date = min_data_date
+    else:
+        start_date = parse_date(start_date)
+
     if end_date is None:
         end_date = max_data_date
+    else:
+        end_date = parse_date(end_date)
 
     if isinstance(start_date, datetime):
         start_date = start_date.date()
@@ -187,7 +205,7 @@ def github_chart(
         week_of_month = ((m_start - start_date).days + start_date.weekday()) // 7
         ax.text(
             week_of_month + 0.5,
-            -month_y_margin,  # place label just outside the grid
+            -month_y_margin,
             m_start.strftime("%b"),
             month_text_style,
         )
@@ -222,13 +240,12 @@ def github_chart(
 
 
 if __name__ == "__main__":
-    import pandas as pd
+    import dayplot as dp
 
-    df = pd.read_csv("dayplot/data/sample.csv")
-    df.loc[df["date"] == "2024-01-02", "values"] = 25
+    df = dp.load_dataset()
 
     fig, ax = github_chart(
-        df["date"], df["values"], start_date="2024-01-01", end_date="2024-12-31"
+        df["dates"], df["values"], start_date="2024-01-01", end_date="2024-12-31"
     )
     fig.savefig("test.png", dpi=300, bbox_inches="tight")
     plt.show()
