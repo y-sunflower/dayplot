@@ -32,6 +32,14 @@ pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
 
 <br>
 
+## Guide
+
+- [Customise the charts](/tuto/styling)
+- [Combining charts](/tuto/combine-charts)
+- [Fetch (and plot) Github contributions](/tuto/fetch-github-contribs)
+
+<br>
+
 ## Related projects
 
 - [calplot](https://github.com/tomkwok/calplot){target=\_blank}
