@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
 import matplotlib
 import numpy as np
 
@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Union, Optional, Dict
 from datetime import date
+import warnings
 
 from dayplot._parse_date import parse_date
 
@@ -17,7 +18,7 @@ def calendar(
     values: List[Union[int, float]],
     start_date: Optional[Union[date, datetime, str]] = None,
     end_date: Optional[Union[date, datetime, str]] = None,
-    color_for_none: str = "#e8e8e8",
+    color_for_none: Optional[str] = None,
     edgecolor: str = "black",
     edgewidth: float = 0.5,
     cmap: Union[str, LinearSegmentedColormap] = "Greens",
@@ -25,73 +26,94 @@ def calendar(
     day_kws: Optional[Dict] = None,
     day_x_margin: float = 0.02,
     month_y_margin: float = 0.4,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    vcenter: Optional[float] = None,
     ax: Optional[matplotlib.axes.Axes] = None,
-) -> None:
+) -> List[matplotlib.patches.Rectangle]:
     """
-    Create a GitHub-style heatmap (contribution chart) from input dates and values.
+    Create a calendar heatmap (GitHub-style) from input dates and values,
+    supporting both positive and negative values via a suitable colormap scale.
 
     This function generates a calendar heatmap similar to GitHub's contribution graph, where
     each cell represents a day colored according to the corresponding value. The chart is
     organized by weeks (columns) and days of the week (rows), starting from a specified
     start date to an end date.
 
+    When vmin, vmax, and vcenter are not specified, they default to the data's
+    minimum, maximum, and zero (if data spans negative and positive values),
+    respectively. Providing any of vmin, vmax, or vcenter manually will override
+    the automatic calculation for that parameter.
+
     Parameters
     ----------
     dates
-        A list of date-like objects (e.g., `datetime.date`, `datetime.datetime`, or
-        strings in "YYYY-MM-DD" format). Must have the same length as `values`.
+        A list of date-like objects (e.g., datetime.date, datetime.datetime, or
+        strings in "YYYY-MM-DD" format). Must have the same length as values.
     values
-        A list of numeric values corresponding to each date in `dates`. These values
+        A list of numeric values corresponding to each date in dates. These values
         represent contributions or counts for each day and must have the same length
-        as `dates`.
+        as dates.
     start_date
-        The earliest date to display on the chart. Can be a `date`, `datetime`, or a
+        The earliest date to display on the chart. Can be a date, datetime, or a
         string in "YYYY-MM-DD" format. If not provided, the minimum date found in
-        `dates` will be used.
+        dates will be used.
     end_date
-        The latest date to display on the chart. Can be a `date`, `datetime`, or a
+        The latest date to display on the chart. Can be a date, datetime, or a
         string in "YYYY-MM-DD" format. If not provided, the maximum date found in
-        `dates` will be used.
-    edgecolor
-        Color of the edges for each day's rectangle. Defaults to `"black"`.
+        dates will be used.
     color_for_none
         Color to use for days with no contributions (i.e., count zero). Defaults to
-        `"#e8e8e8"`, a light gray color.
+        "#e8e8e8", a light gray color. This parameter is ignored when `values` has
+        negative values.
+    edgecolor
+        Color of the edges for each day's rectangle. Defaults to "black".
+    edgewidth
+        Line width for the edges of each day's rectangle. Defaults to 0.5.
     cmap
-        A valid Matplotlib colormap name or a `LinearSegmentedColormap` instance.
-        Defaults to `"Greens"`. The colormap is used to determine the fill color
+        A valid Matplotlib colormap name or a LinearSegmentedColormap instance.
+        Defaults to "Greens". The colormap is used to determine the fill color
         intensity of each day's cell based on its value.
     month_kws
         Additional keyword arguments passed to the matplotlib.axes.Axes.text function when
-        labeling month names (outside of `x`, `y` and `s`).
+        labeling month names (outside of x, y and s).
     day_kws
         Additional keyword arguments passed to the matplotlib.axes.Axes.text function when
-        labeling weekday names on the y-axis (outside of `x`, `y` and `s`).
+        labeling weekday names on the y-axis (outside of x, y and s).
     day_x_margin
         Distance between the day labels (Monday, Tuesday, etc.) and the graph. The greater
         the distance, the further to the left the text will be.
     month_y_margin
         Distance between the month labels (January, February, etc.) and the graph. The greater
         the distance, the more text will appear at the top.
+    vmin
+        The lower bound for the color scale. If None, it is determined automatically from the
+        data. If data contains both positive and negative values and `vcenter` is not provided,
+        `vmin` will default to the data's minimum. Providing `vmin` overrides the automatic
+        calculation.
+    vmax
+        The upper bound for the color scale. If None, it is determined automatically from the
+        data. If data contains both positive and negative values and `vcenter` is not provided,
+        `vmax` will default to the data's maximum. Providing `vmax` overrides the automatic
+        calculation.
+    vcenter
+        The midpoint for the color scale, typically used with diverging colormaps (e.g., "RdBu")
+        to position a central reference (e.g., zero). If None and the data spans negative and
+        positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic
+        setting.
+    ax
+        A matplotlib axes. If None, plt.gca() will be used. It is advisable to make
+        this explicit to avoid unexpected behaviour, particularly when manipulating a
+        figure with several axes.
 
     Returns
     -------
-    fig : matplotlib.figure.Figure
-        The Matplotlib figure object containing the heatmap.
-    ax : matplotlib.axes.Axes
-        The Matplotlib axes object on which the heatmap is plotted.
+    A list of matplotlib.patches.Rectangle (one for each square).
 
     Notes
     -----
     - The function aggregates multiple entries for the same date by summing their
       values.
-    - The grid is laid out with weeks as columns and days of the week as rows, starting
-      with Sunday at the top. The y-axis is inverted so that Sunday appears at the
-      top of the chart.
-    - Month labels are placed above the chart aligned with the start of each month.
-    - Weekday labels are placed to the left of the chart.
-    - The heatmap color intensity is scaled relative to the 90th percentile of all
-      non-zero values to reduce the impact of outliers.
 
     Examples
     --------
@@ -119,7 +141,7 @@ def calendar(
     if len(dates) == 0 or len(values) == 0:
         raise ValueError("`dates` and `values` cannot be empty.")
 
-    date_counts = defaultdict(int)
+    date_counts = defaultdict(float)
     for d, v in zip(dates, values):
         d = parse_date(d)
         date_counts[d] += v
@@ -165,42 +187,67 @@ def calendar(
         ax = plt.gca()
     ax.set_aspect("equal")
 
-    valid_counts = [val for val in date_counts.values() if val > 0]
-    if valid_counts:
-        p90 = np.percentile(valid_counts, 90)
-    else:
-        p90 = 1  # fallback if no nonzero values
-
     if isinstance(cmap, str):
         cmap = plt.get_cmap(cmap)
-    elif isinstance(cmap, LinearSegmentedColormap):
-        pass
-    else:
+    elif not isinstance(cmap, LinearSegmentedColormap):
         raise ValueError(
-            "Invalid cmap input. It must be either a valid matplotlib colormap"
-            "  (string) or a matplotlib.colors.LinearSegmentedColormap"
+            "Invalid `cmap` input. It must be either a valid matplotlib colormap string "
+            f"or a matplotlib.colors.LinearSegmentedColormap instance, not {cmap}"
         )
 
-    for week, weekday, count in data_for_plot:
-        if count > 0:
-            color = cmap((count + 1) / (p90 + 1))
+    all_counts = np.array(list(date_counts.values()))
+    min_count, max_count = all_counts.min(), all_counts.max()
+
+    # If vmin or vmax are not given, use data range.
+    if vmin is None:
+        vmin = min_count
+    if vmax is None:
+        vmax = max_count if max_count != 0 else 1
+
+    if vcenter is not None:
+        is_diverging = True
+        norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
+    # If vcenter is None, use 0 only when data spans negative and positive.
+    else:
+        # If we have both negative and positive values, use a diverging scale with 0 in the center.
+        # Otherwise, we use a simple Normalize.
+        if min_count < 0 < max_count:
+            is_diverging = True
+            norm = TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
         else:
-            color = color_for_none
+            is_diverging = False
+            # All counts are >= 0 or <= 0, so just do linear scaling
+            norm = Normalize(vmin=vmin, vmax=vmax)
+
+    rect_patches = []
+    for week, weekday, count in data_for_plot:
+        if is_diverging:
+            if color_for_none is not None:
+                warnings.warn(
+                    "color_for_none argument is ignored when values argument contains negative values.",
+                    UserWarning,
+                )
+            face_color = cmap(norm(count))
+        elif not is_diverging:
+            if count == 0:
+                if color_for_none is None:
+                    color_for_none = "#e8e8e8"
+                face_color = color_for_none
+            else:
+                face_color = cmap(norm(count))
+
         rect = patches.Rectangle(
             xy=(week, weekday),
             width=1,
             height=1,
             linewidth=edgewidth,
             edgecolor=edgecolor,
-            facecolor=color,
+            facecolor=face_color,
         )
         ax.add_patch(rect)
+        rect_patches.append(rect)
 
-    month_text_style = dict(
-        ha="center",
-        va="center",
-        size=9,
-    )
+    month_text_style = dict(ha="center", va="center", size=9)
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
     for m_start in month_starts:
@@ -209,7 +256,7 @@ def calendar(
             week_of_month + 0.5,
             -month_y_margin,
             m_start.strftime("%b"),
-            month_text_style,
+            **month_text_style,
         )
 
     ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
@@ -217,33 +264,39 @@ def calendar(
     ax.set_ylim(-0.5, 7.5)
     ax.set_xticks([])
     ax.set_yticks([])
+    ax.tick_params(size=0)
+    ax.invert_yaxis()
 
-    day_text_style = dict(
-        transform=ax.get_yaxis_transform(),
-        ha="left",
-        va="center",
-    )
+    day_text_style = dict(transform=ax.get_yaxis_transform(), ha="left", va="center")
     day_text_style.update(day_kws)
+
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    for y_tick, day in zip(ticks, labels):
-        ax.text(
-            -day_x_margin,
-            y_tick,
-            day,
-            **day_text_style,
-        )
-
-    ax.tick_params(size=0)
-    ax.invert_yaxis()  # so Sunday is at the top
+    for y_tick, day_label in zip(ticks, labels):
+        ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     plt.tight_layout()
+    return rect_patches
 
 
 if __name__ == "__main__":
+    import numpy as np
     import dayplot as dp
 
     df = dp.load_dataset()
+
+    rng = np.random.default_rng(42)
+    all_dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(365)]
+    values = [rng.integers(-10, 10) for _ in range(365)]
+    fig, ax = plt.subplots(figsize=(15, 6))
+    calendar(
+        all_dates,
+        values,
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        cmap="RdBu",
+        color_for_none="#e8e8e8",
+    )
 
     fig, ax = plt.subplots(figsize=(15, 6))
     calendar(df["dates"], df["values"], start_date="2024-01-01", end_date="2024-12-31")

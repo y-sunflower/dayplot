@@ -44,5 +44,6 @@ pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
 
 - [calplot](https://github.com/tomkwok/calplot){target=\_blank}
 - [july](https://github.com/e-hulten/july){target=\_blank}
+- [calendarplot](https://github.com/dhowland/calendarplot){target=\_blank}
 
 <br><br>
