@@ -154,7 +154,7 @@ def test_calendar_patch_type(sample_data):
     fig, ax = plt.subplots()
     rect_patches = calendar(dates, values, ax=ax)
     for rect_patch in rect_patches:
-        assert isinstance(rect_patch, matplotlib.patches.Rectangle)
+        assert isinstance(rect_patch, matplotlib.patches.FancyBboxPatch)
 
 
 def test_calendar_p90_scaling():

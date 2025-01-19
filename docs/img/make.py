@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import os
-import numpy as np
 
 import dayplot as dp
 
@@ -160,10 +159,8 @@ fig.savefig("docs/img/combine-chart-2.png", bbox_inches="tight", dpi=300)
 ########################################################################
 
 df = dp.load_dataset()
-random_indices = np.random.choice(df.index, size=40, replace=False)
-df.loc[random_indices, "values"] = -df.loc[random_indices, "values"]
-sampled_indices = df.sample(n=40, replace=False).index
-df.loc[sampled_indices, "values"] *= -1
+
+df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
 
 fig, ax = plt.subplots(figsize=(16, 4))
 
@@ -173,7 +170,6 @@ dp.calendar(
     cmap="RdBu",  # use a diverging colormap
     start_date="2024-01-01",
     end_date="2024-12-31",
-    vcenter=0,
     ax=ax,
 )
 
@@ -181,3 +177,27 @@ dp.calendar(
 fig.savefig("docs/img/negative-values-1.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
+
+df = dp.load_dataset()
+df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
+
+fig, ax = plt.subplots(figsize=(16, 4))
+
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    cmap="RdBu",  # use a diverging colormap
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    vmin=-3,
+    vcenter=0,
+    vmax=10,
+    ax=ax,
+)
+
+
+fig.savefig("docs/img/negative-values-2.png", bbox_inches="tight", dpi=300)
+
+########################################################################
+
+plt.close("all")

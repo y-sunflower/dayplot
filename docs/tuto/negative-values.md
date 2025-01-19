@@ -1,6 +1,10 @@
 ### Handling negative values
 
-Pro tips: you can find great colormaps using [pypalettes](https://python-graph-gallery.com/color-palette-finder/){target=\_blank}.
+`dayplot` makes it straightforward to plot negative values.
+
+Under the hood, it automatically checks for them. If no negative values are found, all days with 0 or missing data are displayed in light gray (using the `color_for_none` argument). In this case, it's recommended to use a [sequential colormap](https://matplotlib.org/stable/users/explain/colors/colormaps.html#sequential){target=\_blank}.
+
+Otherwise, `color_for_none` is ignored and all cells are colored according to their values. Any missing data is treated as 0 by default, so if you need a different approach, fill in the data before plotting.
 
 ```py
 import matplotlib.pyplot as plt
@@ -8,26 +12,31 @@ import dayplot as dp
 
 df = dp.load_dataset()
 
-fig, ax = plt.subplots(figsize=(15, 6))
+# add negative values at some random dates
+df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
+
+fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
     dates=df["dates"],
     values=df["values"],
-    cmap="RdBu", # use a diverging colormap
-    start_date="2023-01-01",
-    end_date="2023-12-31",
+    cmap="RdBu", # use a diverging colormap (red -> white -> blue)
+    start_date="2024-01-01",
+    end_date="2024-12-31",
     ax=ax,
 )
 ```
 
-![](../img/cmap.png)
+![](../img/negative-values-1.png)
+
+Red days are the ones with negative values.
 
 <br>
 
-### Change other colors
+### Control colormap scaling
 
-You can change the color between squares with the `edgecolor` argument and the color for "none" (aka 0) with the `color_for_none` argument.
+You can set custom boundaries for the colormap using the `vmin`, `vcenter` and `vmax` arguments. In this example, any cell with a value at or below -3 displays in the deepest red hue, 0 is shown in a neutral color (white), and any cell at or above 10 appears in the most intense blue.
 
-Also, use `edgewidth` to moderate the width of the edge between squares.
+This can be used as a convenient way of controlling color mapping when there are outliers.
 
 ```py
 import matplotlib.pyplot as plt
@@ -35,19 +44,23 @@ import dayplot as dp
 
 df = dp.load_dataset()
 
-fig, ax = plt.subplots(figsize=(15, 6))
+# add negative values at some random dates
+df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
+
+fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
     dates=df["dates"],
     values=df["values"],
+    cmap="RdBu", # use a diverging colormap (red -> white -> blue)
     start_date="2024-01-01",
     end_date="2024-12-31",
-    edgecolor="white",      # any matplotlib color
-    color_for_none="black", # any matplotlib color
-    edgewidth=1,
+    vmin=-3,
+    vcenter=0,
+    vmax=10,
     ax=ax,
 )
 ```
 
-![](../img/colors.png)
+![](../img/negative-values-2.png)
 
 <br><br>
