@@ -35,6 +35,7 @@ pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
 ## Guide
 
 - [Customise the charts](tuto/styling)
+- [Work with negative values](tuto/negative-values)
 - [Combining charts](tuto/combine-charts)
 - [Fetch (and plot) Github contributions](tuto/fetch-github-contribs)
 

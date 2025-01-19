@@ -29,7 +29,10 @@ def calendar(
     vmin: Optional[float] = None,
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
+    boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
+    mutation_scale: float = 1,
     ax: Optional[matplotlib.axes.Axes] = None,
+    **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
     """
     Create a calendar heatmap (GitHub-style) from input dates and values,
@@ -101,14 +104,23 @@ def calendar(
         to position a central reference (e.g., zero). If None and the data spans negative and
         positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic
         setting.
+    boxstyle
+        The style of each box. This will be passed to matplotlib.patches.FancyBboxPatch. Available
+        values are: "square", "circle", "ellipse", "larrow"
+    mutation_scale
+        Scale factor for the size of each cell. Default to 1.
     ax
         A matplotlib axes. If None, plt.gca() will be used. It is advisable to make
         this explicit to avoid unexpected behaviour, particularly when manipulating a
         figure with several axes.
+    kwargs
+        Any additional arguments that will be passed to matplotlib.patches.FancyBboxPatch. For example,
+        you can set `alpha`, `hatch`, `linestyle`, etc.
+        You can find them all here: https://matplotlib.org/stable/api/_as_gen/matplotlib.patches.FancyBboxPatch.html
 
     Returns
     -------
-    A list of matplotlib.patches.Rectangle (one for each square).
+    A list of matplotlib.patches.FancyBboxPatch (one for each cell).
 
     Notes
     -----
@@ -134,6 +146,33 @@ def calendar(
 
     month_kws = month_kws or {}
     day_kws = day_kws or {}
+
+    implemented_boxstyle = [
+        "square",
+        "circle",
+        "round",
+        "round4",
+        "sawtooth",
+        "roundtooth",
+    ]
+    not_implemented_boxstyle = [
+        "ellipse",
+        "larrow",
+        "rarrow",
+        "darrow",
+    ]
+    if isinstance(boxstyle, str):
+        if boxstyle not in implemented_boxstyle:
+            if boxstyle in not_implemented_boxstyle:
+                return NotImplementedError
+            else:
+                raise ValueError(
+                    f"Invalid boxstyle value. Must be in {implemented_boxstyle}, not {boxstyle}."
+                )
+    elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
+        raise ValueError(
+            f"boxstyle must either be a string or a matplotlib.patches.BoxStyle, not {boxstyle}"
+        )
 
     if len(dates) != len(values):
         raise ValueError("`dates` and `values` must have the same length.")
@@ -198,7 +237,6 @@ def calendar(
     all_counts = np.array(list(date_counts.values()))
     min_count, max_count = all_counts.min(), all_counts.max()
 
-    # If vmin or vmax are not given, use data range.
     if vmin is None:
         vmin = min_count
     if vmax is None:
@@ -207,7 +245,6 @@ def calendar(
     if vcenter is not None:
         is_diverging = True
         norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
-    # If vcenter is None, use 0 only when data spans negative and positive.
     else:
         # If we have both negative and positive values, use a diverging scale with 0 in the center.
         # Otherwise, we use a simple Normalize.
@@ -216,7 +253,6 @@ def calendar(
             norm = TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
         else:
             is_diverging = False
-            # All counts are >= 0 or <= 0, so just do linear scaling
             norm = Normalize(vmin=vmin, vmax=vmax)
 
     rect_patches = []
@@ -244,6 +280,17 @@ def calendar(
             edgecolor=edgecolor,
             facecolor=face_color,
         )
+        rect = patches.FancyBboxPatch(
+            xy=(week + 0.35, weekday + 0.35),
+            width=0.3,
+            height=0.3,
+            linewidth=edgewidth,
+            edgecolor=edgecolor,
+            facecolor=face_color,
+            boxstyle=boxstyle,
+            mutation_scale=mutation_scale,
+            **kwargs,
+        )
         ax.add_patch(rect)
         rect_patches.append(rect)
 
@@ -264,7 +311,6 @@ def calendar(
     ax.set_ylim(-0.5, 7.5)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.tick_params(size=0)
     ax.invert_yaxis()
 
     day_text_style = dict(transform=ax.get_yaxis_transform(), ha="left", va="center")
@@ -285,20 +331,13 @@ if __name__ == "__main__":
 
     df = dp.load_dataset()
 
-    rng = np.random.default_rng(42)
-    all_dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(365)]
-    values = [rng.integers(-10, 10) for _ in range(365)]
     fig, ax = plt.subplots(figsize=(15, 6))
     calendar(
-        all_dates,
-        values,
+        df["dates"],
+        df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
-        cmap="RdBu",
-        color_for_none="#e8e8e8",
+        mutation_scale=1.15,
     )
-
-    fig, ax = plt.subplots(figsize=(15, 6))
-    calendar(df["dates"], df["values"], start_date="2024-01-01", end_date="2024-12-31")
     fig.savefig("test.png", dpi=300, bbox_inches="tight")
-    plt.show()
+    plt.close()
