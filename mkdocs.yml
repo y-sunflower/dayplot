@@ -13,6 +13,7 @@ nav:
   - Home: index.md
   - Tuto:
     - tuto/styling.md
+    - tuto/negative-values.md
     - tuto/combine-charts.md
     - tuto/fetch-github-contribs.md
   - Contributing: contributing.md
