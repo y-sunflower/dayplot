@@ -30,7 +30,6 @@ def calendar(
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
-    mutation_scale: float = 1,
     ax: Optional[matplotlib.axes.Axes] = None,
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
@@ -107,8 +106,6 @@ def calendar(
     boxstyle
         The style of each box. This will be passed to matplotlib.patches.FancyBboxPatch. Available
         values are: "square", "circle", "ellipse", "larrow"
-    mutation_scale
-        Scale factor for the size of each cell. Default to 1.
     ax
         A matplotlib axes. If None, plt.gca() will be used. It is advisable to make
         this explicit to avoid unexpected behaviour, particularly when manipulating a
@@ -288,7 +285,6 @@ def calendar(
             edgecolor=edgecolor,
             facecolor=face_color,
             boxstyle=boxstyle,
-            mutation_scale=mutation_scale,
             **kwargs,
         )
         ax.add_patch(rect)

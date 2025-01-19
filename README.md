@@ -1,8 +1,8 @@
 # dayplot
 
-A simple-to-use Python library to build calendar heatmaps with ease.
+A simple-to-use Python library to build **calendar heatmaps** with ease.
 
-It's built on top of matplotlib and leverages it to access high customization possibilities.
+It's built on top of **matplotlib** and leverages it to access high customization possibilities.
 
 ## Quick start
 
