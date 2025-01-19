@@ -16,3 +16,4 @@ wheels/
 .vscode/
 sandbox*
 test*.png
+.coverage

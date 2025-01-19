@@ -12,7 +12,9 @@ theme:
 nav:
   - Home: index.md
   - Tuto:
-    - tuto/styling.md
+    - tuto/basic-styling.md
+    - tuto/negative-values.md
+    - tuto/boxstyle.md
     - tuto/combine-charts.md
     - tuto/fetch-github-contribs.md
   - Contributing: contributing.md
@@ -20,7 +22,7 @@ nav:
 extra:
   analytics:
     provider: google
-    property: G-XXXXXXXXXX
+    property: G-JCXSYFN2WD
 
 markdown_extensions:
   - pymdownx.highlight:
