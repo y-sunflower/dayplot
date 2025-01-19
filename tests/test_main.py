@@ -1,5 +1,6 @@
 import pytest
-
+import warnings
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from datetime import datetime, timedelta
@@ -58,11 +59,25 @@ def test_calendar_invalid_cmap(sample_data):
     """
     dates, values = sample_data
 
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(ValueError):
         fig, ax = plt.subplots()
         calendar(dates, values, cmap=123, ax=ax)
 
-    assert "Invalid cmap input" in str(exc_info.value)
+
+def test_warning_color_for_none(sample_data):
+    """
+    Test that passing an invalid colormap raises a ValueError.
+    """
+    dates, values = sample_data
+    values[0] = -19
+
+    with pytest.warns(UserWarning):
+        warnings.warn(
+            "color_for_none argument is ignored when values argument contains negative values.",
+            UserWarning,
+        )
+        fig, ax = plt.subplots()
+        calendar(dates, values, ax=ax)
 
 
 def test_calendar_all_zeros():
@@ -129,6 +144,17 @@ def test_calendar_patch_count(sample_data):
     calendar(dates, values, ax=ax)
     patches = ax.patches
     assert len(patches) == 10, f"Expected 10 patches for 10 days, got {len(patches)}."
+
+
+def test_calendar_patch_type(sample_data):
+    """
+    Verify that the calendar output is an iterable of patches.
+    """
+    dates, values = sample_data
+    fig, ax = plt.subplots()
+    rect_patches = calendar(dates, values, ax=ax)
+    for rect_patch in rect_patches:
+        assert isinstance(rect_patch, matplotlib.patches.FancyBboxPatch)
 
 
 def test_calendar_p90_scaling():

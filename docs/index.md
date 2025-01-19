@@ -34,7 +34,9 @@ pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
 
 ## Guide
 
-- [Customise the charts](tuto/styling)
+- [Customise the charts](tuto/basic-styling)
+- [Work with negative values](tuto/negative-values)
+- [Cell style](tuto/boxstyle)
 - [Combining charts](tuto/combine-charts)
 - [Fetch (and plot) Github contributions](tuto/fetch-github-contribs)
 
@@ -44,5 +46,6 @@ pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
 
 - [calplot](https://github.com/tomkwok/calplot){target=\_blank}
 - [july](https://github.com/e-hulten/july){target=\_blank}
+- [calendarplot](https://github.com/dhowland/calendarplot){target=\_blank}
 
 <br><br>
