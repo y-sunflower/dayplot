@@ -4,6 +4,8 @@ A simple-to-use Python library to build **calendar heatmaps** with ease.
 
 It's built on top of **matplotlib** and leverages it to access high customization possibilities.
 
+<br>
+
 ## Quick start
 
 ```py
