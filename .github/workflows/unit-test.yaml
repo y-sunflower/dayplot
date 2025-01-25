@@ -19,7 +19,7 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
-          python-version-file: "3.9"
+          python-version-file: "3.9.0"
 
       - name: Enable caching
         uses: astral-sh/setup-uv@v5
