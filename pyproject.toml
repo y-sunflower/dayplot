@@ -3,9 +3,9 @@ name = "githubchart"
 version = "0.1.0"
 description = "day plotting"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9"
 dependencies = [
-    "matplotlib>=3.10.0",
+    "matplotlib",
 ]
 
 [project.optional-dependencies]
@@ -16,9 +16,7 @@ data = [
 
 [dependency-groups]
 dev = [
-    "coverage>=7.6.10",
     "mkdocs-material>=9.5.50",
     "pre-commit>=4.0.1",
     "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
 ]

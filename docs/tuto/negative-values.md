@@ -26,7 +26,7 @@ dp.calendar(
 )
 ```
 
-![](../img/negative-values-1.png)
+![](../img/negative-values/negative-values-1.png)
 
 Red days are the ones with negative values.
 
@@ -61,6 +61,6 @@ dp.calendar(
 )
 ```
 
-![](../img/negative-values-2.png)
+![](../img/negative-values/negative-values-2.png)
 
 <br><br>
