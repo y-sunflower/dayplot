@@ -26,12 +26,14 @@ dp.calendar(
 
 ![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/docs/img/quickstart.png)
 
+More examples in the [documentation](https://josephbarbierdarnal.github.io/dayplot/).
+
 <br>
 
 ## Installation
 
 ```bash
-pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
+pip install dayplot
 ```
 
 <br>
