@@ -4,7 +4,7 @@ setup(
     name="dayplot",
     version="0.1.0",
     packages=["dayplot"],
-    description="day plotting",
+    description="calendar heatmaps with matplotlib",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     package_data={"dayplot": ["data/*.csv"]},

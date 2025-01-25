@@ -24,7 +24,7 @@ dp.calendar(
 )
 ```
 
-![](docs/img/quickstart.png)
+![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/docs/img/quickstart.png)
 
 <br>
 
