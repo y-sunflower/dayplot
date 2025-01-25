@@ -27,7 +27,7 @@ dp.calendar(
 )
 ```
 
-![](../img/combine-chart-1.png)
+![](../img/combine-charts/combine-charts-1.png)
 
 <br>
 
@@ -64,4 +64,4 @@ ax1.text(s="2024", **text_args)
 ax2.text(s="2025", **text_args)
 ```
 
-![](../img/combine-chart-2.png)
+![](../img/combine-charts/combine-charts-2.png)

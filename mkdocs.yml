@@ -11,13 +11,17 @@ theme:
 
 nav:
   - Home: index.md
+  - Gallery: gallery.md
+  - Contributing: contributing.md
   - Tuto:
     - tuto/basic-styling.md
     - tuto/negative-values.md
     - tuto/boxstyle.md
     - tuto/combine-charts.md
     - tuto/fetch-github-contribs.md
-  - Contributing: contributing.md
+
+extra_css:
+  - stylesheets/style.css
 
 extra:
   analytics:
@@ -25,6 +29,8 @@ extra:
     property: G-JCXSYFN2WD
 
 markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

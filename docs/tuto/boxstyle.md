@@ -25,7 +25,7 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-1.png)
+![](../img/boxstyle/boxstyle-1.png)
 
 - round
 
@@ -46,7 +46,7 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-2.png)
+![](../img/boxstyle/boxstyle-2.png)
 
 - sawtooth
 
@@ -67,7 +67,7 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-3.png)
+![](../img/boxstyle/boxstyle-3.png)
 
 - roundtooth
 
@@ -88,7 +88,7 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-4.png)
+![](../img/boxstyle/boxstyle-4.png)
 
 <br>
 
@@ -97,27 +97,6 @@ dp.calendar(
 The `dp.calendar()` function will take all additional arguments and pass them to each [`FancyBboxPatch`](https://matplotlib.org/stable/api/_as_gen/matplotlib.patches.FancyBboxPatch.html){target=\_blank}.
 
 This means that any argument that this class accepts will be accepted. Here is a non-exhaustive list.
-
-- alpha
-
-```py
-import matplotlib.pyplot as plt
-import dayplot as dp
-
-df = dp.load_dataset()
-
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    alpha=0.5,
-    ax=ax,
-)
-```
-
-![](../img/boxstyle-5.png)
 
 - mutation_scale (size scale)
 
@@ -138,7 +117,7 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-6.png)
+![](../img/boxstyle/boxstyle-6.png)
 
 - hatch
 
@@ -159,7 +138,28 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-7.png)
+![](../img/boxstyle/boxstyle-7.png)
+
+- alpha
+
+```py
+import matplotlib.pyplot as plt
+import dayplot as dp
+
+df = dp.load_dataset()
+
+fig, ax = plt.subplots(figsize=(16, 4))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    alpha=0.5,
+    ax=ax,
+)
+```
+
+![](../img/boxstyle/boxstyle-5.png)
 
 - linestyle
 
@@ -181,6 +181,6 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle-8.png)
+![](../img/boxstyle/boxstyle-8.png)
 
 <br><br>

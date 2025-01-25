@@ -2,7 +2,7 @@
 
 Use the `cmap` argument to use any other colormap from matplotlib. This argument can either be a string or a `matplotlib.colors.LinearSegmentedColormap` (the object behind colormaps in matplotlib).
 
-Pro tips: you can find great colormaps using [pypalettes](https://python-graph-gallery.com/color-palette-finder/){target=\_blank}.
+**Pro tips**: you can find great colormaps using [pypalettes](https://python-graph-gallery.com/color-palette-finder/){target=\_blank}.
 
 ```py
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ dp.calendar(
 )
 ```
 
-![](../img/cmap.png)
+![](../img/basic-styling/cmap.png)
 
 <br>
 
@@ -39,18 +39,22 @@ df = dp.load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
+    df["dates"],
+    df["values"],
     start_date="2024-01-01",
     end_date="2024-12-31",
-    edgecolor="white",      # any matplotlib color
-    color_for_none="black", # any matplotlib color
-    edgewidth=1,
+    color_for_none="#444444",
+    edgecolor="white",
+    edgewidth=0.4,
+    day_kws={"color": "white"},
+    month_kws={"color": "white"},
     ax=ax,
 )
+fig.set_facecolor("black")
+ax.set_facecolor("black")
 ```
 
-![](../img/colors.png)
+![](../img/basic-styling/colors.png)
 
 <br>
 
@@ -73,44 +77,13 @@ dp.calendar(
     start_date="2024-01-01",
     end_date="2024-12-31",
     day_kws={"weight": "bold"},
-    month_kws={"size": 18, "color": "red"},
+    month_kws={"size": 20, "color": "red"},
     day_x_margin=0.03, # default = 0.02
     month_y_margin=0.7, # default = 0.4
     ax=ax,
 )
 ```
 
-![](../img/text.png)
-
-<br>
-
-### Dark theme
-
-We saw how to change colors, but to create a complete dark theme, we also need to change the `figure` and `axes` colors.
-
-```py
-import matplotlib.pyplot as plt
-import dayplot as dp
-
-df = dp.load_dataset()
-
-fig, ax = plt.subplots(figsize=(15, 6))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    color_for_none="black",
-    edgecolor="white",
-    edgewidth=1,
-    day_kws={"color": "white"},
-    month_kws={"color": "white"},
-    ax=ax,
-)
-fig.set_facecolor("black")
-ax.set_facecolor("black")
-```
-
-![](../img/dark.png)
+![](../img/basic-styling/text.png)
 
 <br><br>
