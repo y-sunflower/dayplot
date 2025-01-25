@@ -17,3 +17,4 @@ wheels/
 sandbox*
 test*.png
 .coverage
+uv.lock
