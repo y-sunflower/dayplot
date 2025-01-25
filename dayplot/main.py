@@ -20,7 +20,7 @@ def calendar(
     end_date: Optional[Union[date, datetime, str]] = None,
     color_for_none: Optional[str] = None,
     edgecolor: str = "black",
-    edgewidth: float = 0.5,
+    edgewidth: float = 0.0,
     cmap: Union[str, LinearSegmentedColormap] = "Greens",
     month_kws: Optional[Dict] = None,
     day_kws: Optional[Dict] = None,
@@ -164,7 +164,7 @@ def calendar(
                 return NotImplementedError
             else:
                 raise ValueError(
-                    f"Invalid boxstyle value. Must be in {implemented_boxstyle}, not {boxstyle}."
+                    f"Invalid boxstyle value. Must be in {implemented_boxstyle}"
                 )
     elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
         raise ValueError(
@@ -243,8 +243,8 @@ def calendar(
         is_diverging = True
         norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
     else:
-        # If we have both negative and positive values, use a diverging scale with 0 in the center.
-        # Otherwise, we use a simple Normalize.
+        # If we have both negative and positive values, use a diverging
+        # scale with 0 in the center. Otherwise, we use a simple Normalize.
         if min_count < 0 < max_count:
             is_diverging = True
             norm = TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
@@ -290,7 +290,7 @@ def calendar(
         ax.add_patch(rect)
         rect_patches.append(rect)
 
-    month_text_style = dict(ha="center", va="center", size=9)
+    month_text_style = dict(ha="center", va="center", size=11)
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
     for m_start in month_starts:
@@ -309,7 +309,9 @@ def calendar(
     ax.set_yticks([])
     ax.invert_yaxis()
 
-    day_text_style = dict(transform=ax.get_yaxis_transform(), ha="left", va="center")
+    day_text_style = dict(
+        transform=ax.get_yaxis_transform(), ha="left", va="center", size=11
+    )
     day_text_style.update(day_kws)
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
@@ -333,7 +335,6 @@ if __name__ == "__main__":
         df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
-        mutation_scale=1.15,
     )
     fig.savefig("test.png", dpi=300, bbox_inches="tight")
     plt.close()
