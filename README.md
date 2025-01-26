@@ -28,6 +28,8 @@ dp.calendar(
 
 More examples in the [documentation](https://josephbarbierdarnal.github.io/dayplot/).
 
+[![](examples.gif)](https://josephbarbierdarnal.github.io/dayplot/)
+
 <br>
 
 ## Installation
