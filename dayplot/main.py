@@ -30,7 +30,6 @@ def calendar(
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
-    # legend: bool = False,
     ax: Optional[matplotlib.axes.Axes] = None,
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
@@ -319,37 +318,6 @@ def calendar(
     labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     for y_tick, day_label in zip(ticks, labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
-
-    # if legend:
-
-    #     n_bins = 10
-    #     bin_edges = np.linspace(vmin, vmax, n_bins + 1)
-    #     bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
-
-    #     legend_box_width = 0.3
-    #     legend_box_height = 0.3
-    #     legend_box_spacing = 0.85
-
-    #     legend_x_start = 0.3
-    #     legend_y = 8
-
-    #     for i in range(n_bins):
-    #         color = cmap(norm(bin_centers[i]))
-
-    #         box_x = legend_x_start + i * (legend_box_width + legend_box_spacing)
-
-    #         rect_legend = patches.FancyBboxPatch(
-    #             xy=(box_x, legend_y),
-    #             width=legend_box_width,
-    #             height=legend_box_height,
-    #             facecolor=color,
-    #             edgecolor=edgecolor,
-    #             linewidth=edgewidth,
-    #             boxstyle=boxstyle,
-    #             clip_on=False,
-    #             **kwargs,
-    #         )
-    #         ax.add_patch(rect_legend)
 
     return rect_patches
 
