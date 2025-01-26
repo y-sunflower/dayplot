@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import os
+from dotenv import load_dotenv
 
 import dayplot as dp
 
@@ -63,23 +65,23 @@ fig.savefig("docs/img/basic-styling/text.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
 
-# load_dotenv()
-# token = os.getenv("GITHUB_TOKEN")
-# my_data = dp.fetch_github_contrib(
-#     username="JosephBARBIERDARNAL",
-#     github_token=token,
-#     start_date="2024-01-01T00:00:00Z",
-#     end_date="2024-12-31T23:59:59Z",
-# )
-# fig, ax = plt.subplots(figsize=(15, 6))
-# dp.calendar(
-#     my_data["dates"],
-#     my_data["values"],
-#     start_date="2024-01-01",
-#     end_date="2024-12-31",
-#     ax=ax,
-# )
-# fig.savefig("docs/img/github/github.png", bbox_inches="tight", dpi=300)
+load_dotenv()
+token = os.getenv("GITHUB_TOKEN")
+my_data = dp.fetch_github_contrib(
+    username="JosephBARBIERDARNAL",
+    github_token=token,
+    start_date="2024-01-01T00:00:00Z",
+    end_date="2024-12-31T23:59:59Z",
+)
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    my_data["dates"],
+    my_data["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    ax=ax,
+)
+fig.savefig("docs/img/github/github.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
 
