@@ -28,7 +28,7 @@ dp.calendar(
 
 More examples in the [documentation](https://josephbarbierdarnal.github.io/dayplot/).
 
-[![](examples.gif)](https://josephbarbierdarnal.github.io/dayplot/)
+[![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/examples.gif)](https://josephbarbierdarnal.github.io/dayplot/)
 
 <br>
 
@@ -37,6 +37,14 @@ More examples in the [documentation](https://josephbarbierdarnal.github.io/daypl
 ```bash
 pip install dayplot
 ```
+
+<br>
+
+## Advanced usage
+
+`dayplot` is designed to fit any matplotlib graph, allowing you to do things like:
+
+![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/docs/img/advanced/advanced-2.png)
 
 <br>
 
