@@ -18,3 +18,5 @@ sandbox*
 test*.png
 .coverage
 uv.lock
+*.csv
+!sample.csv
