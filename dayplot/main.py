@@ -30,7 +30,6 @@ def calendar(
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
-    legend: bool = True,
     ax: Optional[matplotlib.axes.Axes] = None,
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
@@ -335,6 +334,7 @@ if __name__ == "__main__":
         df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
+        legend=True,
     )
     fig.savefig("test.png", dpi=300, bbox_inches="tight")
     plt.close()

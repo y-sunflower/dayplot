@@ -141,25 +141,17 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
 You can find more examples in the [Gallery](gallery).
 
-<br>
-
 ## Installation
 
 ```bash
 pip install dayplot
 ```
 
-<br>
+## Advanced usage
 
-## Guide
+`dayplot` is designed to fit any matplotlib graph, allowing you to do things like:
 
-- [Customise the charts](tuto/basic-styling)
-- [Work with negative values](tuto/negative-values)
-- [Cell style](tuto/boxstyle)
-- [Combining charts](tuto/combine-charts)
-- [Fetch (and plot) Github contributions](tuto/fetch-github-contribs)
-
-<br>
+[![](img/advanced/advanced-2.png)](tuto/advanced)
 
 ## Related projects
 

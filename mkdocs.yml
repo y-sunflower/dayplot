@@ -19,6 +19,7 @@ nav:
     - tuto/boxstyle.md
     - tuto/combine-charts.md
     - tuto/fetch-github-contribs.md
+    - tuto/advanced.md
 
 extra_css:
   - stylesheets/style.css
