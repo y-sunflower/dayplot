@@ -30,6 +30,7 @@ def calendar(
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
+    legend: bool = True,
     ax: Optional[matplotlib.axes.Axes] = None,
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
@@ -290,7 +291,7 @@ def calendar(
         ax.add_patch(rect)
         rect_patches.append(rect)
 
-    month_text_style = dict(ha="center", va="center", size=11)
+    month_text_style = dict(ha="center", va="center", size=10)
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
     for m_start in month_starts:
@@ -310,7 +311,7 @@ def calendar(
     ax.invert_yaxis()
 
     day_text_style = dict(
-        transform=ax.get_yaxis_transform(), ha="left", va="center", size=11
+        transform=ax.get_yaxis_transform(), ha="left", va="center", size=10
     )
     day_text_style.update(day_kws)
 
@@ -319,7 +320,6 @@ def calendar(
     for y_tick, day_label in zip(ticks, labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
-    plt.tight_layout()
     return rect_patches
 
 
