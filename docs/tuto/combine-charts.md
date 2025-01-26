@@ -15,6 +15,7 @@ dp.calendar(
     values=df["values"],
     start_date="2025-01-01",
     end_date="2025-12-31",
+    cmap="Blues",
     ax=ax1, # top axes
 )
 
@@ -23,6 +24,7 @@ dp.calendar(
     values=df["values"],
     start_date="2024-01-01",
     end_date="2024-12-31",
+    cmap="Blues",
     ax=ax2, # bottom axes
 )
 ```
@@ -48,6 +50,7 @@ dp.calendar(
     values=df["values"],
     start_date="2025-01-01",
     end_date="2025-12-31",
+    cmap="inferno",
     ax=ax1, # top axes
 )
 
@@ -56,6 +59,7 @@ dp.calendar(
     values=df["values"],
     start_date="2024-01-01",
     end_date="2024-12-31",
+    cmap="inferno",
     ax=ax2, # bottom axes
 )
 

@@ -85,5 +85,11 @@ def generate_gallery_markdown(image_dir, output_file, subdirs):
 if __name__ == "__main__":
     IMAGE_DIR = "docs/img/"
     OUTPUT_FILE = "docs/gallery.md"
-    SUBDIRECTORIES = ["basic-styling", "boxstyle", "combine-charts", "negative-values"]
+    SUBDIRECTORIES = [
+        "basic-styling",
+        "boxstyle",
+        "combine-charts",
+        "negative-values",
+        "advanced",
+    ]
     generate_gallery_markdown(IMAGE_DIR, OUTPUT_FILE, SUBDIRECTORIES)
