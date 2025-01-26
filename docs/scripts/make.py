@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
 from pypalettes import load_cmap
 from pyfonts import load_font
 import os
@@ -95,6 +97,7 @@ dp.calendar(
     values=df["values"],
     start_date="2025-01-01",
     end_date="2025-12-31",
+    cmap="Blues",
     ax=ax1,  # top axes
 )
 dp.calendar(
@@ -102,6 +105,7 @@ dp.calendar(
     values=df["values"],
     start_date="2024-01-01",
     end_date="2024-12-31",
+    cmap="Blues",
     ax=ax2,  # bottom axes
 )
 
@@ -115,6 +119,7 @@ dp.calendar(
     values=df["values"],
     start_date="2025-01-01",
     end_date="2025-12-31",
+    cmap="inferno",
     ax=ax1,  # top axes
 )
 dp.calendar(
@@ -122,6 +127,7 @@ dp.calendar(
     values=df["values"],
     start_date="2024-01-01",
     end_date="2024-12-31",
+    cmap="inferno",
     ax=ax2,  # bottom axes
 )
 text_args = dict(x=-4, y=3.5, size=30, rotation=90, color="#afafaf", va="center")
@@ -328,6 +334,69 @@ axs[1].text(s="2018", **text_args)
 axs[2].text(s="2017", **text_args)
 
 fig.savefig("docs/img/advanced/advanced-1.png", bbox_inches="tight", dpi=300)
+
+########################################################################
+
+df = pd.read_csv("elonmusk.csv")
+df["Datetime"] = pd.to_datetime(df["Datetime"])
+df["Date"] = df["Datetime"].dt.strftime("%Y-%m-%d")
+df = df.groupby("Date").size().reset_index(name="n_tweets")
+df = df[df["Date"] <= "2022-12-31"]
+df = df[df["Date"] >= "2011-01-01"]
+
+cmap = load_cmap("deep_purple_material", cmap_type="continuous", keep_last_n=10)
+cmap = load_cmap("ag_Sunset", cmap_type="continuous", reverse=True)
+font_url = "https://github.com/kosmynkab/Bona-Nova/blob/main/fonts/ttf"
+fontlight = load_font(f"{font_url}/BonaNova-Regular.ttf?raw=true")
+fontmedium = load_font(f"{font_url}/BonaNova-Bold.ttf?raw=true")
+font_url = "https://github.com/coreyhu/Urbanist/blob/main/fonts/ttf"
+fontyear = load_font(f"{font_url}/Urbanist-Medium.ttf?raw=true")
+
+style_args = dict(
+    cmap=cmap,
+    day_kws={"alpha": 0},
+    month_kws={"font": fontlight, "size": 6},
+    month_y_margin=0.8,
+    color_for_none="#eeeeee",
+)
+text_args = dict(
+    x=-4, y=3.5, size=15, rotation=90, color="#aaa", va="center", font=fontyear
+)
+
+years = list(range(2011, 2023))[::-1]
+fig, axs = plt.subplots(nrows=len(years), figsize=(15, 10))
+for i, year in enumerate(years):
+    dp.calendar(
+        df["Date"],
+        df["n_tweets"],
+        start_date=f"{year}-01-01",
+        end_date=f"{year}-12-31",
+        ax=axs[i],
+        **style_args,
+    )
+    axs[i].text(s=f"{year}", **text_args)
+
+fig.text(
+    x=0.39,
+    y=0.91,
+    s="Elon Musk Tweets",
+    size=20,
+    font=fontmedium,
+)
+fig.text(
+    x=0.63,
+    y=0.1,
+    s="made with dayplot, by Joseph Barbier",
+    size=7,
+    ha="right",
+    font=fontmedium,
+)
+
+elon_ax = axs[0].inset_axes([0.7, 1.1, 0.3, 1.4])
+elon_ax.imshow(np.array(Image.open("docs/img/musk.png")))
+elon_ax.axis("off")
+
+fig.savefig("docs/img/advanced/advanced-2.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
 
