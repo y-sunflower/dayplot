@@ -50,4 +50,4 @@ dp.calendar(
 )
 ```
 
-![](../img/github.png)
+![](../img/github/github.png)

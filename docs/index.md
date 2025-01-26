@@ -106,15 +106,16 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
         df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
-        color_for_none="#444444",
+        color_for_none="#bcbcbc",
         edgecolor="white",
         edgewidth=0.4,
+        cmap="OrRd",
         day_kws={"color": "white"},
         month_kws={"color": "white"},
         ax=ax,
     )
-    fig.set_facecolor("black")
-    ax.set_facecolor("black")
+    fig.set_facecolor("#2a2929")
+    ax.set_facecolor("#2a2929")
     ```
 
 === "Round boxes"
@@ -145,7 +146,7 @@ You can find more examples in the [Gallery](gallery).
 ## Installation
 
 ```bash
-pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git
+pip install dayplot
 ```
 
 <br>
