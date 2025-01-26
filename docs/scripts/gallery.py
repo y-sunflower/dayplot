@@ -23,7 +23,7 @@ def generate_gallery_markdown(image_dir, output_file, subdirs):
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    markdown_lines = ["# Image Gallery\n"]
+    markdown_lines = ["# Gallery\n"]
 
     for subdir in subdirs:
         subdir_path = image_dir / subdir

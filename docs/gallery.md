@@ -1,4 +1,4 @@
-# Image Gallery
+# Gallery
 
 ## Basic-styling
 
