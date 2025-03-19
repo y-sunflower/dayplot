@@ -31,6 +31,7 @@ def calendar(
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
     ax: Optional[matplotlib.axes.Axes] = None,
+    week_start_day: str = "Sunday",
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
     """
@@ -110,6 +111,9 @@ def calendar(
         A matplotlib axes. If None, plt.gca() will be used. It is advisable to make
         this explicit to avoid unexpected behaviour, particularly when manipulating a
         figure with several axes.
+    week_start_day
+        The starting day of the week, which can be specified as a string ("Sunday", "Monday", 
+        ..., "Saturday"). Defaults to "Sunday".
     kwargs
         Any additional arguments that will be passed to matplotlib.patches.FancyBboxPatch. For example,
         you can set `alpha`, `hatch`, `linestyle`, etc.
@@ -176,6 +180,12 @@ def calendar(
 
     if len(dates) == 0 or len(values) == 0:
         raise ValueError("`dates` and `values` cannot be empty.")
+    
+    day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    try:
+        week_start_day = day_names.index(week_start_day.capitalize())
+    except ValueError:
+        raise ValueError(f"Invalid start_day string: {week_start_day}. Must be one of {day_names}.")
 
     date_counts = defaultdict(float)
     for d, v in zip(dates, values):
@@ -211,12 +221,12 @@ def calendar(
     data_for_plot = []
     for d in full_range:
         days_from_start = (d - start_date).days
-        start_date_sun = (start_date.weekday() + 1) % 7
-        week_index = (days_from_start + start_date_sun) // 7
-        day_of_week = (d.weekday() + 1) % 7
+        start_date_weekday = (start_date.weekday() - week_start_day) % 7 # Adjusted weekday
+        week_index = (days_from_start + start_date_weekday) // 7
+        day_of_week = (d.weekday() - week_start_day) % 7 # Adjusted day of week
         count = date_counts.get(d, 0)
         data_for_plot.append((week_index, day_of_week, count))
-
+        
     total_weeks = (end_date - start_date).days // 7 + 1
 
     if ax is None:
@@ -316,7 +326,8 @@ def calendar(
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    for y_tick, day_label in zip(ticks, labels):
+    adjusted_labels = labels[week_start_day:] + labels[:week_start_day]
+    for y_tick, day_label in zip(ticks, adjusted_labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     return rect_patches
@@ -334,7 +345,7 @@ if __name__ == "__main__":
         df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
-        legend=True,
+        week_start_day='Sunday',
     )
     fig.savefig("test.png", dpi=300, bbox_inches="tight")
     plt.close()
