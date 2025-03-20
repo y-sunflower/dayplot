@@ -1,7 +1,7 @@
 [project]
 name = "dayplot"
 version = "0.2.0"
-description = "calendar heatmaps with matplotlib"
+description = "Calendar heatmaps with matplotlib"
 authors = [
   { name="Joseph Barbier", email="joseph.barbierdarnal@gmail.com" },
 ]
@@ -38,3 +38,6 @@ build-backend = "setuptools.build_meta"
 [project.urls]
 Homepage = "https://github.com/JosephBARBIERDARNAL/dayplot"
 Issues = "https://github.com/JosephBARBIERDARNAL/dayplot/issues"
+
+[tool.setuptools]
+include-package-data = true
