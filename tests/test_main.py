@@ -173,19 +173,21 @@ def test_calendar_p90_scaling():
         "Outlier day should not have the 'no data' color."
     )
 
-def test_calendar_invalid_week_start_on():
-    """Test that an invalid week_start_on raises a ValueError."""
+
+def test_calendar_invalid_week_starts_on():
+    """Test that an invalid week_starts_on raises a ValueError."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
     values = [1, 2, 3, 4, 5, 6, 7]
     fig, ax = plt.subplots()
     with pytest.raises(ValueError):
-        calendar(dates, values, week_start_on="InvalidDay", ax=ax)
+        calendar(dates, values, week_starts_on="InvalidDay", ax=ax)
 
-def test_calendar_week_start_on_monday():
-    """Test when week_start_on is set to Monday."""
+
+def test_calendar_week_starts_on_monday():
+    """Test when week_starts_on is set to Monday."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
     values = [1, 2, 3, 4, 5, 6, 7]
     fig, ax = plt.subplots()
-    calendar(dates, values, week_start_on="Monday", ax=ax)
+    calendar(dates, values, week_starts_on="Monday", ax=ax)
     patches = ax.patches
     assert len(patches) == 7
