@@ -50,6 +50,7 @@ def calendar(
 
     Parameters
     ----------
+
     dates
         A list of date-like objects (e.g., datetime.date, datetime.datetime, or
         strings in "YYYY-MM-DD" format). Must have the same length as values.
@@ -121,15 +122,18 @@ def calendar(
 
     Returns
     -------
+
     A list of matplotlib.patches.FancyBboxPatch (one for each cell).
 
     Notes
     -----
+
     - The function aggregates multiple entries for the same date by summing their
       values.
 
     Examples
     --------
+
     >>> import dayplot as dp
     >>> import pandas as pd
     >>> df = pd.DataFrame({
