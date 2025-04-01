@@ -22,6 +22,7 @@ def calendar(
     edgecolor: str = "black",
     edgewidth: float = 0.0,
     cmap: Union[str, LinearSegmentedColormap] = "Greens",
+    week_starts_on: str = "Sunday",
     month_kws: Optional[Dict] = None,
     day_kws: Optional[Dict] = None,
     day_x_margin: float = 0.02,
@@ -31,7 +32,6 @@ def calendar(
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
     ax: Optional[matplotlib.axes.Axes] = None,
-    week_starts_on: str = "Sunday",
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
     """
@@ -77,6 +77,9 @@ def calendar(
         A valid Matplotlib colormap name or a LinearSegmentedColormap instance.
         Defaults to "Greens". The colormap is used to determine the fill color
         intensity of each day's cell based on its value.
+    week_starts_on
+        The starting day of the week, which can be specified as a string ("Sunday", "Monday",
+        ..., "Saturday"). Defaults to "Sunday".
     month_kws
         Additional keyword arguments passed to the matplotlib.axes.Axes.text function when
         labeling month names (outside of x, y and s).
@@ -111,9 +114,6 @@ def calendar(
         A matplotlib axes. If None, plt.gca() will be used. It is advisable to make
         this explicit to avoid unexpected behaviour, particularly when manipulating a
         figure with several axes.
-    week_starts_on
-        The starting day of the week, which can be specified as a string ("Sunday", "Monday",
-        ..., "Saturday"). Defaults to "Sunday".
     kwargs
         Any additional arguments that will be passed to matplotlib.patches.FancyBboxPatch. For example,
         you can set `alpha`, `hatch`, `linestyle`, etc.
@@ -343,21 +343,3 @@ def calendar(
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     return rect_patches
-
-
-if __name__ == "__main__":
-    import numpy as np
-    import dayplot as dp
-
-    df = dp.load_dataset()
-
-    fig, ax = plt.subplots(figsize=(15, 6))
-    calendar(
-        df["dates"],
-        df["values"],
-        start_date="2024-01-01",
-        end_date="2024-12-31",
-        week_starts_on="Sunday",
-    )
-    fig.savefig("test.png", dpi=300, bbox_inches="tight")
-    plt.close()
