@@ -160,4 +160,121 @@ elon_ax.axis("off")
 
 ![](../img/advanced/advanced-2.png)
 
+## COVID-19
+
+The dataset can be found [here](https://www.kaggle.com/datasets/gpreda/covid-world-vaccination-progress?select=country_vaccinations.csv){target=\_blank}.
+
+```py
+import matplotlib.pyplot as plt
+import dayplot as dp
+import pandas as pd
+from pyfonts import load_font
+
+font_url = "https://github.com/coreyhu/Urbanist/blob/main/fonts/ttf"
+fontlight = load_font(f"{font_url}/Urbanist-Light.ttf?raw=true")
+fontmedium = load_font(f"{font_url}/Urbanist-Medium.ttf?raw=true")
+
+df = pd.read_csv("country_vaccinations_by_manufacturer.csv")
+df_agg = (
+    df.groupby(["date", "location"], as_index=False)["total_vaccinations"]
+    .sum()
+    .sort_values(["location", "date"])
+)
+
+fig, axs = plt.subplots(nrows=5, figsize=(12, 13))
+fig.subplots_adjust(hspace=0.5)
+
+text_style = dict(size=16, ha="right", x=0.99, y=1.15, color="#626262", font=fontlight)
+calend_style = dict(
+    cmap="Blues",
+    start_date="2021-01-01",
+    end_date="2021-12-31",
+    week_starts_on="Monday",
+    vmin=0,
+    vmax=1,
+    month_kws={"font": fontlight},
+    day_kws={"font": fontlight},
+)
+
+france = df_agg[df_agg["location"] == "France"]
+france["total_vaccinations"] = france["total_vaccinations"] / (67.8 * 1e6)
+dp.calendar(
+    dates=france["date"],
+    values=france["total_vaccinations"],
+    ax=axs[1],
+    **calend_style,
+)
+axs[1].text(s="France", transform=axs[1].transAxes, **text_style)
+
+south_korea = df_agg[df_agg["location"] == "South Korea"]
+south_korea["total_vaccinations"] = south_korea["total_vaccinations"] / (51.8 * 1e6)
+dp.calendar(
+    dates=south_korea["date"],
+    values=south_korea["total_vaccinations"],
+    ax=axs[3],
+    **calend_style,
+)
+axs[3].text(s="South Korea", transform=axs[3].transAxes, **text_style)
+
+us = df_agg[df_agg["location"] == "United States"]
+us["total_vaccinations"] = us["total_vaccinations"] / (331.9 * 1e6)
+dp.calendar(
+    dates=us["date"],
+    values=us["total_vaccinations"],
+    ax=axs[0],
+    **calend_style,
+)
+axs[0].text(s="United States", transform=axs[0].transAxes, **text_style)
+
+peru = df_agg[df_agg["location"] == "Peru"]
+peru["total_vaccinations"] = peru["total_vaccinations"] / (33.2 * 1e6)
+dp.calendar(
+    dates=peru["date"],
+    values=peru["total_vaccinations"],
+    ax=axs[4],
+    **calend_style,
+)
+axs[4].text(s="Peru", transform=axs[4].transAxes, **text_style)
+
+hk = df_agg[df_agg["location"] == "Hong Kong"]
+hk["total_vaccinations"] = hk["total_vaccinations"] / (7.4 * 1e6)
+dp.calendar(
+    dates=hk["date"],
+    values=hk["total_vaccinations"],
+    ax=axs[2],
+    **calend_style,
+)
+axs[2].text(s="Hong Kong", transform=axs[2].transAxes, **text_style)
+
+title_style = dict(
+    ha="center",
+    va="top",
+    font=fontmedium,
+    x=0.5,
+)
+fig.text(
+    y=0.97,
+    s="% of people vaccinated with COVID-19 in 2021",
+    size=30,
+    **title_style,
+)
+fig.text(
+    y=0.93,
+    s="Percentages are relative to total population of the country",
+    size=18,
+    color="#8d8d8d",
+    **title_style,
+)
+fig.text(
+    x=0.88,
+    y=0.07,
+    s="Made with dayplot, by Joseph Barbier",
+    font=fontmedium,
+    ha="right",
+    size=14,
+)
+```
+
+![](../img/advanced/advanced-3.png)
+
 <br><br>
