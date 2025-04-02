@@ -172,11 +172,11 @@ def calendar(
                 return NotImplementedError
             else:
                 raise ValueError(
-                    f"Invalid boxstyle value. Must be in {implemented_boxstyle}"
+                    f"Invalid `boxstyle` value. Must be in {implemented_boxstyle}"
                 )
     elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
         raise ValueError(
-            f"boxstyle must either be a string or a matplotlib.patches.BoxStyle, not {boxstyle}"
+            f"`boxstyle` must either be a string or a `matplotlib.patches.BoxStyle`, not {boxstyle}"
         )
 
     if len(dates) != len(values):
@@ -295,7 +295,7 @@ def calendar(
         if is_diverging:
             if color_for_none is not None:
                 warnings.warn(
-                    "color_for_none argument is ignored when values argument contains negative values.",
+                    "`color_for_none` argument is ignored when `values` argument contains negative values.",
                     UserWarning,
                 )
             face_color = cmap(norm(count))
