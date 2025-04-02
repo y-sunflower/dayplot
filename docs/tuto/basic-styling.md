@@ -8,7 +8,7 @@ Use the `cmap` argument to use any other colormap from matplotlib. This argument
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(
@@ -35,7 +35,7 @@ Also, use `edgewidth` to moderate the width of the edge between squares.
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(
@@ -69,7 +69,7 @@ Pro tip: when changing font size, the label positioning might get worse. In orde
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(

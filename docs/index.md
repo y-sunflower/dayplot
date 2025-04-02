@@ -10,9 +10,11 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-    import dayplot as dp
 
-    df = dp.load_dataset()  # requires pandas to be installed
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()  # requires pandas to be installed
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -30,9 +32,11 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-    import dayplot as dp
 
-    df = dp.load_dataset()
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -51,9 +55,11 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-    import dayplot as dp
 
-    df = dp.load_dataset()
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()
 
     # add negative values at some random dates
     df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
@@ -75,9 +81,11 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-    import dayplot as dp
 
-    df = dp.load_dataset()
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()
 
     fig, ax = plt.subplots(figsize=(16, 4))
     dp.calendar(
@@ -96,9 +104,11 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-    import dayplot as dp
 
-    df = dp.load_dataset()
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -124,9 +134,11 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-    import dayplot as dp
 
-    df = dp.load_dataset()
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()
 
     fig, ax = plt.subplots(figsize=(16, 4))
     dp.calendar(

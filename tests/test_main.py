@@ -16,7 +16,7 @@ def sample_data():
     """
     start_date = datetime(2024, 1, 1)
     dates = [start_date + timedelta(days=i) for i in range(10)]
-    values = [i for i in range(10)]  # 0..9
+    values = [i for i in range(10)]  # 0...9
     return dates, values
 
 
