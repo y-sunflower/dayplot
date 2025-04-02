@@ -199,7 +199,20 @@ def calendar(
             f"Invalid start_day string: {week_starts_on}. Must be one of {day_names}."
         )
 
-    week_starts_on = day_names.index(week_starts_on.capitalize())
+    # Get the index of the starting day of the week
+    week_starts_on_idx = day_names.index(week_starts_on.capitalize())
+
+    # Create a mapping from Python's weekday() (0=Monday) to our day indices
+    # where the first day is determined by week_starts_on_idx
+    weekday_mapping = {}
+    for i in range(7):
+        # Python's weekday: 0 = Monday, ..., 6 = Sunday
+        python_weekday = i  # 0-6 (Mon-Sun)
+        # Convert to our indexing where 0 = Sunday, ..., 6 = Saturday
+        our_day_idx = (python_weekday + 1) % 7  # Convert to 0-6 (Sun-Sat)
+        # Adjust for the week start day
+        adjusted_idx = (our_day_idx - week_starts_on_idx) % 7
+        weekday_mapping[python_weekday] = adjusted_idx
 
     date_counts = defaultdict(float)
     for d, v in zip(dates, values):
@@ -235,11 +248,10 @@ def calendar(
     data_for_plot = []
     for d in full_range:
         days_from_start = (d - start_date).days
-        start_date_weekday = (
-            start_date.weekday() - week_starts_on
-        ) % 7  # Adjusted weekday
-        week_index = (days_from_start + start_date_weekday) // 7
-        day_of_week = (d.weekday() - week_starts_on) % 7  # Adjusted day of week
+        # Use our mapping to get the correct weekday
+        start_date_adj_weekday = weekday_mapping[start_date.weekday()]
+        week_index = (days_from_start + start_date_adj_weekday) // 7
+        day_of_week = weekday_mapping[d.weekday()]  # Use the mapping
         count = date_counts.get(d, 0)
         data_for_plot.append((week_index, day_of_week, count))
 
@@ -270,7 +282,7 @@ def calendar(
         norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
     else:
         # If we have both negative and positive values, use a diverging
-        # scale with 0 in the center. Otherwise, we use a simple Normalize.
+        # scale with a center of 0. Otherwise, use a simple Normalize.
         if min_count < 0 < max_count:
             is_diverging = True
             norm = TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
@@ -295,14 +307,6 @@ def calendar(
             else:
                 face_color = cmap(norm(count))
 
-        rect = patches.Rectangle(
-            xy=(week, weekday),
-            width=1,
-            height=1,
-            linewidth=edgewidth,
-            edgecolor=edgecolor,
-            facecolor=face_color,
-        )
         rect = patches.FancyBboxPatch(
             xy=(week + 0.35, weekday + 0.35),
             width=0.3,
@@ -320,7 +324,8 @@ def calendar(
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
     for m_start in month_starts:
-        week_of_month = ((m_start - start_date).days + start_date.weekday()) // 7
+        m_start_adj_weekday = weekday_mapping[m_start.weekday()]
+        week_of_month = ((m_start - start_date).days + m_start_adj_weekday) // 7
         ax.text(
             week_of_month + 0.5,
             -month_y_margin,
@@ -341,9 +346,42 @@ def calendar(
     day_text_style.update(day_kws)
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
-    labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    adjusted_labels = labels[week_starts_on:] + labels[:week_starts_on]
+    # Create labels in the adjusted order based on week_starts_on
+    labels = day_names.copy()
+    labels = [L[:3] for L in labels]  # Abbreviate to "Sun", "Mon", etc.
+    adjusted_labels = labels[week_starts_on_idx:] + labels[:week_starts_on_idx]
+
     for y_tick, day_label in zip(ticks, adjusted_labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     return rect_patches
+
+
+if __name__ == "__main__":
+    from datetime import datetime as dt
+
+    import matplotlib.pyplot as plt
+    import pandas as pd
+
+    mve = pd.DataFrame(
+        {
+            "year": [2020] * 7,
+            "month": [8] * 7,
+            "day": range(17, 24),
+            "value": [80, 80, 80, 20, 20, 20, 20],
+        }
+    )
+    mve["date"] = mve.apply(lambda x: dt(x["year"], x["month"], x["day"]), axis=1)
+    mve["day_of_week"] = mve["date"].dt.day_name()
+
+    fig, ax = plt.subplots(figsize=(15, 5))
+    calendar(
+        dates=mve["date"],
+        values=mve["value"],
+        start_date="2020-08-01",
+        end_date="2020-08-31",
+        week_starts_on="Sunday",
+        ax=ax,
+    )
+    fig.savefig("test.png", dpi=300, bbox_inches="tight")
+    print(mve.head(4))
