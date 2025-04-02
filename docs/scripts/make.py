@@ -8,8 +8,10 @@ import pandas as pd
 from dotenv import load_dotenv
 
 import dayplot as dp
+from dayplot.data import load_dataset
+from dayplot.github import fetch_github_contrib
 
-df = dp.load_dataset()
+df = load_dataset()
 
 ########################################################################
 
@@ -72,7 +74,7 @@ fig.savefig("docs/img/basic-styling/text.png", bbox_inches="tight", dpi=300)
 
 load_dotenv()
 token = os.getenv("GITHUB_TOKEN")
-my_data = dp.fetch_github_contrib(
+my_data = fetch_github_contrib(
     username="JosephBARBIERDARNAL",
     github_token=token,
     start_date="2024-01-01T00:00:00Z",
@@ -90,7 +92,7 @@ fig.savefig("docs/img/github/github.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
 
-df = dp.load_dataset()
+df = load_dataset()
 fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(16, 4))
 dp.calendar(
     dates=df["dates"],
@@ -139,7 +141,7 @@ fig.savefig(
 
 ########################################################################
 
-df = dp.load_dataset()
+df = load_dataset()
 
 df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
 fig, ax = plt.subplots(figsize=(16, 4))
@@ -173,7 +175,7 @@ fig.savefig(
 
 ########################################################################
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(

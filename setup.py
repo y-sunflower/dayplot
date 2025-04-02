@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="dayplot",
-    version="0.2.1",
+    version="0.2.2",
     packages=["dayplot"],
     description="Calendar heatmaps with matplotlib",
     long_description=open("README.md").read(),
