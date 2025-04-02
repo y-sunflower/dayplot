@@ -1,6 +1,6 @@
 [project]
 name = "dayplot"
-version = "0.2.0"
+version = "0.2.1"
 description = "Calendar heatmaps with matplotlib"
 authors = [
   { name="Joseph Barbier", email="joseph.barbierdarnal@gmail.com" },
