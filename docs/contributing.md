@@ -2,7 +2,7 @@ This package is relatively new and still needs some improvements and bug fixes. 
 
 - Opening [GitHub issues](https://github.com/JosephBARBIERDARNAL/dayplot/issues) to list the bugs you've found
 - Implementation of new features or resolution of existing bugs
-- Enhancing the documentation
+- Enhancing the documentation by creating cool examples
 
 ### Setting up your environment
 

@@ -1,10 +1,6 @@
-import requests
-import pandas as pd
-
-
 def fetch_github_contrib(
     username: str, github_token: str, start_date: str, end_date: str
-) -> pd.DataFrame:
+):
     """
     Fetches GitHub contributions for a given user and date range.
 
@@ -23,6 +19,9 @@ def fetch_github_contrib(
     -------
     Pandas DataFrame with dates and contribution counts.
     """
+    import requests
+    import pandas as pd
+
     if not github_token:
         raise EnvironmentError("invalid github_token")
     headers = {"Authorization": f"Bearer {github_token}"}

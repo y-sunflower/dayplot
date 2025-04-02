@@ -11,8 +11,9 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -32,8 +33,9 @@ dp.calendar(
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -53,8 +55,9 @@ dp.calendar(
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -74,8 +77,9 @@ dp.calendar(
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -103,8 +107,9 @@ This means that any argument that this class accepts will be accepted. Here is a
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -124,8 +129,9 @@ dp.calendar(
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -145,8 +151,9 @@ dp.calendar(
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
@@ -166,8 +173,9 @@ dp.calendar(
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(

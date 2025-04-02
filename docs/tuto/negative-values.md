@@ -9,8 +9,9 @@ Otherwise, `color_for_none` is ignored and all cells are colored according to th
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 # add negative values at some random dates
 df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
@@ -41,8 +42,9 @@ This can be used as a convenient way of controlling color mapping when there are
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 # add negative values at some random dates
 df.loc[df.sample(n=40, replace=False).index, "values"] *= -1

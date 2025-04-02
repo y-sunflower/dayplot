@@ -3,10 +3,11 @@ Since `dayplot` draws the chart on a matplotlib axes, it's quite easy to combine
 For this, we need to create a figure with 2 axes (`nrows=2` since we want them to be one above the other). Then we plot the year 2024 below and the year 2025 above.
 
 ```py
-import dayplot as dp
 import matplotlib.pyplot as plt
+import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(16, 4))
 
@@ -38,10 +39,11 @@ dp.calendar(
 It makes sense to add the year associated with each chart, so let's leverage `ax.text()` to add the years next to each chart.
 
 ```py
-import dayplot as dp
 import matplotlib.pyplot as plt
+import dayplot as dp
+from dayplot.data import load_dataset
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(16, 4))
 
