@@ -9,6 +9,7 @@ Otherwise, `color_for_none` is ignored and all cells are colored according to th
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
 df = load_dataset()
 
@@ -41,6 +42,7 @@ This can be used as a convenient way of controlling color mapping when there are
 ```py
 import matplotlib.pyplot as plt
 import dayplot as dp
+from dayplot.data import load_dataset
 
 df = load_dataset()
 
