@@ -14,12 +14,15 @@ The `fetch_github_contrib()` function requires you to pass:
 - your Github token
 - start and end dates to fetch the data using ISO 8601 format (e.g. `"2024-01-01T00:00:00Z"`)
 
+> Note: you'll need both `pandas` and `requests` to be installed
+
 ```py
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import os
 
 import dayplot as dp
+from dayplot.github import fetch_github_contrib
 
 load_dotenv()
 token = os.getenv("GITHUB_TOKEN")
