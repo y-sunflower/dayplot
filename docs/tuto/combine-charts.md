@@ -6,7 +6,7 @@ For this, we need to create a figure with 2 axes (`nrows=2` since we want them t
 import dayplot as dp
 import matplotlib.pyplot as plt
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(16, 4))
 
@@ -41,7 +41,7 @@ It makes sense to add the year associated with each chart, so let's leverage `ax
 import dayplot as dp
 import matplotlib.pyplot as plt
 
-df = dp.load_dataset()
+df = load_dataset()
 
 fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(16, 4))
 

@@ -3,7 +3,7 @@ name = "dayplot"
 version = "0.2.1"
 description = "Calendar heatmaps with matplotlib"
 authors = [
-  { name="Joseph Barbier", email="joseph.barbierdarnal@gmail.com" },
+    { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
 ]
 readme = "README.md"
 requires-python = ">=3.9"
@@ -11,25 +11,16 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Framework :: Matplotlib"
+    "Framework :: Matplotlib",
 ]
 
-dependencies = [
-    "matplotlib",
-]
+dependencies = ["matplotlib"]
 
 [project.optional-dependencies]
-data = [
-    "pandas>=2.2.3",
-    "requests>=2.32.3",
-]
+data = ["pandas", "requests"]
 
 [dependency-groups]
-dev = [
-    "mkdocs-material>=9.5.50",
-    "pre-commit>=4.0.1",
-    "pytest>=8.3.4",
-]
+dev = ["mkdocs-material>=9.5.50", "pre-commit>=4.0.1", "pytest>=8.3.4"]
 
 [build-system]
 requires = ["setuptools>=61.0"]

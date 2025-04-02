@@ -10,9 +10,11 @@ It's built on top of **matplotlib** and leverages it to access high customizatio
 
 ```py
 import matplotlib.pyplot as plt
-import dayplot as dp
 
-df = dp.load_dataset()  # requires pandas to be installed
+import dayplot as dp
+from dayplot.data import load_dataset
+
+df = load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(
