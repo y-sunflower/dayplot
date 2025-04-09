@@ -6,6 +6,7 @@ def fetch_github_contrib(
 
     Parameters
     ----------
+
     username : str
         GitHub username.
     github_token : str
@@ -17,6 +18,7 @@ def fetch_github_contrib(
 
     Returns
     -------
+
     Pandas DataFrame with dates and contribution counts.
     """
     import requests

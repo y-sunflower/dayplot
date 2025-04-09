@@ -6,6 +6,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from datetime import datetime, timedelta
 
 from dayplot import calendar
+import dayplot
 
 
 @pytest.fixture
@@ -191,3 +192,7 @@ def test_calendar_week_starts_on_monday():
     calendar(dates, values, week_starts_on="Monday", ax=ax)
     patches = ax.patches
     assert len(patches) == 7
+
+
+def dayplot_version():
+    assert dayplot.__version__ == "0.2.3"

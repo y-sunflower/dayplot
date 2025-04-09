@@ -34,8 +34,6 @@ dp.calendar(
 
 More examples in the [documentation](https://josephbarbierdarnal.github.io/dayplot/).
 
-[![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/examples.gif)](https://josephbarbierdarnal.github.io/dayplot/)
-
 <br>
 
 ## Installation

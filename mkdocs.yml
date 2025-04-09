@@ -9,10 +9,17 @@ theme:
   icon:
     repo: fontawesome/brands/github
 
+plugins:
+- search
+- mkdocstrings
+
 nav:
   - Home: index.md
   - Gallery: gallery.md
   - Contributing: contributing.md
+  - Reference:
+      - reference/calendar.md
+      - reference/fetch_github_contrib.md
   - Tuto:
     - tuto/basic-styling.md
     - tuto/negative-values.md
@@ -24,10 +31,6 @@ nav:
 extra_css:
   - stylesheets/style.css
 
-extra:
-  analytics:
-    provider: google
-    property: G-JCXSYFN2WD
 
 markdown_extensions:
   - pymdownx.tabbed:
