@@ -18,7 +18,8 @@ dev = [
     "mkdocs-matplotlib>=0.10.1",
     "mkdocstrings-python>=1.16.5",
     "pre-commit>=4.0.1",
-    "pytest>=8.3.4"
+    "pytest>=8.3.4",
+    "ruff>=0.11.4",
 ]
 
 [build-system]
