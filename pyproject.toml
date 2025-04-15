@@ -2,6 +2,9 @@
 name = "dayplot"
 version = "0.2.3"
 description = "Calendar heatmaps with matplotlib"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["matplotlib", "calendar", "heatmap", "github", "plot"]
 authors = [
     { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
 ]
@@ -23,13 +26,20 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools >= 77.0.3"]
+requires = [
+    "setuptools>=60",
+    "setuptools-scm>=8.0",
+]
 build-backend = "setuptools.build_meta"
-
-[project.urls]
-Homepage = "https://github.com/JosephBARBIERDARNAL/dayplot"
-Issues = "https://github.com/JosephBARBIERDARNAL/dayplot/issues"
 
 [tool.setuptools.packages.find]
 where = ["dayplot"]
 
+[tool.setuptools.package-data]
+mypkg = ["sample.csv"]
+
+[project.urls]
+Homepage = "https://josephbarbierdarnal.github.io/dayplot/"
+Issues = "https://github.com/JosephBARBIERDARNAL/dayplot/issues"
+Documentation = "https://josephbarbierdarnal.github.io/dayplot/reference/calendar/"
+Repository = "https://github.com/JosephBARBIERDARNAL/dayplot"

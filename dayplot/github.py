@@ -2,20 +2,28 @@ def fetch_github_contrib(
     username: str, github_token: str, start_date: str, end_date: str
 ):
     """
-    Fetches GitHub contributions for a given user and date range. It requires `requests` and `pandas` to be installed.
+    Fetches GitHub contributions for a given user and date range. It requires
+    `requests` and `pandas` to be installed.
 
     Parameters
+    ---
 
     - `username`: GitHub username.
-    - `github_token`: Personal access token for GitHub API. Find yours [here](https://github.com/settings/tokens).
+
+    - `github_token`: Personal access token for GitHub API. Find yours
+      [here](https://github.com/settings/tokens).
+
     - `start_date`: Start date in ISO 8601 format (e.g. "2024-01-01T00:00:00Z").
+
     - `end_date`: End date in ISO 8601 format (e.g. "2024-12-31T23:59:59Z").
 
     Returns
+    ---
 
     Pandas DataFrame with dates and contribution counts.
 
     Example
+    ---
 
     ```python
     import dayplot as dp

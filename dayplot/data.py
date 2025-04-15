@@ -2,11 +2,15 @@ def load_dataset():
     """
     Load a simple dataset with fake daily data.
 
+    Requires `pandas` to be installed.
+
     Returns
+    ---
 
     Pandas DataFrame with 2 columns: "dates" and "values".
 
     Example
+    ---
 
     ```python
     import dayplot as dp
