@@ -23,12 +23,7 @@ plugins:
 
 nav:
   - Home: index.md
-  - Gallery: gallery.md
   - Contributing: contributing.md
-  - Reference:
-      - reference/calendar.md
-      - reference/fetch_github_contrib.md
-      - reference/load_dataset.md
   - Tuto:
     - tuto/basic-styling.md
     - tuto/negative-values.md
@@ -36,6 +31,10 @@ nav:
     - tuto/combine-charts.md
     - tuto/fetch-github-contribs.md
     - tuto/advanced.md
+  - Reference:
+      - reference/calendar.md
+      - reference/fetch_github_contrib.md
+      - reference/load_dataset.md
 
 extra_css:
   - stylesheets/style.css

@@ -9,6 +9,7 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
 - circle
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -26,11 +27,10 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-1.png)
-
 - round
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -48,11 +48,10 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-2.png)
-
 - sawtooth
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -70,11 +69,10 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-3.png)
-
 - roundtooth
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -92,8 +90,6 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-4.png)
-
 <br>
 
 ### Other arguments
@@ -105,6 +101,7 @@ This means that any argument that this class accepts will be accepted. Here is a
 - mutation_scale (size scale)
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -122,11 +119,10 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-6.png)
-
 - hatch
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -144,11 +140,10 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-7.png)
-
 - alpha
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -166,11 +161,10 @@ dp.calendar(
 )
 ```
 
-![](../img/boxstyle/boxstyle-5.png)
-
 - linestyle
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -188,7 +182,5 @@ dp.calendar(
     ax=ax,
 )
 ```
-
-![](../img/boxstyle/boxstyle-8.png)
 
 <br><br>

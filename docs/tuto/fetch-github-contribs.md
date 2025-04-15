@@ -17,6 +17,7 @@ The `fetch_github_contrib()` function requires you to pass:
 > Note: you'll need both `pandas` and `requests` to be installed
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import os
@@ -43,6 +44,7 @@ Here, `my_data` is a pandas dataframe with 2 columns: `"dates"` and `"values"`.
 Once I've fetched this data, I can plot my contribution chart:
 
 ```py
+# mkdocs: render
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(
     dates=my_data["dates"],
@@ -53,4 +55,4 @@ dp.calendar(
 )
 ```
 
-![](../img/github/github.png)
+
