@@ -1,4 +1,6 @@
-# calendar
+# Calendar heatmaps
+
+<br>
 
 ::: dayplot.calendar
 
