@@ -112,6 +112,29 @@ dp.calendar(
 )
 ```
 
+#### Label style
+
+```py hl_lines="13 14 15 16"
+# mkdocs: render
+import matplotlib.pyplot as plt
+import dayplot as dp
+
+df = dp.load_dataset()
+
+fig, ax = plt.subplots(figsize=(15, 5))
+dp.calendar(
+   dates=df["dates"],
+   values=df["values"],
+   start_date="2024-01-01",
+   end_date="2024-12-31",
+   day_kws={"weight": "bold", "size": 12},
+   month_kws={"size": 20, "color": "red"},
+   day_x_margin=0.05,  # default = 0.02
+   month_y_margin=0.8,  # default = 0.4
+   ax=ax,
+)
+```
+
 #### Combine calendars
 
 ```py hl_lines="8 17 25 28 29 30"
