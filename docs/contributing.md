@@ -40,6 +40,12 @@ You can now make changes to the package and start coding!
 uv run pytest
 ```
 
+### Preview documentation locally
+
+```bash
+PYTHONPATH=$(pwd) uv run mkdocs serve
+```
+
 ### Push changes
 
 - Commit and push your changes:

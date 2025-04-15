@@ -17,6 +17,7 @@ data = ["pandas", "requests"]
 
 [dependency-groups]
 dev = [
+    "dayplot",
     "mkdocs-material>=9.6.9",
     "mkdocs-matplotlib>=0.10.1",
     "mkdocstrings-python>=1.16.5",
@@ -37,6 +38,9 @@ where = ["dayplot"]
 
 [tool.setuptools.package-data]
 mypkg = ["sample.csv"]
+
+[tool.uv.sources]
+dayplot = { workspace = true }
 
 [project.urls]
 Homepage = "https://josephbarbierdarnal.github.io/dayplot/"

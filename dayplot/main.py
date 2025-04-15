@@ -125,26 +125,6 @@ def calendar(
 
     - The function aggregates multiple entries for the same date by summing their
       values.
-
-    Example
-    ---
-
-    ```python
-    import pandas as pd
-    import dayplot as dp
-
-    df = pd.DataFrame({
-        "date": ["2024-01-01", "2024-01-02", "2024-01-03"],
-        "values": [5, 10, 3]
-     })
-
-    dp.calendar(
-        df["date"],
-        df["values"],
-        start_date="2024-01-01",
-        end_date="2024-01-31"
-    )
-    ```
     """
 
     month_kws = month_kws or {}

@@ -55,3 +55,8 @@ markdown_extensions:
   - pymdownx.blocks.caption
   - admonition
   - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
