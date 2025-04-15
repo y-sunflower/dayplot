@@ -4,6 +4,7 @@ repo_url: https://github.com/JosephBARBIERDARNAL/dayplot
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - content.code.copy
   icon:

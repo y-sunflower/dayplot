@@ -7,7 +7,7 @@ Here's a list of cool uses for `dayplot` to demonstrate its capabilities. It reg
 The dataset can be found [here](https://www.kaggle.com/datasets/sudalairajkumar/daily-temperature-of-major-cities){target=\_blank}.
 
 ```py
-# mkdocs: render
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from pypalettes import load_cmap
@@ -87,7 +87,7 @@ axs[2].text(s="2017", **text_args)
 The dataset can be found [here](https://www.kaggle.com/datasets/aryansingh0909/elon-musk-tweets-updated-daily){target=\_blank} and the image of Musk [here](https://github.com/JosephBARBIERDARNAL/dayplot/blob/main/docs/img/musk.png).
 
 ```py
-# mkdocs: render
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -162,7 +162,7 @@ elon_ax.axis("off")
 The dataset can be found [here](https://www.kaggle.com/datasets/gpreda/covid-world-vaccination-progress?select=country_vaccinations.csv){target=\_blank}.
 
 ```py
-# mkdocs: render
+
 import matplotlib.pyplot as plt
 import dayplot as dp
 import pandas as pd

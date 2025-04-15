@@ -123,12 +123,6 @@ You can find more examples in the [Gallery](gallery).
 pip install dayplot
 ```
 
-## Advanced usage
-
-`dayplot` is designed to fit any matplotlib graph, allowing you to do things like:
-
-[![](img/advanced/advanced-2.png)](tuto/advanced)
-
 ## Related projects
 
 - [calplot](https://github.com/tomkwok/calplot){target=\_blank}
