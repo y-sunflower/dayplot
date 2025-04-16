@@ -98,30 +98,3 @@ def fetch_github_contrib(
     df["dates"] = pd.to_datetime(df["dates"], format="%Y-%m-%d")
     df["values"] = df["values"].astype(int)
     return df
-
-
-if __name__ == "__main__":
-    import dayplot as dp
-    from dotenv import load_dotenv
-    import os
-
-    # generate a token: https://github.com/settings/tokens
-    load_dotenv()
-    token = os.getenv("GITHUB_TOKEN")
-
-    start_date_iso = "2024-01-01T00:00:00Z"
-    end_date_iso = "2024-12-31T23:59:59Z"
-
-    my_data = fetch_github_contrib(
-        username="JosephBARBIERDARNAL",
-        github_token=token,
-        start_date=start_date_iso,
-        end_date=end_date_iso,
-    )
-
-    dp.calendar(
-        my_data["dates"],
-        my_data["values"],
-        start_date="2024-01-01",
-        end_date="2024-12-31",
-    )

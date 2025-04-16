@@ -28,8 +28,12 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-matplotlib mkdocstrings-python dotenv
+      - run: pip install mkdocs-material mkdocs-matplotlib mkdocstrings-python python-dotenv requests pandas
       - name: Setup Environment
         run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" > .env
-      - run: PYTHONPATH=$(pwd) mkdocs gh-deploy --force
+          cat .env
+      - name: Deploy MkDocs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: PYTHONPATH=$(pwd) mkdocs gh-deploy --force
