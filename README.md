@@ -4,6 +4,8 @@
 
 # dayplot
 
+<img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/dayplot/image.png?raw=true" alt="dayplot logo" align="right" width="150px"/>
+
 A simple-to-use Python library to build **calendar heatmaps** with ease.
 
 It's built on top of **matplotlib** and leverages it to access high customization possibilities.
@@ -14,11 +16,9 @@ It's built on top of **matplotlib** and leverages it to access high customizatio
 
 ```py
 import matplotlib.pyplot as plt
-
 import dayplot as dp
-from dayplot.data import load_dataset
 
-df = load_dataset()
+df = dp.load_dataset()
 
 fig, ax = plt.subplots(figsize=(15, 6))
 dp.calendar(

@@ -1,6 +1,6 @@
 [project]
 name = "dayplot"
-version = "0.2.3"
+version = "0.3.2"
 description = "Calendar heatmaps with matplotlib"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -29,13 +29,13 @@ dev = [
 
 [build-system]
 requires = [
-    "setuptools>=60",
-    "setuptools-scm>=8.0",
+    "setuptools",
+    "setuptools-scm",
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["dayplot"]
+[tool.setuptools]
+packages = ["dayplot"]
 
 [tool.setuptools.package-data]
 mypkg = ["sample.csv"]

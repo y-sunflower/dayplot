@@ -334,33 +334,3 @@ def calendar(
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     return rect_patches
-
-
-if __name__ == "__main__":
-    from datetime import datetime as dt
-
-    import matplotlib.pyplot as plt
-    import pandas as pd
-
-    mve = pd.DataFrame(
-        {
-            "year": [2020] * 7,
-            "month": [8] * 7,
-            "day": range(17, 24),
-            "value": [80, 80, 80, 20, 20, 20, 20],
-        }
-    )
-    mve["date"] = mve.apply(lambda x: dt(x["year"], x["month"], x["day"]), axis=1)
-    mve["day_of_week"] = mve["date"].dt.day_name()
-
-    fig, ax = plt.subplots(figsize=(15, 5))
-    calendar(
-        dates=mve["date"],
-        values=mve["value"],
-        start_date="2020-08-01",
-        end_date="2020-08-31",
-        week_starts_on="Sunday",
-        ax=ax,
-    )
-    fig.savefig("test.png", dpi=300, bbox_inches="tight")
-    print(mve.head(4))
