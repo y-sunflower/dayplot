@@ -48,4 +48,4 @@ jobs:
       - name: Deploy MkDocs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: PYTHONPATH=$(pwd) mkdocs gh-deploy --force
+        run: PYTHONPATH=$(pwd) uv run mkdocs gh-deploy --force
