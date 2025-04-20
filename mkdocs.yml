@@ -4,33 +4,43 @@ repo_url: https://github.com/JosephBARBIERDARNAL/dayplot
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - content.code.copy
+    - navigation.path
+    - navigation.tabs
   icon:
     repo: fontawesome/brands/github
 
 plugins:
-- search
-- mkdocstrings
+  - mkdocs_matplotlib
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
+            heading_level: 3
 
 nav:
   - Home: index.md
-  - Gallery: gallery.md
   - Contributing: contributing.md
+  - Tuto:
+      - tuto/basic-styling.md
+      - tuto/negative-values.md
+      - tuto/boxstyle.md
+      - tuto/combine-charts.md
+      - tuto/fetch-github-contribs.md
+      - tuto/advanced.md
   - Reference:
       - reference/calendar.md
       - reference/fetch_github_contrib.md
-  - Tuto:
-    - tuto/basic-styling.md
-    - tuto/negative-values.md
-    - tuto/boxstyle.md
-    - tuto/combine-charts.md
-    - tuto/fetch-github-contribs.md
-    - tuto/advanced.md
+      - reference/load_dataset.md
 
 extra_css:
   - stylesheets/style.css
-
 
 markdown_extensions:
   - pymdownx.tabbed:
@@ -47,6 +57,8 @@ markdown_extensions:
   - pymdownx.blocks.caption
   - admonition
   - pymdownx.details
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde

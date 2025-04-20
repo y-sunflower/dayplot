@@ -44,14 +44,6 @@ pip install dayplot
 
 <br>
 
-## Advanced usage
-
-`dayplot` is designed to fit any matplotlib graph, allowing you to do things like:
-
-![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/docs/img/advanced/advanced-2.png)
-
-<br>
-
 ## Related projects
 
 - [calplot](https://github.com/tomkwok/calplot)

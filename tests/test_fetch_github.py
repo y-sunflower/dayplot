@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from unittest.mock import patch, MagicMock
 
-from dayplot.github import fetch_github_contrib
+from dayplot import fetch_github_contrib
 
 
 def test_fetch_github_contrib_missing_token():

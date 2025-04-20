@@ -13,8 +13,7 @@ from pypalettes import load_cmap
 from pyfonts import load_font
 import dayplot as dp
 
-
-df = pd.read_csv("city_temperature.csv", low_memory=False)
+df = pd.read_csv("datasets/city_temperature.csv", low_memory=False)
 df = df[df["City"] == "Tunis"]
 df = df[df["Year"].isin([2017, 2018, 2019])]
 df["Date"] = pd.to_datetime(df[["Year", "Month", "Day"]])
@@ -33,7 +32,7 @@ style_args = dict(
     month_y_margin=0.5,
 )
 
-fig, axs = plt.subplots(nrows=3, figsize=(15, 5), layout="tight")
+fig, axs = plt.subplots(nrows=3, figsize=(15, 5))
 dp.calendar(
     df["Date"],
     df["AvgTemperature"],
@@ -82,7 +81,7 @@ axs[1].text(s="2018", **text_args)
 axs[2].text(s="2017", **text_args)
 ```
 
-![](../img/advanced/advanced-1.png)
+![](../img/tunis.png)
 
 ## Elon Musk Tweets
 
@@ -97,7 +96,7 @@ from pypalettes import load_cmap
 from pyfonts import load_font
 import dayplot as dp
 
-df = pd.read_csv("elonmusk.csv")
+df = pd.read_csv("datasets/elonmusk.csv")
 df["Datetime"] = pd.to_datetime(df["Datetime"])
 df["Date"] = df["Datetime"].dt.strftime("%Y-%m-%d")
 df = df.groupby("Date").size().reset_index(name="n_tweets")
@@ -125,7 +124,7 @@ text_args = dict(
 )
 
 years = list(range(2011, 2023))[::-1]
-fig, axs = plt.subplots(nrows=len(years), figsize=(15, 10), layout="tight")
+fig, axs = plt.subplots(nrows=len(years), figsize=(15, 10))
 for i, year in enumerate(years):
     dp.calendar(
         df["Date"],
@@ -158,7 +157,7 @@ elon_ax.imshow(np.array(Image.open("docs/img/musk.png")))
 elon_ax.axis("off")
 ```
 
-![](../img/advanced/advanced-2.png)
+![](../img/tweets.png)
 
 ## COVID-19
 
@@ -174,7 +173,7 @@ font_url = "https://github.com/coreyhu/Urbanist/blob/main/fonts/ttf"
 fontlight = load_font(f"{font_url}/Urbanist-Light.ttf?raw=true")
 fontmedium = load_font(f"{font_url}/Urbanist-Medium.ttf?raw=true")
 
-df = pd.read_csv("country_vaccinations_by_manufacturer.csv")
+df = pd.read_csv("datasets/country_vaccinations_by_manufacturer.csv")
 df_agg = (
     df.groupby(["date", "location"], as_index=False)["total_vaccinations"]
     .sum()
@@ -275,6 +274,6 @@ fig.text(
 )
 ```
 
-![](../img/advanced/advanced-3.png)
+![](../img/covid.png)
 
 <br><br>

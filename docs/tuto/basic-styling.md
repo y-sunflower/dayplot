@@ -5,6 +5,7 @@ Use the `cmap` argument to use any other colormap from matplotlib. This argument
 **Pro tips**: you can find great colormaps using [pypalettes](https://python-graph-gallery.com/color-palette-finder/){target=\_blank}.
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -22,10 +23,6 @@ dp.calendar(
 )
 ```
 
-![](../img/basic-styling/cmap.png)
-
-<br>
-
 ### Change other colors
 
 You can change the color between squares with the `edgecolor` argument and the color for "none" (aka 0) with the `color_for_none` argument.
@@ -33,6 +30,7 @@ You can change the color between squares with the `edgecolor` argument and the c
 Also, use `edgewidth` to moderate the width of the edge between squares.
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -57,8 +55,6 @@ fig.set_facecolor("#2a2929")
 ax.set_facecolor("#2a2929")
 ```
 
-![](../img/basic-styling/colors.png)
-
 <br>
 
 ### Text styling
@@ -68,6 +64,7 @@ In order to customize the text (days and months), you have to, respectively, use
 Pro tip: when changing font size, the label positioning might get worse. In order to control that, use the `day_x_margin` argument (shift day labels to the left) and the `month_y_margin` argument (shift month labels to the top).
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -87,7 +84,5 @@ dp.calendar(
     ax=ax,
 )
 ```
-
-![](../img/basic-styling/text.png)
 
 <br><br>

@@ -24,9 +24,8 @@ git checkout -b my-feature
 - Set up your Python environment (ensure you have [uv installed](https://docs.astral.sh/uv/getting-started/installation/)):
 
 ```bash
-uv init
-uv pip install -e .
 uv sync --all-extras --dev
+uv pip install -e .
 ```
 
 ### Code!
@@ -39,6 +38,12 @@ You can now make changes to the package and start coding!
 
 ```bash
 uv run pytest
+```
+
+### Preview documentation locally
+
+```bash
+PYTHONPATH=$(pwd) uv run mkdocs serve
 ```
 
 ### Push changes

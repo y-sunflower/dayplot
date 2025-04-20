@@ -1,5 +1,7 @@
 # dayplot
 
+<img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/dayplot/image.png?raw=true" alt="dayplot logo" align="right" width="150px"/>
+
 A simple-to-use Python library to build **calendar heatmaps** with ease. It's built on top of **matplotlib** and leverages it to access high customization possibilities.
 
 ## Examples
@@ -10,11 +12,9 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     ```py
     import matplotlib.pyplot as plt
-
     import dayplot as dp
-    from dayplot.data import load_dataset
 
-    df = load_dataset()  # requires pandas to be installed
+    df = dp.load_dataset()  # requires pandas to be installed
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -28,15 +28,13 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
 === "Colormap"
 
-    ![](img/basic-styling/cmap.png)
+    ![](img/quickstart-cmap.png)
 
     ```py
     import matplotlib.pyplot as plt
-
     import dayplot as dp
-    from dayplot.data import load_dataset
 
-    df = load_dataset()
+    df = dp.load_dataset()
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -49,43 +47,15 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     )
     ```
 
-=== "Negative values"
-
-    ![](img/negative-values/negative-values-1.png)
-
-    ```py
-    import matplotlib.pyplot as plt
-
-    import dayplot as dp
-    from dayplot.data import load_dataset
-
-    df = load_dataset()
-
-    # add negative values at some random dates
-    df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
-
-    fig, ax = plt.subplots(figsize=(16, 4))
-    dp.calendar(
-        dates=df["dates"],
-        values=df["values"],
-        cmap="RdBu", # use a diverging colormap (red -> white -> blue)
-        start_date="2024-01-01",
-        end_date="2024-12-31",
-        ax=ax,
-    )
-    ```
-
 === "Fill the gap"
 
-    ![](img/boxstyle/boxstyle-6.png)
+    ![](img/quickstart-gap.png)
 
     ```py
     import matplotlib.pyplot as plt
-
     import dayplot as dp
-    from dayplot.data import load_dataset
 
-    df = load_dataset()
+    df = dp.load_dataset()
 
     fig, ax = plt.subplots(figsize=(16, 4))
     dp.calendar(
@@ -93,27 +63,25 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
         values=df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
-        mutation_scale=1.15,
+        mutation_scale=1.22,
         ax=ax,
     )
     ```
 
 === "Dark theme"
 
-    ![](img/basic-styling/colors.png)
+    ![](img/quickstart-dark.png)
 
     ```py
     import matplotlib.pyplot as plt
-
     import dayplot as dp
-    from dayplot.data import load_dataset
 
-    df = load_dataset()
+    df = dp.load_dataset()
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
-        df["dates"],
-        df["values"],
+        dates=df["dates"],
+        values=df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
         color_for_none="#bcbcbc",
@@ -130,15 +98,13 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
 === "Round boxes"
 
-    ![](img/boxstyle/boxstyle-1.png)
+    ![](img/quickstart-boxstyle.png)
 
     ```py
     import matplotlib.pyplot as plt
-
     import dayplot as dp
-    from dayplot.data import load_dataset
 
-    df = load_dataset()
+    df = dp.load_dataset()
 
     fig, ax = plt.subplots(figsize=(16, 4))
     dp.calendar(
@@ -151,19 +117,21 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     )
     ```
 
-You can find more examples in the [Gallery](gallery).
+<span style="font-size: 1rem; font-weight: bold;">[See more examples](./tuto/basic-styling.md)</span>
 
 ## Installation
 
-```bash
-pip install dayplot
-```
+=== "stable"
 
-## Advanced usage
+    ```bash
+    pip install dayplot
+    ```
 
-`dayplot` is designed to fit any matplotlib graph, allowing you to do things like:
+=== "dev"
 
-[![](img/advanced/advanced-2.png)](tuto/advanced)
+    ```bash
+    pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git@main
+    ```
 
 ## Related projects
 

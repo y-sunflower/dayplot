@@ -2,6 +2,9 @@
 name = "dayplot"
 version = "0.2.3"
 description = "Calendar heatmaps with matplotlib"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["matplotlib", "calendar", "heatmap", "github", "plot"]
 authors = [
     { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
 ]
@@ -14,21 +17,34 @@ data = ["pandas", "requests"]
 
 [dependency-groups]
 dev = [
+    "dayplot",
+    "dotenv>=0.9.9",
     "mkdocs-material>=9.6.9",
     "mkdocs-matplotlib>=0.10.1",
     "mkdocstrings-python>=1.16.5",
     "pre-commit>=4.0.1",
-    "pytest>=8.3.4"
+    "pytest>=8.3.4",
+    "ruff>=0.11.4",
 ]
 
 [build-system]
-requires = ["setuptools >= 77.0.3"]
+requires = [
+    "setuptools>=60",
+    "setuptools-scm>=8.0",
+]
 build-backend = "setuptools.build_meta"
-
-[project.urls]
-Homepage = "https://github.com/JosephBARBIERDARNAL/dayplot"
-Issues = "https://github.com/JosephBARBIERDARNAL/dayplot/issues"
 
 [tool.setuptools.packages.find]
 where = ["dayplot"]
 
+[tool.setuptools.package-data]
+mypkg = ["sample.csv"]
+
+[tool.uv.sources]
+dayplot = { workspace = true }
+
+[project.urls]
+Homepage = "https://josephbarbierdarnal.github.io/dayplot/"
+Issues = "https://github.com/JosephBARBIERDARNAL/dayplot/issues"
+Documentation = "https://josephbarbierdarnal.github.io/dayplot/reference/calendar/"
+Repository = "https://github.com/JosephBARBIERDARNAL/dayplot"

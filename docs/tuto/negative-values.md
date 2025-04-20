@@ -7,6 +7,7 @@ Under the hood, it automatically checks for them. If no negative values are foun
 Otherwise, `color_for_none` is ignored and all cells are colored according to their values. Any missing data is treated as 0 by default, so if you need a different approach, fill in the data before plotting.
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -27,8 +28,6 @@ dp.calendar(
 )
 ```
 
-![](../img/negative-values/negative-values-1.png)
-
 Red days are the ones with negative values.
 
 <br>
@@ -40,6 +39,7 @@ You can set custom boundaries for the colormap using the `vmin`, `vcenter` and `
 This can be used as a convenient way of controlling color mapping when there are outliers.
 
 ```py
+# mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 from dayplot.data import load_dataset
@@ -62,7 +62,5 @@ dp.calendar(
     ax=ax,
 )
 ```
-
-![](../img/negative-values/negative-values-2.png)
 
 <br><br>
