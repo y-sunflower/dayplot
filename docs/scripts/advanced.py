@@ -1,14 +1,11 @@
-# Advanced examples
+########################################################################
+# Generate quick start example images
+########################################################################
 
-Here's a list of cool uses for `dayplot` to demonstrate its capabilities. It regularly uses external libraries such as [pyfonts](https://github.com/JosephBARBIERDARNAL/pyfonts){target=\_blank} or [pypalettes](https://github.com/JosephBARBIERDARNAL/pypalettes){target=\_blank}.
-
-## Average temperature in Tunis
-
-The dataset can be found [here](https://www.kaggle.com/datasets/sudalairajkumar/daily-temperature-of-major-cities){target=\_blank}.
-
-```py
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
 from pypalettes import load_cmap
 from pyfonts import load_font
 import dayplot as dp
@@ -32,7 +29,7 @@ style_args = dict(
     month_y_margin=0.5,
 )
 
-fig, axs = plt.subplots(nrows=3, figsize=(15, 5))
+fig, axs = plt.subplots(nrows=3, figsize=(10, 5))
 dp.calendar(
     df["Date"],
     df["AvgTemperature"],
@@ -79,22 +76,10 @@ text_args = dict(
 axs[0].text(s="2019", **text_args)
 axs[1].text(s="2018", **text_args)
 axs[2].text(s="2017", **text_args)
-```
 
-![](../img/tunis.png)
+fig.savefig("docs/img/tunis.png", dpi=300)
 
-## Elon Musk Tweets
-
-The dataset can be found [here](https://www.kaggle.com/datasets/aryansingh0909/elon-musk-tweets-updated-daily){target=\_blank} and the image of Musk [here](https://github.com/JosephBARBIERDARNAL/dayplot/blob/main/docs/img/musk.png).
-
-```py
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-from PIL import Image
-from pypalettes import load_cmap
-from pyfonts import load_font
-import dayplot as dp
+########################################################################
 
 df = pd.read_csv("datasets/elonmusk.csv")
 df["Datetime"] = pd.to_datetime(df["Datetime"])
@@ -124,7 +109,7 @@ text_args = dict(
 )
 
 years = list(range(2011, 2023))[::-1]
-fig, axs = plt.subplots(nrows=len(years), figsize=(15, 10))
+fig, axs = plt.subplots(nrows=len(years), figsize=(8, 13))
 for i, year in enumerate(years):
     dp.calendar(
         df["Date"],
@@ -152,22 +137,14 @@ fig.text(
     font=fontmedium,
 )
 
-elon_ax = axs[0].inset_axes([0.7, 1.1, 0.3, 1.4])
+elon_ax = axs[0].inset_axes([0.75, 1.1, 0.3, 1.4])
 elon_ax.imshow(np.array(Image.open("docs/img/musk.png")))
 elon_ax.axis("off")
-```
 
-![](../img/tweets.png)
+fig.savefig("docs/img/tweets.png", dpi=300)
 
-## COVID-19
 
-The dataset can be found [here](https://www.kaggle.com/datasets/gpreda/covid-world-vaccination-progress?select=country_vaccinations.csv){target=\_blank}.
-
-```py
-import matplotlib.pyplot as plt
-import dayplot as dp
-import pandas as pd
-from pyfonts import load_font
+########################################################################
 
 font_url = "https://github.com/coreyhu/Urbanist/blob/main/fonts/ttf"
 fontlight = load_font(f"{font_url}/Urbanist-Light.ttf?raw=true")
@@ -272,8 +249,5 @@ fig.text(
     ha="right",
     size=14,
 )
-```
 
-![](../img/covid.png)
-
-<br><br>
+fig.savefig("docs/img/covid.png", dpi=300)

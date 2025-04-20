@@ -1,5 +1,7 @@
 # dayplot
 
+<img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/dayplot/image.png?raw=true" alt="dayplot logo" align="right" width="150px"/>
+
 A simple-to-use Python library to build **calendar heatmaps** with ease. It's built on top of **matplotlib** and leverages it to access high customization possibilities.
 
 ## Examples
@@ -78,8 +80,8 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
-        df["dates"],
-        df["values"],
+        dates=df["dates"],
+        values=df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
         color_for_none="#bcbcbc",
@@ -115,13 +117,21 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     )
     ```
 
-You can find more examples in the [Gallery](gallery).
+<span style="font-size: 1rem; font-weight: bold;">[See more examples](./tuto/basic-styling.md)</span>
 
 ## Installation
 
-```bash
-pip install dayplot
-```
+=== "stable"
+
+    ```bash
+    pip install dayplot
+    ```
+
+=== "dev"
+
+    ```bash
+    pip install git+https://github.com/JosephBARBIERDARNAL/dayplot.git@main
+    ```
 
 ## Related projects
 

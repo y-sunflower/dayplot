@@ -6,89 +6,110 @@ Under the hood, `dayplot` uses a niche matplotlib object called a [`FancyBboxPat
 
 By default, you'll get simple squares, but you can leverage the `boxstyle` argument to do much fancier things.
 
-- circle
+=== "circle"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    boxstyle="circle",
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        boxstyle="circle",
+        ax=ax,
+    )
+    ```
 
-- round
+=== "round"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    boxstyle="round",
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        boxstyle="round",
+        ax=ax,
+    )
+    ```
 
-- sawtooth
+=== "sawtooth"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    boxstyle="sawtooth",
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        boxstyle="sawtooth",
+        ax=ax,
+    )
+    ```
 
-- roundtooth
+=== "roundtooth"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    boxstyle="roundtooth",
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        boxstyle="roundtooth",
+        ax=ax,
+    )
+    ```
+
+=== "round4"
+
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
+
+    df = load_dataset()
+
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        boxstyle="round4",
+        ax=ax,
+    )
+    ```
 
 <br>
 
@@ -98,89 +119,89 @@ The `dp.calendar()` function will take all additional arguments and pass them to
 
 This means that any argument that this class accepts will be accepted. Here is a non-exhaustive list.
 
-- mutation_scale (size scale)
+=== "mutation_scale (size scale)"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    mutation_scale=1.15,
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        mutation_scale=0.8, # 80% of original size
+        ax=ax,
+    )
+    ```
 
-- hatch
+=== "hatch"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    hatch="*",
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        hatch="*",
+        ax=ax,
+    )
+    ```
 
-- alpha
+=== "alpha"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    alpha=0.5,
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        alpha=0.5,
+        ax=ax,
+    )
+    ```
 
-- linestyle
+=== "linestyle"
 
-```py
-# mkdocs: render
-import matplotlib.pyplot as plt
-import dayplot as dp
-from dayplot.data import load_dataset
+    ```py hl_lines="14 15"
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+    from dayplot.data import load_dataset
 
-df = load_dataset()
+    df = load_dataset()
 
-fig, ax = plt.subplots(figsize=(16, 4))
-dp.calendar(
-    dates=df["dates"],
-    values=df["values"],
-    start_date="2024-01-01",
-    end_date="2024-12-31",
-    linestyle="--",
-    edgewidth=1,
-    ax=ax,
-)
-```
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        linestyle="--",
+        edgewidth=1,
+        ax=ax,
+    )
+    ```
 
 <br><br>

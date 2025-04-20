@@ -7,6 +7,8 @@ theme:
   custom_dir: overrides
   features:
     - content.code.copy
+    - navigation.path
+    - navigation.tabs
   icon:
     repo: fontawesome/brands/github
 
@@ -26,12 +28,12 @@ nav:
   - Home: index.md
   - Contributing: contributing.md
   - Tuto:
-    - tuto/basic-styling.md
-    - tuto/negative-values.md
-    - tuto/boxstyle.md
-    - tuto/combine-charts.md
-    - tuto/fetch-github-contribs.md
-    - tuto/advanced.md
+      - tuto/basic-styling.md
+      - tuto/negative-values.md
+      - tuto/boxstyle.md
+      - tuto/combine-charts.md
+      - tuto/fetch-github-contribs.md
+      - tuto/advanced.md
   - Reference:
       - reference/calendar.md
       - reference/fetch_github_contrib.md
