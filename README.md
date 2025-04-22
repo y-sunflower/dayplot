@@ -51,5 +51,3 @@ pip install dayplot
 - [calendarplot](https://github.com/dhowland/calendarplot)
 
 <br><br>
-
-> `dayplot` is supported by [Matplotlib Journey](https://www.matplotlib-journey.com/), an interactive online course designed to make you a master of Matplotlib. If you want to **support `dayplot`** and **become a Matplotlib expert**, consider purchasing the course!
