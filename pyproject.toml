@@ -9,7 +9,7 @@ authors = [
     { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9"
 dependencies = ["matplotlib"]
 
 [project.optional-dependencies]
