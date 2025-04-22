@@ -195,4 +195,4 @@ def test_calendar_week_starts_on_monday():
 
 
 def dayplot_version():
-    assert dayplot.__version__ == "0.3.2"
+    assert dayplot.__version__ == "0.3.3"
