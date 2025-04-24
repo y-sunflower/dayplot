@@ -12,6 +12,11 @@ theme:
   icon:
     repo: fontawesome/brands/github
 
+extra:
+  analytics:
+    provider: google
+    property: G-MLP58TWW3R
+
 plugins:
   - mkdocs_matplotlib
   - search
