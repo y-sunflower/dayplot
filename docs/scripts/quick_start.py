@@ -77,4 +77,19 @@ fig.savefig("docs/img/quickstart-boxstyle.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
 
+fig, ax = plt.subplots(figsize=(16, 4))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    ax=ax,
+    **dp.styles["github"],
+)
+fig.set_facecolor("#0d1117")
+ax.set_facecolor("#0d1117")
+fig.savefig("docs/img/quickstart-github.png", bbox_inches="tight", dpi=300)
+
+########################################################################
+
 plt.close("all")

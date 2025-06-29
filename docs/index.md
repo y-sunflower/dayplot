@@ -14,7 +14,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     import matplotlib.pyplot as plt
     import dayplot as dp
 
-    df = dp.load_dataset()  # requires pandas to be installed
+    df = dp.load_dataset("pandas") # can also be "polars", "pyarrow", etc
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -34,7 +34,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     import matplotlib.pyplot as plt
     import dayplot as dp
 
-    df = dp.load_dataset()
+    df = dp.load_dataset("pandas")
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -55,7 +55,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     import matplotlib.pyplot as plt
     import dayplot as dp
 
-    df = dp.load_dataset()
+    df = dp.load_dataset("pandas")
 
     fig, ax = plt.subplots(figsize=(16, 4))
     dp.calendar(
@@ -76,7 +76,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     import matplotlib.pyplot as plt
     import dayplot as dp
 
-    df = dp.load_dataset()
+    df = dp.load_dataset("pandas")
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
@@ -104,7 +104,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     import matplotlib.pyplot as plt
     import dayplot as dp
 
-    df = dp.load_dataset()
+    df = dp.load_dataset("pandas")
 
     fig, ax = plt.subplots(figsize=(16, 4))
     dp.calendar(
@@ -115,6 +115,29 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
         boxstyle="circle",
         ax=ax,
     )
+    ```
+
+=== "Github style"
+
+    ![](img/quickstart-github.png)
+
+    ```py
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+
+    df = dp.load_dataset("pandas")
+
+    fig, ax = plt.subplots(figsize=(16, 4))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        ax=ax,
+        **dp.styles["github"]
+    )
+    fig.set_facecolor("#0d1117")
+    ax.set_facecolor("#0d1117")
     ```
 
 <span style="font-size: 1rem; font-weight: bold;">[See more examples](./tuto/basic-styling.md)</span>
