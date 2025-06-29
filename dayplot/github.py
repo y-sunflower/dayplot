@@ -1,54 +1,32 @@
+import narwhals as nw
+
+
 def fetch_github_contrib(
-    username: str, github_token: str, start_date: str, end_date: str
+    username: str,
+    github_token: str,
+    start_date: str,
+    end_date: str,
+    backend: str = "pandas",
 ):
     """
     Fetches GitHub contributions for a given user and date range. It requires
     `requests` and `pandas` to be installed.
 
-    Parameters
-    ---
+    Args:
+      username: GitHub username.
+      github_token: Personal access token for GitHub API. Find yours
+        [here](https://github.com/settings/tokens).
+      start_date: Start date in ISO 8601 format (e.g. "2024-01-01T00:00:00Z").
+      end_date: End date in ISO 8601 format (e.g. "2024-12-31T23:59:59Z").
+      backend: The output format of the dataframe. Note that, for example,
+        if you set `backend="polars"`, you must have polars installed. Must
+        be one of the following: "pandas", "polars", "pyarrow", "modin",
+        "cudf". Default to "pandas".
 
-    - `username`: GitHub username.
-
-    - `github_token`: Personal access token for GitHub API. Find yours
-      [here](https://github.com/settings/tokens).
-
-    - `start_date`: Start date in ISO 8601 format (e.g. "2024-01-01T00:00:00Z").
-
-    - `end_date`: End date in ISO 8601 format (e.g. "2024-12-31T23:59:59Z").
-
-    Returns
-    ---
-
-    Pandas DataFrame with dates and contribution counts.
-
-    Example
-    ---
-
-    ```python
-    import dayplot as dp
-    from dotenv import load_dotenv
-    import os
-
-    # generate a token: https://github.com/settings/tokens
-    load_dotenv()
-    token = os.getenv("GITHUB_TOKEN")
-
-    start_date_iso = "2024-01-01T00:00:00Z"
-    end_date_iso = "2024-12-31T23:59:59Z"
-
-    my_data = fetch_github_contrib(
-        username="JosephBARBIERDARNAL",
-        github_token=token,
-        start_date=start_date_iso,
-        end_date=end_date_iso,
-    )
-
-    my_data.head() # it's a pandas dataframe
-    ```
+    Returns:
+      A DataFrame with dates and contribution counts.
     """
     import requests
-    import pandas as pd
 
     if not github_token:
         raise EnvironmentError("invalid github_token")
@@ -89,12 +67,16 @@ def fetch_github_contrib(
     calendar = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
     weeks = calendar["weeks"]
 
-    records = []
-    for week in weeks:
-        for day in week["contributionDays"]:
-            records.append({"dates": day["date"], "values": day["contributionCount"]})
+    records = [
+        {"dates": day["date"], "values": day["contributionCount"]}
+        for week in weeks
+        for day in week["contributionDays"]
+    ]
 
-    df = pd.DataFrame(records)
-    df["dates"] = pd.to_datetime(df["dates"], format="%Y-%m-%d")
-    df["values"] = df["values"].astype(int)
-    return df
+    dict_records = {
+        "dates": [entry["dates"] for entry in records],
+        "values": [entry["values"] for entry in records],
+    }
+
+    df = nw.from_dict(dict_records, backend=backend)
+    return df.to_native()

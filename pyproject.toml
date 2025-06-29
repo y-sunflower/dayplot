@@ -10,21 +10,26 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = ["matplotlib"]
+dependencies = [
+    "matplotlib",
+    "narwhals>=1.0.0",
+]
 
 [project.optional-dependencies]
-data = ["pandas", "requests"]
+data = ["requests"]
 
 [dependency-groups]
 dev = [
-    "dayplot",
     "dotenv>=0.9.9",
-    "mkdocs-material>=9.6.9",
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+    "ruff>=0.11.13",
     "mkdocs-matplotlib>=0.10.1",
+    "mkdocs-material>=9.6.9",
     "mkdocstrings-python>=1.16.5",
-    "pre-commit>=4.0.1",
-    "pytest>=8.3.4",
-    "ruff>=0.11.4",
+    "coverage>=7.9.1",
+    "genbadge[coverage]>=1.1.2",
+    "polars>=1.31.0",
 ]
 
 [build-system]

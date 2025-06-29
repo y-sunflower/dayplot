@@ -1,6 +1,7 @@
-from .main import calendar
+from .calendar import calendar
 from .github import fetch_github_contrib
-from .data import load_dataset
+from .utils import load_dataset
+from .styles import styles
 
 __version__ = "0.3.3"
-__all__ = ["calendar", "fetch_github_contrib", "load_dataset"]
+__all__ = ["calendar", "fetch_github_contrib", "load_dataset", "styles"]

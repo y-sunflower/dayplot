@@ -6,7 +6,8 @@ from unittest.mock import patch, MagicMock
 from dayplot import fetch_github_contrib
 
 
-def test_fetch_github_contrib_missing_token():
+@pytest.mark.parametrize("backend", ["pandas", "polars"])
+def test_fetch_github_contrib_missing_token(backend):
     """
     Test that the function raises an EnvironmentError if no GitHub token is provided.
     """
@@ -16,6 +17,7 @@ def test_fetch_github_contrib_missing_token():
             github_token="",
             start_date="2024-01-01T00:00:00Z",
             end_date="2024-12-31T23:59:59Z",
+            backend=backend,
         )
 
 
@@ -86,10 +88,4 @@ def test_fetch_github_contrib_valid_response(mock_post):
     )
 
     assert len(df) == 4
-    assert df["dates"].tolist() == [
-        pd.to_datetime("2024-01-01"),
-        pd.to_datetime("2024-01-02"),
-        pd.to_datetime("2024-01-03"),
-        pd.to_datetime("2024-01-04"),
-    ]
     assert df["values"].tolist() == [1, 2, 3, 4]

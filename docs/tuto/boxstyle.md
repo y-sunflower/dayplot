@@ -12,7 +12,7 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -33,7 +33,7 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -54,7 +54,7 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -75,7 +75,7 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -96,7 +96,7 @@ By default, you'll get simple squares, but you can leverage the `boxstyle` argum
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -125,7 +125,7 @@ This means that any argument that this class accepts will be accepted. Here is a
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -146,7 +146,7 @@ This means that any argument that this class accepts will be accepted. Here is a
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -167,7 +167,7 @@ This means that any argument that this class accepts will be accepted. Here is a
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 
@@ -188,7 +188,7 @@ This means that any argument that this class accepts will be accepted. Here is a
     # mkdocs: render
     import matplotlib.pyplot as plt
     import dayplot as dp
-    from dayplot.data import load_dataset
+    from dayplot import load_dataset
 
     df = load_dataset()
 

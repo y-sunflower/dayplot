@@ -10,126 +10,21 @@ from typing import List, Union, Optional, Dict
 from datetime import date
 import warnings
 
-from dayplot._parse_date import parse_date
+from .utils import _parse_date
 
 
-def calendar(
-    dates: List[Union[date, datetime, str]],
-    values: List[Union[int, float]],
-    start_date: Optional[Union[date, datetime, str]] = None,
-    end_date: Optional[Union[date, datetime, str]] = None,
-    color_for_none: Optional[str] = None,
-    edgecolor: str = "black",
-    edgewidth: float = 0.0,
-    cmap: Union[str, LinearSegmentedColormap] = "Greens",
-    week_starts_on: str = "Sunday",
-    month_kws: Optional[Dict] = None,
-    day_kws: Optional[Dict] = None,
-    day_x_margin: float = 0.02,
-    month_y_margin: float = 0.4,
-    vmin: Optional[float] = None,
-    vmax: Optional[float] = None,
-    vcenter: Optional[float] = None,
-    boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
-    ax: Optional[matplotlib.axes.Axes] = None,
-    **kwargs,
-) -> List[matplotlib.patches.Rectangle]:
-    """
-    Create a calendar heatmap (GitHub-style) from input dates and values,
-    supporting both positive and negative values via a suitable colormap scale.
+DAY_NAMES = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+]
 
-    This function generates a calendar heatmap similar to GitHub's contribution graph, where
-    each cell represents a day colored according to the corresponding value. The chart is
-    organized by weeks (columns) and days of the week (rows), starting from a specified
-    start date to an end date.
 
-    When `vmin`, `vmax`, and `vcenter` are not specified, they default to the data's
-    minimum, maximum, and zero (if data spans negative and positive values),
-    respectively. Providing any of `vmin`, `vmax`, or `vcenter` manually will override
-    the automatic calculation for that parameter.
-
-    Parameters
-    ---
-
-    - `dates`: A list of date-like objects (e.g., datetime.date, datetime.datetime,
-        or strings in "YYYY-MM-DD" format). Must have the same length as values.
-
-    - `values`: A list of numeric values corresponding to each date in dates. These
-        values represent contributions or counts for each day and must have the same
-        length as dates.
-
-    - `start_date`: The earliest date to display on the chart. Can be a date, datetime,
-        or a string in "YYYY-MM-DD" format. If not provided, the minimum date found in
-        dates will be used.
-
-    - `end_date`: The latest date to display on the chart. Can be a date, datetime, or a
-        string in "YYYY-MM-DD" format. If not provided, the maximum date found in dates
-        will be used.
-
-    - `color_for_none`: Color to use for days with no contributions (i.e., count zero).
-        Defaults to "#e8e8e8", a light gray color. This parameter is ignored when `values`
-        has negative values.
-
-    - `edgecolor`: Color of the edges for each day's rectangle. Defaults to "black".
-
-    - `edgewidth`: Line width for the edges of each day's rectangle. Defaults to 0.5.
-
-    - `cmap`: A valid Matplotlib colormap name or a LinearSegmentedColormap instance. Defaults
-        to "Greens". The colormap is used to determine the fill color intensity of each day's
-        cell based on its value.
-
-    - `week_starts_on`: The starting day of the week, which can be specified as a string
-        ("Sunday", "Monday", ..., "Saturday"). Defaults to "Sunday".
-
-    - `month_kws`: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
-        when labeling month names (outside of x, y and s).
-
-    - `day_kws`: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
-        when labeling weekday names on the y-axis (outside of x, y and s).
-
-    - `day_x_margin`: Distance between the day labels (Monday, Tuesday, etc.) and the graph. The
-        greater the distance, the further to the left the text will be.
-
-    - `month_y_margin`: Distance between the month labels (January, February, etc.) and the graph.
-        The greater the distance, the more text will appear at the top.
-
-    - `vmin`: The lower bound for the color scale. If None, it is determined automatically from the
-        data. If data contains both positive and negative values and `vcenter` is not provided, `vmin` will
-        default to the data's minimum. Providing `vmin` overrides the automatic calculation.
-
-    - `vmax`: The upper bound for the color scale. If None, it is determined automatically from the
-        data. If data contains both positive and negative values and `vcenter` is not provided, `vmax`
-        will default to the data's maximum. Providing `vmax` overrides the automatic calculation.
-
-    - `vcenter`: The midpoint for the color scale, typically used with diverging colormaps (e.g.,
-        "RdBu") to position a central reference (e.g., zero). If None and the data spans negative and
-        positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic setting.
-
-    - `boxstyle`: The style of each box. This will be passed to `matplotlib.patches.FancyBboxPatch`.
-        Available values are: "square", "circle", "ellipse", "larrow"
-
-    - `ax`: A matplotlib axes. If None, plt.gca() will be used. It is advisable to make this explicit
-        to avoid unexpected behaviour, particularly when manipulating a figure with several axes.
-
-    - `kwargs`: Any additional arguments that will be passed to `matplotlib.patches.FancyBboxPatch`.
-        For example, you can set `alpha`, `hatch`, `linestyle`, etc. You can find them all
-        [here](https://matplotlib.org/stable/api/_as_gen/matplotlib.patches.FancyBboxPatch.html).
-
-    Returns
-    ---
-
-    A list of `matplotlib.patches.FancyBboxPatch` (one for each cell).
-
-    Notes
-    ---
-
-    - The function aggregates multiple entries for the same date by summing their
-      values.
-    """
-
-    month_kws = month_kws or {}
-    day_kws = day_kws or {}
-
+def _validate_inputs(boxstyle, dates, values, week_starts_on):
     implemented_boxstyle = [
         "square",
         "circle",
@@ -163,38 +58,124 @@ def calendar(
     if len(dates) == 0 or len(values) == 0:
         raise ValueError("`dates` and `values` cannot be empty.")
 
-    day_names = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-    ]
-    if week_starts_on not in day_names:
+    if week_starts_on not in DAY_NAMES:
         raise ValueError(
-            f"Invalid start_day string: {week_starts_on}. Must be one of {day_names}."
+            f"Invalid start_day string: {week_starts_on}. Must be one of {DAY_NAMES}."
         )
 
-    # Get the index of the starting day of the week
-    week_starts_on_idx = day_names.index(week_starts_on.capitalize())
+
+def calendar(
+    dates: List[Union[date, datetime, str]],
+    values: List[Union[int, float]],
+    start_date: Optional[Union[date, datetime, str]] = None,
+    end_date: Optional[Union[date, datetime, str]] = None,
+    color_for_none: Optional[str] = None,
+    edgecolor: str = "black",
+    edgewidth: float = 0.0,
+    cmap: Union[str, LinearSegmentedColormap] = "Greens",
+    week_starts_on: str = "Sunday",
+    month_kws: Optional[Dict] = None,
+    day_kws: Optional[Dict] = None,
+    day_x_margin: float = 0.02,
+    month_y_margin: float = 0.4,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    vcenter: Optional[float] = None,
+    boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
+    clip_on: bool = False,
+    ax: Optional[matplotlib.axes.Axes] = None,
+    **kwargs,
+) -> List[matplotlib.patches.Rectangle]:
+    """
+    Create a calendar heatmap (GitHub-style) from input dates and values,
+    supporting both positive and negative values via a suitable colormap scale.
+
+    This function generates a calendar heatmap similar to GitHub's contribution graph, where
+    each cell represents a day colored according to the corresponding value. The chart is
+    organized by weeks (columns) and days of the week (rows), starting from a specified
+    start date to an end date.
+
+    When `vmin`, `vmax`, and `vcenter` are not specified, they default to the data's
+    minimum, maximum, and zero (if data spans negative and positive values),
+    respectively. Providing any of `vmin`, `vmax`, or `vcenter` manually will override
+    the automatic calculation for that parameter.
+
+    Args:
+        dates: A list of date-like objects (e.g., datetime.date, datetime.datetime,
+            or strings in "YYYY-MM-DD" format). Must have the same length as values.
+        values: A list of numeric values corresponding to each date in dates. These
+            values represent contributions or counts for each day and must have the same
+            length as dates.
+        start_date: The earliest date to display on the chart. Can be a date, datetime,
+            or a string in "YYYY-MM-DD" format. If not provided, the minimum date found in
+            dates will be used.
+        end_date: The latest date to display on the chart. Can be a date, datetime, or a
+            string in "YYYY-MM-DD" format. If not provided, the maximum date found in dates
+            will be used.
+        color_for_none: Color to use for days with no contributions (i.e., count zero).
+            Defaults to "#e8e8e8", a light gray color. This parameter is ignored when `values`
+            has negative values.
+        edgecolor: Color of the edges for each day's rectangle. Defaults to "black".
+        edgewidth: Line width for the edges of each day's rectangle. Defaults to 0.5.
+        cmap: A valid Matplotlib colormap name or a LinearSegmentedColormap instance. Defaults
+            to "Greens". The colormap is used to determine the fill color intensity of each day's
+            cell based on its value.
+        week_starts_on: The starting day of the week, which can be specified as a string
+            ("Sunday", "Monday", ..., "Saturday"). Defaults to "Sunday".
+        month_kws: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
+            when labeling month names (outside of x, y and s).
+        day_kws: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
+            when labeling weekday names on the y-axis (outside of x, y and s).
+        day_x_margin: Distance between the day labels (Monday, Tuesday, etc.) and the graph. The
+            greater the distance, the further to the left the text will be.
+        month_y_margin: Distance between the month labels (January, February, etc.) and the graph.
+            The greater the distance, the more text will appear at the top.
+        vmin: The lower bound for the color scale. If None, it is determined automatically from the
+            data. If data contains both positive and negative values and `vcenter` is not provided, `vmin` will
+            default to the data's minimum. Providing `vmin` overrides the automatic calculation.
+        vmax: The upper bound for the color scale. If None, it is determined automatically from the
+            data. If data contains both positive and negative values and `vcenter` is not provided, `vmax`
+            will default to the data's maximum. Providing `vmax` overrides the automatic calculation.
+        vcenter: The midpoint for the color scale, typically used with diverging colormaps (e.g.,
+            "RdBu") to position a central reference (e.g., zero). If None and the data spans negative and
+            positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic setting.
+        boxstyle: The style of each box. This will be passed to `matplotlib.patches.FancyBboxPatch`.
+            Available values are: "square", "circle", "ellipse", "larrow"
+        clip_on: Whether the artist (e.g., squares) is clipped to the axes boundaries (True) or allowed to extend
+            beyond them (False).
+        ax: A matplotlib axes. If None, plt.gca() will be used. It is advisable to make this explicit
+            to avoid unexpected behaviour, particularly when manipulating a figure with several axes.
+        kwargs: Any additional arguments that will be passed to `matplotlib.patches.FancyBboxPatch`.
+            For example, you can set `alpha`, `hatch`, `linestyle`, etc. You can find them all
+            [here](https://matplotlib.org/stable/api/_as_gen/matplotlib.patches.FancyBboxPatch.html).
+
+    Returns:
+        A list of `matplotlib.patches.FancyBboxPatch` (one for each cell).
+
+    Notes:
+        The function aggregates multiple entries for the same date by summing their values.
+    """
+    _validate_inputs(boxstyle, dates, values, week_starts_on)
+
+    month_kws = month_kws or {}
+    day_kws = day_kws or {}
+
+    week_starts_on_index = DAY_NAMES.index(week_starts_on.capitalize())
 
     # Create a mapping from Python's weekday() (0=Monday) to our day indices
-    # where the first day is determined by week_starts_on_idx
+    # where the first day is determined by week_starts_on_index
     weekday_mapping = {}
     for i in range(7):
-        # Python's weekday: 0 = Monday, ..., 6 = Sunday
         python_weekday = i  # 0-6 (Mon-Sun)
         # Convert to our indexing where 0 = Sunday, ..., 6 = Saturday
         our_day_idx = (python_weekday + 1) % 7  # Convert to 0-6 (Sun-Sat)
         # Adjust for the week start day
-        adjusted_idx = (our_day_idx - week_starts_on_idx) % 7
+        adjusted_idx = (our_day_idx - week_starts_on_index) % 7
         weekday_mapping[python_weekday] = adjusted_idx
 
     date_counts = defaultdict(float)
     for d, v in zip(dates, values):
-        d = parse_date(d)
+        d = _parse_date(d)
         date_counts[d] += v
 
     min_data_date = min(date_counts.keys())
@@ -203,12 +184,12 @@ def calendar(
     if start_date is None:
         start_date = min_data_date
     else:
-        start_date = parse_date(start_date)
+        start_date = _parse_date(start_date)
 
     if end_date is None:
         end_date = max_data_date
     else:
-        end_date = parse_date(end_date)
+        end_date = _parse_date(end_date)
 
     if isinstance(start_date, datetime):
         start_date = start_date.date()
@@ -226,10 +207,9 @@ def calendar(
     data_for_plot = []
     for d in full_range:
         days_from_start = (d - start_date).days
-        # Use our mapping to get the correct weekday
         start_date_adj_weekday = weekday_mapping[start_date.weekday()]
         week_index = (days_from_start + start_date_adj_weekday) // 7
-        day_of_week = weekday_mapping[d.weekday()]  # Use the mapping
+        day_of_week = weekday_mapping[d.weekday()]
         count = date_counts.get(d, 0)
         data_for_plot.append((week_index, day_of_week, count))
 
@@ -326,9 +306,9 @@ def calendar(
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     # Create labels in the adjusted order based on week_starts_on
-    labels = day_names.copy()
+    labels = DAY_NAMES.copy()
     labels = [L[:3] for L in labels]  # Abbreviate to "Sun", "Mon", etc.
-    adjusted_labels = labels[week_starts_on_idx:] + labels[:week_starts_on_idx]
+    adjusted_labels = labels[week_starts_on_index:] + labels[:week_starts_on_index]
 
     for y_tick, day_label in zip(ticks, adjusted_labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)

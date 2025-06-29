@@ -33,6 +33,7 @@ nav:
   - Home: index.md
   - Contributing: contributing.md
   - Tuto:
+      - tuto/built-in-styles.md
       - tuto/basic-styling.md
       - tuto/negative-values.md
       - tuto/boxstyle.md

@@ -8,7 +8,7 @@ Use the `cmap` argument to use any other colormap from matplotlib. This argument
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
-from dayplot.data import load_dataset
+from dayplot import load_dataset
 
 df = load_dataset()
 
@@ -33,7 +33,7 @@ Also, use `edgewidth` to moderate the width of the edge between squares.
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
-from dayplot.data import load_dataset
+from dayplot import load_dataset
 
 df = load_dataset()
 
@@ -67,7 +67,7 @@ Pro tip: when changing font size, the label positioning might get worse. In orde
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
-from dayplot.data import load_dataset
+from dayplot import load_dataset
 
 df = load_dataset()
 

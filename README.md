@@ -1,7 +1,3 @@
-> `dayplot` is supported by [Matplotlib Journey](https://www.matplotlib-journey.com/), an interactive online course designed to make you a master of Matplotlib. If you want to **support `dayplot`** and **become a Matplotlib expert**, consider purchasing the course!
-
-<br><br>
-
 # dayplot
 
 <img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/dayplot/image.png?raw=true" alt="dayplot logo" align="right" width="150px"/>
@@ -9,6 +5,9 @@
 A simple-to-use Python library to build **calendar heatmaps** with ease.
 
 It's built on top of **matplotlib** and leverages it to access high customization possibilities.
+
+![PyPI - Downloads](https://img.shields.io/pypi/dm/dayplot)
+![Coverage](coverage-badge.svg)
 
 <br>
 
