@@ -10,7 +10,7 @@ from typing import List, Union, Optional, Dict
 from datetime import date
 import warnings
 
-from dayplot._parse_date import parse_date
+from .utils import _parse_date
 
 
 def calendar(
@@ -172,7 +172,7 @@ def calendar(
 
     date_counts = defaultdict(float)
     for d, v in zip(dates, values):
-        d = parse_date(d)
+        d = _parse_date(d)
         date_counts[d] += v
 
     min_data_date = min(date_counts.keys())
@@ -181,12 +181,12 @@ def calendar(
     if start_date is None:
         start_date = min_data_date
     else:
-        start_date = parse_date(start_date)
+        start_date = _parse_date(start_date)
 
     if end_date is None:
         end_date = max_data_date
     else:
-        end_date = parse_date(end_date)
+        end_date = _parse_date(end_date)
 
     if isinstance(start_date, datetime):
         start_date = start_date.date()

@@ -10,10 +10,13 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = ["matplotlib"]
+dependencies = [
+    "matplotlib",
+    "narwhals>=1.44.0",
+]
 
 [project.optional-dependencies]
-data = ["pandas", "requests"]
+data = ["requests"]
 
 [dependency-groups]
 dev = [
@@ -25,7 +28,8 @@ dev = [
     "mkdocs-material>=9.6.9",
     "mkdocstrings-python>=1.16.5",
     "coverage>=7.9.1",
-    "genbadge>=1.1.2",
+    "genbadge[coverage]>=1.1.2",
+    "polars>=1.31.0",
 ]
 
 [build-system]
