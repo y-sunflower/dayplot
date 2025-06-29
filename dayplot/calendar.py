@@ -13,6 +13,57 @@ import warnings
 from .utils import _parse_date
 
 
+DAY_NAMES = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+]
+
+
+def _validate_inputs(boxstyle, dates, values, week_starts_on):
+    implemented_boxstyle = [
+        "square",
+        "circle",
+        "round",
+        "round4",
+        "sawtooth",
+        "roundtooth",
+    ]
+    not_implemented_boxstyle = [
+        "ellipse",
+        "larrow",
+        "rarrow",
+        "darrow",
+    ]
+    if isinstance(boxstyle, str):
+        if boxstyle not in implemented_boxstyle:
+            if boxstyle in not_implemented_boxstyle:
+                return NotImplementedError
+            else:
+                raise ValueError(
+                    f"Invalid `boxstyle` value. Must be in {implemented_boxstyle}"
+                )
+    elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
+        raise ValueError(
+            f"`boxstyle` must either be a string or a `matplotlib.patches.BoxStyle`, not {boxstyle}"
+        )
+
+    if len(dates) != len(values):
+        raise ValueError("`dates` and `values` must have the same length.")
+
+    if len(dates) == 0 or len(values) == 0:
+        raise ValueError("`dates` and `values` cannot be empty.")
+
+    if week_starts_on not in DAY_NAMES:
+        raise ValueError(
+            f"Invalid start_day string: {week_starts_on}. Must be one of {DAY_NAMES}."
+        )
+
+
 def calendar(
     dates: List[Union[date, datetime, str]],
     values: List[Union[int, float]],
@@ -104,70 +155,22 @@ def calendar(
     Notes:
         The function aggregates multiple entries for the same date by summing their values.
     """
+    _validate_inputs(boxstyle, dates, values, week_starts_on)
 
     month_kws = month_kws or {}
     day_kws = day_kws or {}
 
-    implemented_boxstyle = [
-        "square",
-        "circle",
-        "round",
-        "round4",
-        "sawtooth",
-        "roundtooth",
-    ]
-    not_implemented_boxstyle = [
-        "ellipse",
-        "larrow",
-        "rarrow",
-        "darrow",
-    ]
-    if isinstance(boxstyle, str):
-        if boxstyle not in implemented_boxstyle:
-            if boxstyle in not_implemented_boxstyle:
-                return NotImplementedError
-            else:
-                raise ValueError(
-                    f"Invalid `boxstyle` value. Must be in {implemented_boxstyle}"
-                )
-    elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
-        raise ValueError(
-            f"`boxstyle` must either be a string or a `matplotlib.patches.BoxStyle`, not {boxstyle}"
-        )
-
-    if len(dates) != len(values):
-        raise ValueError("`dates` and `values` must have the same length.")
-
-    if len(dates) == 0 or len(values) == 0:
-        raise ValueError("`dates` and `values` cannot be empty.")
-
-    day_names = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-    ]
-    if week_starts_on not in day_names:
-        raise ValueError(
-            f"Invalid start_day string: {week_starts_on}. Must be one of {day_names}."
-        )
-
-    # Get the index of the starting day of the week
-    week_starts_on_idx = day_names.index(week_starts_on.capitalize())
+    week_starts_on_index = DAY_NAMES.index(week_starts_on.capitalize())
 
     # Create a mapping from Python's weekday() (0=Monday) to our day indices
-    # where the first day is determined by week_starts_on_idx
+    # where the first day is determined by week_starts_on_index
     weekday_mapping = {}
     for i in range(7):
-        # Python's weekday: 0 = Monday, ..., 6 = Sunday
         python_weekday = i  # 0-6 (Mon-Sun)
         # Convert to our indexing where 0 = Sunday, ..., 6 = Saturday
         our_day_idx = (python_weekday + 1) % 7  # Convert to 0-6 (Sun-Sat)
         # Adjust for the week start day
-        adjusted_idx = (our_day_idx - week_starts_on_idx) % 7
+        adjusted_idx = (our_day_idx - week_starts_on_index) % 7
         weekday_mapping[python_weekday] = adjusted_idx
 
     date_counts = defaultdict(float)
@@ -204,10 +207,9 @@ def calendar(
     data_for_plot = []
     for d in full_range:
         days_from_start = (d - start_date).days
-        # Use our mapping to get the correct weekday
         start_date_adj_weekday = weekday_mapping[start_date.weekday()]
         week_index = (days_from_start + start_date_adj_weekday) // 7
-        day_of_week = weekday_mapping[d.weekday()]  # Use the mapping
+        day_of_week = weekday_mapping[d.weekday()]
         count = date_counts.get(d, 0)
         data_for_plot.append((week_index, day_of_week, count))
 
@@ -304,9 +306,9 @@ def calendar(
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     # Create labels in the adjusted order based on week_starts_on
-    labels = day_names.copy()
+    labels = DAY_NAMES.copy()
     labels = [L[:3] for L in labels]  # Abbreviate to "Sun", "Mon", etc.
-    adjusted_labels = labels[week_starts_on_idx:] + labels[:week_starts_on_idx]
+    adjusted_labels = labels[week_starts_on_index:] + labels[:week_starts_on_index]
 
     for y_tick, day_label in zip(ticks, adjusted_labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
