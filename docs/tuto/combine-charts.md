@@ -6,7 +6,7 @@ For this, we need to create a figure with 2 axes (`nrows=2` since we want them t
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
-from dayplot.data import load_dataset
+from dayplot import load_dataset
 
 df = load_dataset()
 
@@ -41,7 +41,7 @@ It makes sense to add the year associated with each chart, so let's leverage `ax
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
-from dayplot.data import load_dataset
+from dayplot import load_dataset
 
 df = load_dataset()
 

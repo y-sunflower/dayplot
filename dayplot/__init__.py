@@ -1,4 +1,4 @@
-from .main import calendar
+from .calendar import calendar
 from .github import fetch_github_contrib
 from .utils import load_dataset
 
