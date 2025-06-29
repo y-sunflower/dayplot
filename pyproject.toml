@@ -12,7 +12,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "matplotlib",
-    "narwhals>=1.44.0",
+    "narwhals>=1.0.0",
 ]
 
 [project.optional-dependencies]
