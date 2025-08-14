@@ -8,7 +8,6 @@
 
 ## Examples
 
-
 #### Basic usage
 
 ```py
@@ -172,4 +171,4 @@ ax2.text(s="2025", **text_args)
 
 #### Advanced
 
-See advanced usage [**here**](../../tuto/advanced/).
+See advanced usage [**here**](../tuto/advanced.md).
