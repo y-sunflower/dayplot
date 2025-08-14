@@ -1,6 +1,6 @@
 This package is relatively new and still needs some improvements and bug fixes. There are several ways you can contribute:
 
-- Opening [GitHub issues](https://github.com/JosephBARBIERDARNAL/dayplot/issues) to list the bugs you've found
+- Opening [GitHub issues](https://github.com/y-sunflower/dayplot/issues) to list the bugs you've found
 - Implementation of new features or resolution of existing bugs
 - Enhancing the documentation by creating cool examples
 

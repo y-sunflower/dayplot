@@ -1,6 +1,6 @@
 `dayplot` ships a few built-in styles so that you can style your heatmap super quickly.
 
-> Currently, there is only the "Github" style. But I'm planning to add more, and if you have suggestions it's more than welcome! You can just [open an issue](https://github.com/JosephBARBIERDARNAL/dayplot/issues){target="\_blank"}
+> Currently, there is only the "Github" style. But I'm planning to add more, and if you have suggestions it's more than welcome! You can just [open an issue](https://github.com/y-sunflower/dayplot/issues){target="\_blank"}
 
 ### Use pre-defined styles
 

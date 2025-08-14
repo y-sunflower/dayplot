@@ -1,6 +1,6 @@
 # dayplot
 
-<img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/dayplot/image.png?raw=true" alt="dayplot logo" align="right" width="150px"/>
+<img src="https://github.com/y-sunflower/static/blob/main/python-libs/dayplot/image.png?raw=true" alt="dayplot logo" align="right" width="150px"/>
 
 A simple-to-use Python library to build **calendar heatmaps** with ease.
 
@@ -29,9 +29,9 @@ dp.calendar(
 )
 ```
 
-![](https://raw.githubusercontent.com/JosephBARBIERDARNAL/dayplot/refs/heads/main/docs/img/quickstart.png)
+![](https://raw.githubusercontent.com/y-sunflower/dayplot/refs/heads/main/docs/img/quickstart.png)
 
-More examples in the [documentation](https://josephbarbierdarnal.github.io/dayplot/).
+More examples in the [documentation](https://y-sunflower.github.io/dayplot/).
 
 <br>
 

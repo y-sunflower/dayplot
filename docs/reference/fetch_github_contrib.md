@@ -21,7 +21,7 @@ start_date_iso = "2024-01-01T00:00:00Z"
 end_date_iso = "2024-12-31T23:59:59Z"
 
 my_data = fetch_github_contrib(
-   username="JosephBARBIERDARNAL",
+   username="y-sunflower",
    github_token=token,
    start_date=start_date_iso,
    end_date=end_date_iso,

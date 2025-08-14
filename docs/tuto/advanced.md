@@ -1,6 +1,6 @@
 # Advanced examples
 
-Here's a list of cool uses for `dayplot` to demonstrate its capabilities. It regularly uses external libraries such as [pyfonts](https://github.com/JosephBARBIERDARNAL/pyfonts){target=\_blank} or [pypalettes](https://github.com/JosephBARBIERDARNAL/pypalettes){target=\_blank}.
+Here's a list of cool uses for `dayplot` to demonstrate its capabilities. It regularly uses external libraries such as [pyfonts](https://github.com/y-sunflower/pyfonts){target=\_blank} or [pypalettes](https://github.com/y-sunflower/pypalettes){target=\_blank}.
 
 ## Average temperature in Tunis
 
@@ -85,7 +85,7 @@ axs[2].text(s="2017", **text_args)
 
 ## Elon Musk Tweets
 
-The dataset can be found [here](https://www.kaggle.com/datasets/aryansingh0909/elon-musk-tweets-updated-daily){target=\_blank} and the image of Musk [here](https://github.com/JosephBARBIERDARNAL/dayplot/blob/main/docs/img/musk.png).
+The dataset can be found [here](https://www.kaggle.com/datasets/aryansingh0909/elon-musk-tweets-updated-daily){target=\_blank} and the image of Musk [here](https://github.com/y-sunflower/dayplot/blob/main/docs/img/musk.png).
 
 ```py
 import pandas as pd

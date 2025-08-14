@@ -49,7 +49,7 @@ mypkg = ["sample.csv"]
 dayplot = { workspace = true }
 
 [project.urls]
-Homepage = "https://josephbarbierdarnal.github.io/dayplot/"
-Issues = "https://github.com/JosephBARBIERDARNAL/dayplot/issues"
-Documentation = "https://josephbarbierdarnal.github.io/dayplot/reference/calendar/"
-Repository = "https://github.com/JosephBARBIERDARNAL/dayplot"
+Homepage = "https://y-sunflower.github.io/dayplot/"
+Issues = "https://github.com/y-sunflower/dayplot/issues"
+Documentation = "https://y-sunflower.github.io/dayplot/reference/calendar/"
+Repository = "https://github.com/y-sunflower/dayplot"
