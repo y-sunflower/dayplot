@@ -53,3 +53,7 @@ Homepage = "https://y-sunflower.github.io/dayplot/"
 Issues = "https://github.com/y-sunflower/dayplot/issues"
 Documentation = "https://y-sunflower.github.io/dayplot/reference/calendar/"
 Repository = "https://github.com/y-sunflower/dayplot"
+
+[tool.ty.src]
+include = ["dayplot"]
+exclude = ["tests"]

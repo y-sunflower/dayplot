@@ -8,7 +8,8 @@ theme:
   features:
     - content.code.copy
     - navigation.path
-    - navigation.tabs
+    - content.footnote.tooltips
+    - navigation.expand
   icon:
     repo: fontawesome/brands/github
 
@@ -32,7 +33,7 @@ plugins:
 nav:
   - Home: index.md
   - Contributing: contributing.md
-  - Tuto:
+  - Guides:
       - tuto/built-in-styles.md
       - tuto/basic-styling.md
       - tuto/negative-values.md
