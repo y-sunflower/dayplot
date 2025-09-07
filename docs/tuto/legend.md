@@ -141,4 +141,33 @@ dp.calendar(
 )
 ```
 
+## Negative values
+
+It works well with negative values too:
+
+```py hl_lines="17 18 19"
+# mkdocs: render
+import matplotlib.pyplot as plt
+import dayplot as dp
+from dayplot import load_dataset
+
+df = load_dataset()
+
+# add negative values at some random dates
+df.loc[df.sample(n=40, replace=False).index, "values"] *= -1
+
+fig, ax = plt.subplots(figsize=(15, 5))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    cmap="RdBu",
+    legend=True,
+    legend_bins=5,
+    legend_labels="auto",
+    ax=ax,
+)
+```
+
 <br><br>

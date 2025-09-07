@@ -380,6 +380,7 @@ if __name__ == "__main__":
     import dayplot as dp
 
     df = dp.load_dataset()
+    df.loc[df.sample(n=100, replace=False).index, "values"] *= -1
 
     fig, ax = plt.subplots(figsize=(15, 5))
     calendar(
@@ -387,6 +388,7 @@ if __name__ == "__main__":
         values=df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
+        cmap="RdBu",
         legend=True,
         legend_bins=5,
         legend_labels="auto",

@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from datetime import datetime, timedelta
+import string
 
 from dayplot import calendar
 import dayplot
@@ -192,6 +193,35 @@ def test_calendar_week_starts_on_monday():
     calendar(dates, values, week_starts_on="Monday", ax=ax)
     patches = ax.patches
     assert len(patches) == 7
+
+
+@pytest.mark.parametrize("legend", [True, False])
+@pytest.mark.parametrize("legend_bins", [2, 4, 10])
+@pytest.mark.parametrize("legend_labels", [None, "auto", []])
+@pytest.mark.parametrize("legend_labels_kws", [None, {"color": "red", "size": "10"}])
+def test_legend_works(legend, legend_bins, legend_labels, legend_labels_kws):
+    """Test that legend arguments work"""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
+    values = [1, 2, 3, 4, 5, 6, 7]
+    if legend_labels == []:
+        legend_labels = list(string.ascii_lowercase)[:legend_bins]
+    fig, ax = plt.subplots()
+    calendar(
+        dates,
+        values,
+        legend=legend,
+        legend_bins=legend_bins,
+        legend_labels=legend_labels,
+        legend_labels_kws=legend_labels_kws,
+    )
+
+    patches = ax.patches
+    if legend:
+        assert len(patches) == len(values) + legend_bins
+    else:
+        assert len(patches) == len(values)
+
+    plt.close("all")
 
 
 def dayplot_version():
