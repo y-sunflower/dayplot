@@ -1,6 +1,6 @@
 [project]
 name = "dayplot"
-version = "0.4.0"
+version = "0.4.1"
 description = "Calendar heatmaps with matplotlib"
 license = "MIT"
 license-files = ["LICENSE"]
