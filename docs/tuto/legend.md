@@ -145,7 +145,7 @@ dp.calendar(
 
 It works well with negative values too:
 
-```py hl_lines="17 18 19"
+```py hl_lines="17 18 19 20"
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
