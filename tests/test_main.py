@@ -242,4 +242,4 @@ def test_legend_works(legend, legend_bins, legend_labels, legend_labels_kws):
 
 
 def dayplot_version():
-    assert dayplot.__version__ == "0.3.3"
+    assert dayplot.__version__ == "0.4.0"
