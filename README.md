@@ -6,7 +6,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease.
 
 It's built on top of **matplotlib** and leverages it to access high customization possibilities.
 
-[![PyPI Downloads](https://static.pepy.tech/badge/dayplot/month)](https://pepy.tech/projects/dayplot)
+[![PyPI Downloads](https://static.pepy.tech/badge/dayplot)](https://pepy.tech/projects/dayplot)
 ![Coverage](coverage-badge.svg)
 
 <br>
