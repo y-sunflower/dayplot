@@ -6,6 +6,9 @@ from matplotlib.colors import LinearSegmentedColormap
 from datetime import datetime, timedelta
 import string
 
+import pandas as pd
+import polars as pl
+
 from dayplot import calendar
 import dayplot
 
@@ -191,6 +194,20 @@ def test_calendar_week_starts_on_monday():
     values = [1, 2, 3, 4, 5, 6, 7]
     fig, ax = plt.subplots()
     calendar(dates, values, week_starts_on="Monday", ax=ax)
+    patches = ax.patches
+    assert len(patches) == 7
+
+
+@pytest.mark.parametrize("backend", [pd, pl])
+def test_diffrerent_df_backends(backend):
+    """Test that it works with different backends"""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
+    values = [1, 2, 3, 4, 5, 6, 7]
+    df = backend.DataFrame({"dates": dates, "values": values})
+
+    fig, ax = plt.subplots()
+    calendar(df["dates"], df["values"], ax=ax)
+
     patches = ax.patches
     assert len(patches) == 7
 
