@@ -8,11 +8,11 @@ import numpy as np
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import List, Union, Optional, Dict
+from typing import List, Union, Optional, Dict, Any
 from datetime import date
 import warnings
 
-from .utils import _parse_date
+from dayplot.utils import _parse_date
 
 
 DAY_NAMES = [
@@ -68,6 +68,45 @@ def _validate_inputs(boxstyle, dates, values, week_starts_on):
         )
 
 
+def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]):
+    if isinstance(cmap, str):
+        cmap: Colormap = plt.get_cmap(cmap)
+    elif not isinstance(cmap, LinearSegmentedColormap):
+        raise ValueError(
+            "Invalid `cmap` input. It must be either a valid matplotlib colormap string "
+            f"or a matplotlib.colors.LinearSegmentedColormap instance, not {cmap}"
+        )
+
+    return cmap
+
+
+def _get_start_and_end_dates(date_counts, start_date, end_date):
+    min_data_date = min(date_counts.keys())
+    max_data_date = max(date_counts.keys())
+
+    if start_date is None:
+        start_date = min_data_date
+    else:
+        start_date = _parse_date(start_date)
+
+    if end_date is None:
+        end_date = max_data_date
+    else:
+        end_date = _parse_date(end_date)
+
+    if isinstance(start_date, datetime):
+        start_date = start_date.date()
+    elif isinstance(start_date, str):
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+
+    if isinstance(end_date, datetime):
+        end_date = end_date.date()
+    elif isinstance(end_date, str):
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+    return start_date, end_date
+
+
 def calendar(
     dates: List[Union[date, datetime, str]],
     values: List[Union[int, float]],
@@ -88,7 +127,7 @@ def calendar(
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
     clip_on: bool = False,
     ax: Optional[Axes] = None,
-    **kwargs,
+    **kwargs: Any,
 ) -> List[matplotlib.patches.Rectangle]:
     """
     Create a calendar heatmap (GitHub-style) from input dates and values,
@@ -160,9 +199,11 @@ def calendar(
         The function aggregates multiple entries for the same date by summing their values.
     """
     _validate_inputs(boxstyle, dates, values, week_starts_on)
+    cmap = _validate_cmap(cmap)
 
     month_kws = month_kws or {}
     day_kws = day_kws or {}
+    ax = ax or plt.gca()
 
     week_starts_on_index = DAY_NAMES.index(week_starts_on.capitalize())
 
@@ -182,28 +223,7 @@ def calendar(
         d = _parse_date(d)
         date_counts[d] += v
 
-    min_data_date = min(date_counts.keys())
-    max_data_date = max(date_counts.keys())
-
-    if start_date is None:
-        start_date = min_data_date
-    else:
-        start_date = _parse_date(start_date)
-
-    if end_date is None:
-        end_date = max_data_date
-    else:
-        end_date = _parse_date(end_date)
-
-    if isinstance(start_date, datetime):
-        start_date = start_date.date()
-    elif isinstance(start_date, str):
-        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-
-    if isinstance(end_date, datetime):
-        end_date = end_date.date()
-    elif isinstance(end_date, str):
-        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+    start_date, end_date = _get_start_and_end_dates(date_counts, start_date, end_date)
 
     delta_days = (end_date - start_date).days + 1
     full_range = [start_date + timedelta(days=i) for i in range(delta_days)]
@@ -218,18 +238,6 @@ def calendar(
         data_for_plot.append((week_index, day_of_week, count))
 
     total_weeks = (end_date - start_date).days // 7 + 1
-
-    if ax is None:
-        ax = plt.gca()
-    ax.set_aspect("equal")
-
-    if isinstance(cmap, str):
-        cmap: Colormap = plt.get_cmap(cmap)
-    elif not isinstance(cmap, LinearSegmentedColormap):
-        raise ValueError(
-            "Invalid `cmap` input. It must be either a valid matplotlib colormap string "
-            f"or a matplotlib.colors.LinearSegmentedColormap instance, not {cmap}"
-        )
 
     all_counts = np.array(list(date_counts.values()))
     min_count, max_count = all_counts.min(), all_counts.max()
@@ -302,6 +310,7 @@ def calendar(
     ax.set_xticks([])
     ax.set_yticks([])
     ax.invert_yaxis()
+    ax.set_aspect("equal")
 
     day_text_style = dict(
         transform=ax.get_yaxis_transform(), ha="left", va="center", size=10
@@ -318,3 +327,20 @@ def calendar(
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     return rect_patches
+
+
+if __name__ == "__main__":
+    import dayplot as dp
+
+    df = dp.load_dataset()
+
+    fig, ax = plt.subplots(figsize=(15, 5))
+    calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        ax=ax,
+    )
+
+    plt.savefig("cache.png", dpi=300)
