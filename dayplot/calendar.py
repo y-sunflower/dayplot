@@ -127,7 +127,7 @@ def calendar(
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
     legend: bool = False,
     legend_bins: int = 4,
-    legend_labels: Optional[list | Literal["auto"]] = None,
+    legend_labels: Optional[Union[List, Literal["auto"]]] = None,
     legend_labels_precision: Optional[int] = None,
     legend_labels_kws: Optional[Dict] = None,
     clip_on: bool = False,
