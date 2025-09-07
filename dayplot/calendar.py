@@ -156,20 +156,20 @@ def calendar(
             length as dates.
         start_date: The earliest date to display on the chart. Can be a date, datetime,
             or a string in "YYYY-MM-DD" format. If not provided, the minimum date found in
-            dates will be used.
+            `dates` will be used.
         end_date: The latest date to display on the chart. Can be a date, datetime, or a
-            string in "YYYY-MM-DD" format. If not provided, the maximum date found in dates
+            string in "YYYY-MM-DD" format. If not provided, the maximum date found in `dates`
             will be used.
         color_for_none: Color to use for days with no contributions (i.e., count zero).
             Defaults to "#e8e8e8", a light gray color. This parameter is ignored when `values`
             has negative values.
-        edgecolor: Color of the edges for each day's rectangle. Defaults to "black".
-        edgewidth: Line width for the edges of each day's rectangle. Defaults to 0.5.
-        cmap: A valid Matplotlib colormap name or a LinearSegmentedColormap instance. Defaults
-            to "Greens". The colormap is used to determine the fill color intensity of each day's
+        edgecolor: Color of the edges for each day's rectangle.
+        edgewidth: Line width for the edges of each day's rectangle.
+        cmap: A valid Matplotlib colormap name or a LinearSegmentedColormap instance. The
+        colormap is used to determine the fill color intensity of each day's
             cell based on its value.
         week_starts_on: The starting day of the week, which can be specified as a string
-            ("Sunday", "Monday", ..., "Saturday"). Defaults to "Sunday".
+            ("Sunday", "Monday", ..., "Saturday").
         month_kws: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
             when labeling month names (outside of x, y and s).
         day_kws: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
@@ -189,12 +189,12 @@ def calendar(
             positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic setting.
         boxstyle: The style of each box. This will be passed to `matplotlib.patches.FancyBboxPatch`.
             Available values are: "square", "circle", "ellipse", "larrow"
-        legend: Whether to display a legend for the color scale. Defaults to `False`.
-        legend_bins: Number of boxes/steps to display in the legend. Defaults to `4`.
+        legend: Whether to display a legend for the color scale.
+        legend_bins: Number of boxes/steps to display in the legend.
         legend_labels: Labels for the legend boxes. Can be a list of strings or "auto"
-            to generate labels from the data values. Defaults to `None`.
+            to generate labels from the data values.
         legend_labels_precision: Number of decimal places to round legend labels when
-            `legend_labels="auto"`. Defaults to `None` (no rounding).
+            `legend_labels="auto"`.
         legend_labels_kws: Additional keyword arguments passed to the matplotlib text
             function when rendering legend labels.
         clip_on: Whether the artist (e.g., squares) is clipped to the axes boundaries (True) or allowed to extend
