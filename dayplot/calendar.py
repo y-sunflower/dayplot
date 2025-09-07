@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
 import matplotlib
+from matplotlib.axes import Axes
+from matplotlib.colors import Colormap
 import numpy as np
 
 from collections import defaultdict
@@ -23,29 +25,31 @@ DAY_NAMES = [
     "Saturday",
 ]
 
+IMPLEMENTED_BOXSTYLE = [
+    "square",
+    "circle",
+    "round",
+    "round4",
+    "sawtooth",
+    "roundtooth",
+]
+
+NOT_IMPLEMENTED_BOXSTYLE = [
+    "ellipse",
+    "larrow",
+    "rarrow",
+    "darrow",
+]
+
 
 def _validate_inputs(boxstyle, dates, values, week_starts_on):
-    implemented_boxstyle = [
-        "square",
-        "circle",
-        "round",
-        "round4",
-        "sawtooth",
-        "roundtooth",
-    ]
-    not_implemented_boxstyle = [
-        "ellipse",
-        "larrow",
-        "rarrow",
-        "darrow",
-    ]
     if isinstance(boxstyle, str):
-        if boxstyle not in implemented_boxstyle:
-            if boxstyle in not_implemented_boxstyle:
+        if boxstyle not in IMPLEMENTED_BOXSTYLE:
+            if boxstyle in NOT_IMPLEMENTED_BOXSTYLE:
                 return NotImplementedError
             else:
                 raise ValueError(
-                    f"Invalid `boxstyle` value. Must be in {implemented_boxstyle}"
+                    f"Invalid `boxstyle` value. Must be in {IMPLEMENTED_BOXSTYLE}"
                 )
     elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
         raise ValueError(
@@ -83,7 +87,7 @@ def calendar(
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
     clip_on: bool = False,
-    ax: Optional[matplotlib.axes.Axes] = None,
+    ax: Optional[Axes] = None,
     **kwargs,
 ) -> List[matplotlib.patches.Rectangle]:
     """
@@ -220,7 +224,7 @@ def calendar(
     ax.set_aspect("equal")
 
     if isinstance(cmap, str):
-        cmap = plt.get_cmap(cmap)
+        cmap: Colormap = plt.get_cmap(cmap)
     elif not isinstance(cmap, LinearSegmentedColormap):
         raise ValueError(
             "Invalid `cmap` input. It must be either a valid matplotlib colormap string "
