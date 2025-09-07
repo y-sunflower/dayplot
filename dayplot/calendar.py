@@ -8,7 +8,7 @@ import numpy as np
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import List, Union, Optional, Dict, Any
+from typing import List, Union, Optional, Dict, Any, Literal
 from datetime import date
 import warnings
 
@@ -125,6 +125,11 @@ def calendar(
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
     boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
+    legend: bool = False,
+    legend_bins: int = 4,
+    legend_labels: Optional[list | Literal["auto"]] = None,
+    legend_labels_precision: Optional[int] = None,
+    legend_labels_kws: Optional[Dict] = None,
     clip_on: bool = False,
     ax: Optional[Axes] = None,
     **kwargs: Any,
@@ -184,6 +189,14 @@ def calendar(
             positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic setting.
         boxstyle: The style of each box. This will be passed to `matplotlib.patches.FancyBboxPatch`.
             Available values are: "square", "circle", "ellipse", "larrow"
+        legend: Whether to display a legend for the color scale. Defaults to `False`.
+        legend_bins: Number of boxes/steps to display in the legend. Defaults to `4`.
+        legend_labels: Labels for the legend boxes. Can be a list of strings or "auto"
+            to generate labels from the data values. Defaults to `None`.
+        legend_labels_precision: Number of decimal places to round legend labels when
+            `legend_labels="auto"`. Defaults to `None` (no rounding).
+        legend_labels_kws: Additional keyword arguments passed to the matplotlib text
+            function when rendering legend labels.
         clip_on: Whether the artist (e.g., squares) is clipped to the axes boundaries (True) or allowed to extend
             beyond them (False).
         ax: A matplotlib axes. If None, plt.gca() will be used. It is advisable to make this explicit
@@ -203,6 +216,7 @@ def calendar(
 
     month_kws = month_kws or {}
     day_kws = day_kws or {}
+    legend_labels_kws = legend_labels_kws or {}
     ax = ax or plt.gca()
 
     week_starts_on_index = DAY_NAMES.index(week_starts_on.capitalize())
@@ -326,6 +340,39 @@ def calendar(
     for y_tick, day_label in zip(ticks, adjusted_labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
+    if legend:
+        legend_values = np.linspace(vmin, vmax, legend_bins)
+        for i, val in enumerate(legend_values):
+            if is_diverging:
+                color = cmap(norm(val))
+            else:
+                color = color_for_none if val == 0 else cmap(norm(val))
+            rect = patches.FancyBboxPatch(
+                xy=(i + 0.35, 7.8),
+                width=0.3,
+                height=0.3,
+                linewidth=edgewidth,
+                edgecolor=edgecolor,
+                facecolor=color,
+                boxstyle=boxstyle,
+                clip_on=False,
+                **kwargs,
+            )
+            ax.add_patch(rect)
+
+            if legend_labels is not None:
+                if legend_labels == "auto":
+                    legend_label = round(val, ndigits=legend_labels_precision)
+                else:
+                    legend_label = str(legend_labels[i])
+
+                legend_labels_style = dict(size=7, ha="center")
+                legend_labels_style.update(legend_labels_kws)
+                ax.text(x=i + 0.5, y=9, s=legend_label, **legend_labels_style)
+
+        ax.text(-0.6, 8, "Less", va="center", ha="right", size=8)
+        ax.text(legend_bins + 0.5, 8, "More", va="center", ha="left", size=8)
+
     return rect_patches
 
 
@@ -340,6 +387,9 @@ if __name__ == "__main__":
         values=df["values"],
         start_date="2024-01-01",
         end_date="2024-12-31",
+        legend=True,
+        legend_bins=5,
+        legend_labels="auto",
         ax=ax,
     )
 
