@@ -1,16 +1,15 @@
 import os
 import narwhals as nw
 from narwhals.typing import IntoDataFrame
-from typing import Union
+from typing import Union, Literal
 from datetime import date
 from datetime import datetime
 
 
-AVAILABLE_OUTPUTS = ["pandas", "polars", "pyarrow", "modin", "cudf"]
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def load_dataset(backend: str = "pandas", **kwargs) -> IntoDataFrame:
+def load_dataset(backend: Literal["pandas", "polars", "pyarrow", "modin", "cudf"] = "pandas", **kwargs) -> IntoDataFrame:
     """
     Load a simple dataset with fake daily data. This function is a simple wrapper
     around the [`narwhals.read_csv()`](https://narwhals-dev.github.io/narwhals/api-reference/narwhals/#narwhals.read_csv)
@@ -26,11 +25,6 @@ def load_dataset(backend: str = "pandas", **kwargs) -> IntoDataFrame:
     Returns:
         A dataframe with the specified dataset.
     """
-    backend = backend.lower()
-
-    if backend not in AVAILABLE_OUTPUTS:
-        raise ValueError(f"backend must be one of: {' ,'.join(AVAILABLE_OUTPUTS)}")
-
     dataset_path = os.path.join(PACKAGE_DIR, "sample.csv")
     df = nw.read_csv(dataset_path, backend=backend, **kwargs)
 
