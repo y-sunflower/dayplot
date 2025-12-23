@@ -5,25 +5,16 @@ import matplotlib
 from matplotlib.axes import Axes
 from matplotlib.colors import Colormap
 import numpy as np
+from calendar import Calendar, day_name, day_abbr
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from typing import List, Union, Optional, Dict, Any, Literal
 from datetime import date
 import warnings
 
 from dayplot.utils import _parse_date
 
-
-DAY_NAMES = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-]
 
 IMPLEMENTED_BOXSTYLE = [
     "square",
@@ -42,7 +33,7 @@ NOT_IMPLEMENTED_BOXSTYLE = [
 ]
 
 
-def _validate_inputs(boxstyle, dates, values, week_starts_on):
+def _validate_inputs(boxstyle, dates, values):
     if isinstance(boxstyle, str):
         if boxstyle not in IMPLEMENTED_BOXSTYLE:
             if boxstyle in NOT_IMPLEMENTED_BOXSTYLE:
@@ -61,11 +52,6 @@ def _validate_inputs(boxstyle, dates, values, week_starts_on):
 
     if len(dates) == 0 or len(values) == 0:
         raise ValueError("`dates` and `values` cannot be empty.")
-
-    if week_starts_on not in DAY_NAMES:
-        raise ValueError(
-            f"Invalid start_day string: {week_starts_on}. Must be one of {DAY_NAMES}."
-        )
 
 
 def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]):
@@ -106,6 +92,12 @@ def _get_start_and_end_dates(date_counts, start_date, end_date):
 
     return start_date, end_date
 
+
+def calendar_week(cal: Calendar, date: date) -> list[date]:
+    for wk in cal.monthdatescalendar(date.year, date.month):
+        if wk[0] <= date <= wk[-1]:
+            return wk
+    raise ValueError('')
 
 def calendar(
     dates: List[Union[date, datetime, str]],
@@ -211,47 +203,34 @@ def calendar(
     Notes:
         The function aggregates multiple entries for the same date by summing their values.
     """
-    _validate_inputs(boxstyle, dates, values, week_starts_on)
+    _validate_inputs(boxstyle, dates, values)
     cmap = _validate_cmap(cmap)
+    cal = Calendar([*day_name].index(week_starts_on))
 
     month_kws = month_kws or {}
     day_kws = day_kws or {}
     legend_labels_kws = legend_labels_kws or {}
     ax = ax or plt.gca()
 
-    week_starts_on_index = DAY_NAMES.index(week_starts_on.capitalize())
-
-    # Create a mapping from Python's weekday() (0=Monday) to our day indices
-    # where the first day is determined by week_starts_on_index
-    weekday_mapping = {}
-    for i in range(7):
-        python_weekday = i  # 0-6 (Mon-Sun)
-        # Convert to our indexing where 0 = Sunday, ..., 6 = Saturday
-        our_day_idx = (python_weekday + 1) % 7  # Convert to 0-6 (Sun-Sat)
-        # Adjust for the week start day
-        adjusted_idx = (our_day_idx - week_starts_on_index) % 7
-        weekday_mapping[python_weekday] = adjusted_idx
-
-    date_counts = defaultdict(float)
+    date_counts: defaultdict[date, float] = defaultdict(float)
     for d, v in zip(dates, values):
-        d = _parse_date(d)
-        date_counts[d] += v
+        date_counts[_parse_date(d)] += v
 
     start_date, end_date = _get_start_and_end_dates(date_counts, start_date, end_date)
+    cal_start_date = calendar_week(cal, start_date)[0]
+    cal_end_date = calendar_week(cal, end_date)[-1]
 
     delta_days = (end_date - start_date).days + 1
     full_range = [start_date + timedelta(days=i) for i in range(delta_days)]
 
     data_for_plot = []
     for d in full_range:
-        days_from_start = (d - start_date).days
-        start_date_adj_weekday = weekday_mapping[start_date.weekday()]
-        week_index = (days_from_start + start_date_adj_weekday) // 7
-        day_of_week = weekday_mapping[d.weekday()]
+        week_index = (d - cal_start_date).days // 7
+        day_of_week = (d.weekday() - cal.firstweekday) % 7
         count = date_counts.get(d, 0)
         data_for_plot.append((week_index, day_of_week, count))
 
-    total_weeks = (end_date - start_date).days // 7 + 1
+    total_weeks = (cal_end_date - cal_start_date).days // 7 + 1
 
     all_counts = np.array(list(date_counts.values()))
     min_count, max_count = all_counts.min(), all_counts.max()
@@ -309,8 +288,7 @@ def calendar(
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
     for m_start in month_starts:
-        m_start_adj_weekday = weekday_mapping[m_start.weekday()]
-        week_of_month = ((m_start - start_date).days + m_start_adj_weekday) // 7
+        week_of_month = (m_start - cal_start_date).days // 7
         ax.text(
             week_of_month + 0.5,
             -month_y_margin,
@@ -333,9 +311,7 @@ def calendar(
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     # Create labels in the adjusted order based on week_starts_on
-    labels = DAY_NAMES.copy()
-    labels = [L[:3] for L in labels]  # Abbreviate to "Sun", "Mon", etc.
-    adjusted_labels = labels[week_starts_on_index:] + labels[:week_starts_on_index]
+    labels = [day_abbr[(cal.firstweekday + i) % 7] for i in range(7)]
 
     for y_tick, day_label in zip(ticks, adjusted_labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
