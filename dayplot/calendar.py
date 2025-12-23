@@ -66,7 +66,7 @@ def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]):
     return cmap
 
 
-def _get_start_and_end_dates(date_counts, start_date, end_date):
+def _get_start_and_end_dates(date_counts: dict[date, float], start_date: Union[datetime, str, date | None], end_date: Union[datetime, str, date | None]) -> tuple[date, date]:
     min_data_date = min(date_counts.keys())
     max_data_date = max(date_counts.keys())
 
@@ -293,7 +293,7 @@ def calendar(
             week_of_month + 0.5,
             -month_y_margin,
             m_start.strftime("%b"),
-            **month_text_style,
+            **month_text_style,  # type: ignore[invalid-argument-type]
         )
 
     ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
@@ -313,8 +313,8 @@ def calendar(
     # Create labels in the adjusted order based on week_starts_on
     labels = [day_abbr[(cal.firstweekday + i) % 7] for i in range(7)]
 
-    for y_tick, day_label in zip(ticks, adjusted_labels):
-        ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
+    for y_tick, day_label in zip(ticks, labels):
+        ax.text(-day_x_margin, y_tick, day_label, **day_text_style)  # type: ignore[invalid-argument-type]
 
     if legend:
         legend_values = np.linspace(vmin, vmax, legend_bins)
@@ -344,31 +344,10 @@ def calendar(
 
                 legend_labels_style = dict(size=7, ha="center")
                 legend_labels_style.update(legend_labels_kws)
-                ax.text(x=i + 0.5, y=9, s=legend_label, **legend_labels_style)
+                ax.text(x=i + 0.5, y=9, s=legend_label, **legend_labels_style)  # type: ignore[invalid-argument-type]
 
         ax.text(-0.6, 8, "Less", va="center", ha="right", size=8)
         ax.text(legend_bins + 0.5, 8, "More", va="center", ha="left", size=8)
 
     return rect_patches
 
-
-if __name__ == "__main__":
-    import dayplot as dp
-
-    df = dp.load_dataset()
-    df.loc[df.sample(n=100, replace=False).index, "values"] *= -1
-
-    fig, ax = plt.subplots(figsize=(15, 5))
-    calendar(
-        dates=df["dates"],
-        values=df["values"],
-        start_date="2024-01-01",
-        end_date="2024-12-31",
-        cmap="RdBu",
-        legend=True,
-        legend_bins=5,
-        legend_labels="auto",
-        ax=ax,
-    )
-
-    plt.savefig("cache.png", dpi=300)
