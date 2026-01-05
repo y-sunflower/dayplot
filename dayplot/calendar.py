@@ -67,8 +67,8 @@ def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]):
 
 def _get_start_and_end_dates(
     date_counts: dict[date, float],
-    start_date: Union[datetime, str, date | None],
-    end_date: Union[datetime, str, date | None],
+    start_date: Union[datetime, str, date, None],
+    end_date: Union[datetime, str, date, None],
 ) -> tuple[date, date]:
     min_data_date = min(date_counts.keys())
     max_data_date = max(date_counts.keys())
