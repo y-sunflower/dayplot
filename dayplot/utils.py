@@ -2,8 +2,8 @@ import os
 import narwhals as nw
 from narwhals.typing import IntoDataFrame
 from typing import Union, Literal
-from datetime import date
-from datetime import datetime
+import calendar
+from datetime import date, datetime, timedelta
 
 
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,3 +42,28 @@ def _parse_date(d: Union[datetime, str, date]) -> date:
     elif isinstance(d, date):
         return d
     raise TypeError("Unsupported date type")
+
+
+def relative_date_add(
+    d: date, *, years: int = 0, months: int = 0, days: int = 0
+) -> date:
+    """
+    Add relative years, months, and days to a date or datetime.
+
+    - Years and months are applied first (calendar-aware)
+    - Days are applied last via timedelta
+    - If the resulting month has fewer days, the day is clamped
+      to the last valid day of that month
+    """
+    if not isinstance(d, (date, datetime)):
+        raise TypeError("d must be a date or datetime")
+
+    total_months = d.year * 12 + (d.month - 1) + years * 12 + months
+    year, month = divmod(total_months, 12)
+    month += 1  # account for months not beginning at 0
+
+    last_day = calendar.monthrange(year, month)[1]
+    day = min(d.day, last_day)
+    result = date(year, month, day)
+
+    return result + timedelta(days=days)

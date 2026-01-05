@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from matplotlib.path import Path
 from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
 import matplotlib
 from matplotlib.axes import Axes
@@ -9,10 +10,11 @@ from calendar import Calendar, day_name, day_abbr
 
 from collections import defaultdict
 from datetime import date, datetime, timedelta
+from itertools import chain
 from typing import List, Union, Optional, Dict, Any, Literal
 import warnings
 
-from dayplot.utils import _parse_date
+from dayplot.utils import _parse_date, relative_date_add
 
 
 IMPLEMENTED_BOXSTYLE = [
@@ -155,6 +157,8 @@ def calendar(
     legend_labels_kws: Optional[Dict] = None,
     less_label: str = "Less",
     more_label: str = "More",
+    month_grid: bool = False,
+    month_grid_kws: Dict = {},
     clip_on: bool = False,
     ax: Optional[Axes] = None,
     **kwargs: Any,
@@ -220,10 +224,13 @@ def calendar(
             to generate labels from the data values.
         legend_labels_precision: Number of decimal places to round legend labels when
             `legend_labels="auto"`.
-        legend_labels_kws: Additional keyword arguments passed to the matplotlib text
-            function when rendering legend labels.
+        legend_labels_kws: Additional keyword arguments passed to Axes.annotate function when
+            rendering legend labels.
         less_label: Left label used for the legend.
         more_label: Right label used for the legend.
+        month_grid: Whether to draw bounding boxes around each month.
+        month_grid_kws: Additional keyword arguments passed to the matplotlib.path.Path used to draw
+            visible bounding boxes around each month.
         clip_on: Whether the artist (e.g., squares) is clipped to the axes boundaries (True) or allowed to extend
             beyond them (False).
         ax: A matplotlib axes. If None, plt.gca() will be used. It is advisable to make this explicit
@@ -319,14 +326,14 @@ def calendar(
         ax.add_patch(rect)
         rect_patches.append(rect)
 
-    month_text_style = dict(ha="center", va="center", size=10)
+    month_text_style = dict(ha="left", va="top", size=10)
     month_text_style.update(month_kws)
     month_starts = [d for d in full_range if d.day == 1]
     for m_start in month_starts:
         week_of_month = (m_start - cal_start_date).days // 7
         ax.text(
             week_of_month + 0.5,
-            -month_y_margin,
+            7 + month_y_margin,
             m_start.strftime("%b"),
             **month_text_style,  # type: ignore[invalid-argument-type]
         )
@@ -351,15 +358,54 @@ def calendar(
     for y_tick, day_label in zip(ticks, labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)  # type: ignore[invalid-argument-type]
 
+    if month_grid:
+        # vertical grid around data within each months
+        verts, codes = [], []
+        last_month = relative_date_add(month_starts[-1], months=1)
+        for m_start in chain(month_starts, [last_month]):
+            week_of_month = (m_start - cal_start_date).days // 7
+            day_of_week = (m_start.weekday() - cal.firstweekday) % 7
+            verts.extend(
+                [
+                    (week_of_month, 7),
+                    (week_of_month, day_of_week),
+                    (week_of_month + 1, day_of_week),
+                    (week_of_month + 1, 0),
+                ]
+            )
+
+            codes.extend([Path.MOVETO, Path.LINETO, Path.LINETO, Path.LINETO])
+
+        # horizontal grid above/below data
+        verts.extend(
+            [
+                (0, 7),
+                (week_of_month, 7),
+                (week_of_month + 1, 0),
+                (1, 0),
+            ]
+        )
+        codes.extend([Path.MOVETO, Path.LINETO, Path.MOVETO, Path.LINETO])
+
+        path = Path(verts, codes, closed=False)
+        default_month_grid_kws = dict(facecolor="none", clip_on=clip_on)
+        default_month_grid_kws.update(month_grid_kws)
+
+        patch = patches.PathPatch(path, **default_month_grid_kws)
+        ax.add_patch(patch)
+
     if legend:
+        legend_rects = []
         legend_values = np.linspace(vmin, vmax, legend_bins)
         for i, val in enumerate(legend_values):
             if is_diverging:
                 color = cmap(norm(val))
             else:
                 color = color_for_none if val == 0 else cmap(norm(val))
+
+            legend_xloc = total_weeks - len(legend_values) + i
             rect = patches.FancyBboxPatch(
-                xy=(i + 0.35, 7.8),
+                xy=(legend_xloc + 0.35, -0.8),
                 width=0.3,
                 height=0.3,
                 linewidth=edgewidth,
@@ -370,6 +416,7 @@ def calendar(
                 **kwargs,
             )
             ax.add_patch(rect)
+            legend_rects.append(rect)
 
             if legend_labels is not None:
                 if legend_labels == "auto":
@@ -377,11 +424,36 @@ def calendar(
                 else:
                     legend_label = str(legend_labels[i])
 
-                legend_labels_style = dict(size=7, ha="center")
+                legend_labels_style = dict(size=7, ha="center", va="bottom")
                 legend_labels_style.update(legend_labels_kws)
-                ax.text(x=i + 0.5, y=9, s=legend_label, **legend_labels_style)  # type: ignore[invalid-argument-type]
+                ax.annotate(
+                    legend_label,
+                    xy=(0.5, 1),
+                    xycoords=rect,
+                    xytext=(0, 1),
+                    textcoords="offset points",
+                    **legend_labels_style,
+                )
 
-        ax.text(-0.6, 8, less_label, va="center", ha="right", size=8)
-        ax.text(legend_bins + 0.5, 8, more_label, va="center", ha="left", size=8)
+        ax.annotate(
+            less_label,
+            xy=(0, 0.5),
+            xycoords=legend_rects[0],
+            xytext=(-5, 0),
+            textcoords="offset points",
+            va="center",
+            ha="right",
+            size=8,
+        )
+        ax.annotate(
+            more_label,
+            xy=(1, 0.5),
+            xycoords=legend_rects[-1],
+            xytext=(5, 0),
+            textcoords="offset points",
+            va="center",
+            ha="left",
+            size=8,
+        )
 
     return rect_patches
