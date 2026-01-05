@@ -97,10 +97,37 @@ def _get_start_and_end_dates(
 
 
 def calendar_week(cal: Calendar, date: date) -> list[date]:
+    """
+    Return the list of dates representing the calendar week containing `date`.
+
+    The week is determined using the provided `calendar.Calendar` instance,
+    meaning the first day of the week and week boundaries follow the calendar's
+    configuration. The returned list always contains seven `datetime.date`
+    objects and may include dates from adjacent months.
+
+    Parameters
+    ----------
+    cal : calendar.Calendar
+        A configured calendar instance that defines week structure.
+    date : datetime.date
+        The date whose containing calendar week should be returned.
+
+    Returns
+    -------
+    list[datetime.date]
+        A list of seven dates representing the week that contains `date`.
+
+    Raises
+    ------
+    ValueError
+        If no week in the calendar month contains `date`. This should not
+        occur for valid `date` and `calendar.Calendar` inputs.
+    """
     for wk in cal.monthdatescalendar(date.year, date.month):
         if wk[0] <= date <= wk[-1]:
             return wk
-    raise ValueError("")
+    msg = f"Date {date!r} was not found in any calendar week for {date.year:04d}-{date.month:02d}"
+    raise ValueError(msg)
 
 
 def calendar(
