@@ -9,7 +9,10 @@ from datetime import datetime
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def load_dataset(backend: Literal["pandas", "polars", "pyarrow", "modin", "cudf"] = "pandas", **kwargs) -> IntoDataFrame:
+def load_dataset(
+    backend: Literal["pandas", "polars", "pyarrow", "modin", "cudf"] = "pandas",
+    **kwargs,
+) -> IntoDataFrame:
     """
     Load a simple dataset with fake daily data. This function is a simple wrapper
     around the [`narwhals.read_csv()`](https://narwhals-dev.github.io/narwhals/api-reference/narwhals/#narwhals.read_csv)

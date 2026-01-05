@@ -10,7 +10,6 @@ from calendar import Calendar, day_name, day_abbr
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from typing import List, Union, Optional, Dict, Any, Literal
-from datetime import date
 import warnings
 
 from dayplot.utils import _parse_date
@@ -66,7 +65,11 @@ def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]):
     return cmap
 
 
-def _get_start_and_end_dates(date_counts: dict[date, float], start_date: Union[datetime, str, date | None], end_date: Union[datetime, str, date | None]) -> tuple[date, date]:
+def _get_start_and_end_dates(
+    date_counts: dict[date, float],
+    start_date: Union[datetime, str, date | None],
+    end_date: Union[datetime, str, date | None],
+) -> tuple[date, date]:
     min_data_date = min(date_counts.keys())
     max_data_date = max(date_counts.keys())
 
@@ -97,7 +100,8 @@ def calendar_week(cal: Calendar, date: date) -> list[date]:
     for wk in cal.monthdatescalendar(date.year, date.month):
         if wk[0] <= date <= wk[-1]:
             return wk
-    raise ValueError('')
+    raise ValueError("")
+
 
 def calendar(
     dates: List[Union[date, datetime, str]],
@@ -350,4 +354,3 @@ def calendar(
         ax.text(legend_bins + 0.5, 8, "More", va="center", ha="left", size=8)
 
     return rect_patches
-
