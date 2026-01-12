@@ -22,4 +22,4 @@ uv.lock
 !sample.csv
 *.zip
 
-scripts/release.sh
+release.sh
