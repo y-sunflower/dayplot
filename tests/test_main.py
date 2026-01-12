@@ -248,4 +248,4 @@ def test_legend_works(
 
 
 def dayplot_version():
-    assert dayplot.__version__ == "0.4.2"
+    assert dayplot.__version__ == "0.5.0"
