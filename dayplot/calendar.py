@@ -153,6 +153,8 @@ def calendar(
     legend_labels: Optional[Union[List, Literal["auto"]]] = None,
     legend_labels_precision: Optional[int] = None,
     legend_labels_kws: Optional[Dict] = None,
+    less_label: str = "Less",
+    more_label: str = "More",
     clip_on: bool = False,
     ax: Optional[Axes] = None,
     **kwargs: Any,
@@ -220,6 +222,8 @@ def calendar(
             `legend_labels="auto"`.
         legend_labels_kws: Additional keyword arguments passed to the matplotlib text
             function when rendering legend labels.
+        less_label: Left label used for the legend.
+        more_label: Right label used for the legend.
         clip_on: Whether the artist (e.g., squares) is clipped to the axes boundaries (True) or allowed to extend
             beyond them (False).
         ax: A matplotlib axes. If None, plt.gca() will be used. It is advisable to make this explicit
@@ -377,7 +381,7 @@ def calendar(
                 legend_labels_style.update(legend_labels_kws)
                 ax.text(x=i + 0.5, y=9, s=legend_label, **legend_labels_style)  # type: ignore[invalid-argument-type]
 
-        ax.text(-0.6, 8, "Less", va="center", ha="right", size=8)
-        ax.text(legend_bins + 0.5, 8, "More", va="center", ha="left", size=8)
+        ax.text(-0.6, 8, less_label, va="center", ha="right", size=8)
+        ax.text(legend_bins + 0.5, 8, more_label, va="center", ha="left", size=8)
 
     return rect_patches
