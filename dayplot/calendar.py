@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from matplotlib.path import Path
 from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
 import matplotlib
 from matplotlib.axes import Axes
@@ -9,10 +10,11 @@ from calendar import Calendar, day_name, day_abbr
 
 from collections import defaultdict
 from datetime import date, datetime, timedelta
+from itertools import chain
 from typing import List, Union, Optional, Dict, Any, Literal
 import warnings
 
-from dayplot.utils import _parse_date
+from dayplot.utils import _parse_date, relative_date_add
 
 
 IMPLEMENTED_BOXSTYLE = [
@@ -155,6 +157,8 @@ def calendar(
     legend_labels_kws: Optional[Dict] = None,
     less_label: str = "Less",
     more_label: str = "More",
+    month_grid: bool = False,
+    month_grid_kws: Dict = {},
     clip_on: bool = False,
     ax: Optional[Axes] = None,
     **kwargs: Any,
@@ -326,7 +330,7 @@ def calendar(
         week_of_month = (m_start - cal_start_date).days // 7
         ax.text(
             week_of_month + 0.5,
-            -month_y_margin,
+            7 + month_y_margin,
             m_start.strftime("%b"),
             **month_text_style,  # type: ignore[invalid-argument-type]
         )
@@ -350,6 +354,42 @@ def calendar(
 
     for y_tick, day_label in zip(ticks, labels):
         ax.text(-day_x_margin, y_tick, day_label, **day_text_style)  # type: ignore[invalid-argument-type]
+
+    if month_grid:
+        # vertical grid around data within each months
+        verts, codes = [], []
+        last_month = relative_date_add(month_starts[-1], months=1)
+        for m_start in chain(month_starts, [last_month]):
+            week_of_month = (m_start - cal_start_date).days // 7
+            day_of_week = (m_start.weekday() - cal.firstweekday) % 7
+            verts.extend(
+                [
+                    (week_of_month, 7),
+                    (week_of_month, day_of_week),
+                    (week_of_month + 1, day_of_week),
+                    (week_of_month + 1, 0),
+                ]
+            )
+
+            codes.extend([Path.MOVETO, Path.LINETO, Path.LINETO, Path.LINETO])
+
+        # horizontal grid above/below data
+        verts.extend(
+            [
+                (0, 7),
+                (week_of_month, 7),
+                (week_of_month + 1, 0),
+                (1, 0),
+            ]
+        )
+        codes.extend([Path.MOVETO, Path.LINETO, Path.MOVETO, Path.LINETO])
+
+        path = Path(verts, codes, closed=False)
+        default_month_grid_kws = dict(facecolor="none", clip_on=False)
+        default_month_grid_kws.update(month_grid_kws)
+
+        patch = patches.PathPatch(path, **default_month_grid_kws)
+        ax.add_patch(patch)
 
     if legend:
         legend_values = np.linspace(vmin, vmax, legend_bins)
