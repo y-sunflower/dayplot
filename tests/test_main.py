@@ -1,6 +1,7 @@
 import pytest
 import warnings
 import matplotlib
+from matplotlib.patches import PathPatch
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from datetime import datetime, timedelta
@@ -243,6 +244,36 @@ def test_legend_works(
         assert len(patches) == len(values) + legend_bins
     else:
         assert len(patches) == len(values)
+
+    plt.close("all")
+
+
+@pytest.mark.parametrize("month_grid", [True, False])
+@pytest.mark.parametrize(
+    "month_grid_kws", [{}, {"edgecolor": (0, 0, 1, 1), "linestyle": "--"}]
+)
+def test_month_grid(month_grid, month_grid_kws):
+    """Test that month_grid and month_grid_kws arguments work"""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
+    values = [1, 2, 3, 4, 5, 6, 7]
+    fig, ax = plt.subplots()
+    rects = calendar(
+        dates,
+        values,
+        month_grid=month_grid,
+        month_grid_kws=month_grid_kws,
+        ax=ax,
+    )
+
+    non_rect_patches = set(ax.patches) - set(rects)
+    assert len(non_rect_patches) == int(month_grid)
+
+    if month_grid:
+        path_patch = non_rect_patches.pop()
+        assert isinstance(path_patch, PathPatch)
+
+        for k, v in month_grid_kws.items():
+            assert getattr(path_patch, f"get_{k}")() == v
 
     plt.close("all")
 
