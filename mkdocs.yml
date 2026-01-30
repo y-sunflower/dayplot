@@ -36,6 +36,7 @@ nav:
   - Guides:
       - tuto/built-in-styles.md
       - tuto/basic-styling.md
+      - tuto/month-grid.md
       - tuto/negative-values.md
       - tuto/boxstyle.md
       - tuto/legend.md
