@@ -432,7 +432,7 @@ def calendar(
                     xycoords=rect,
                     xytext=(0, 1),
                     textcoords="offset points",
-                    **legend_labels_style,
+                    **legend_labels_style,  # type: ignore[invalid-argument-type]
                 )
 
         ax.annotate(
