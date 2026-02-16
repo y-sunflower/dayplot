@@ -365,9 +365,12 @@ def calendar(
         # vertical grid around data within each months
         verts, codes = [], []
         last_month = relative_date_add(month_starts[-1], months=1)
+        horizontal_gaps = []  # track horizontal lines that appear on the chart top
         for m_start in chain(month_starts, [last_month]):
             week_of_month = (m_start - cal_start_date).days // 7
             day_of_week = (m_start.weekday() - cal.firstweekday) % 7
+            if day_of_week == 0:
+                horizontal_gaps.append((week_of_month, week_of_month + 1))
             verts.extend(
                 [
                     (week_of_month, 7),
@@ -379,16 +382,31 @@ def calendar(
 
             codes.extend([Path.MOVETO, Path.LINETO, Path.LINETO, Path.LINETO])
 
-        # horizontal grid above/below data
+        # horizontal grid above/below data, ensuring they do not overlap with any lines drawn in the previous step.
+        last_week_of_month = (last_month - cal_start_date).days // 7
         verts.extend(
             [
+                # bottom line
                 (0, 7),
-                (week_of_month, 7),
-                (week_of_month + 1, 0),
+                (last_week_of_month, 7),
+                # top line
                 (1, 0),
+                *((wk, 0) for gap in horizontal_gaps for wk in gap),
+                (last_week_of_month + 1, 0),
             ]
         )
-        codes.extend([Path.MOVETO, Path.LINETO, Path.MOVETO, Path.LINETO])
+        codes.extend(
+            [
+                # bottom line
+                *[Path.MOVETO, Path.LINETO],
+                # top line
+                *[
+                    Path.MOVETO,
+                    *([Path.LINETO, Path.MOVETO] * len(horizontal_gaps)),
+                    Path.LINETO,
+                ],
+            ]
+        )
 
         path = Path(verts, codes, closed=False)
         default_month_grid_kws = dict(facecolor="none", clip_on=clip_on)
