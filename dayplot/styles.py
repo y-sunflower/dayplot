@@ -12,6 +12,7 @@ github_style = dict(
     day_x_margin=0.03,
     month_y_margin=0.6,
     mutation_scale=0.85,
+    month_grid_kws={"edgecolor": "white"},
 )
 
 styles = {
