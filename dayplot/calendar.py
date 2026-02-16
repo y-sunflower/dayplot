@@ -14,7 +14,7 @@ from itertools import chain
 from typing import List, Union, Optional, Dict, Any, Literal
 import warnings
 
-from dayplot.utils import _parse_date, relative_date_add
+from dayplot.utils import _parse_date, date_range, relative_date_add
 
 
 IMPLEMENTED_BOXSTYLE = [
@@ -328,11 +328,14 @@ def calendar(
 
     month_text_style = dict(ha="left", va="top", size=10)
     month_text_style.update(month_kws)
-    month_starts = [d for d in full_range if d.day == 1]
+
+    month_starts = [
+        *date_range(start_date.replace(day=1), end_date.replace(day=1), months=1)
+    ]
     for m_start in month_starts:
         week_of_month = (m_start - cal_start_date).days // 7
         ax.text(
-            week_of_month + 0.5,
+            week_of_month + 0.1,
             7 + month_y_margin,
             m_start.strftime("%b"),
             **month_text_style,  # type: ignore[invalid-argument-type]
