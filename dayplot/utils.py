@@ -4,6 +4,7 @@ from narwhals.typing import IntoDataFrame
 from typing import Union, Literal
 import calendar
 from datetime import date, datetime, timedelta
+from typing import Generator
 
 
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -71,12 +72,12 @@ def relative_date_add(
 
 def date_range(
     start: date,
-    stop: date | None = None,
+    stop: Union[date, None] = None,
     *,
     years: int = 0,
     months: int = 0,
     days: int = 0,
-) -> date:
+) -> Generator[date, None, None]:
     cur = start
     while stop is None or cur <= stop:
         yield cur
