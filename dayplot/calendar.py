@@ -405,7 +405,7 @@ def calendar(
 
             legend_xloc = total_weeks - len(legend_values) + i
             rect = patches.FancyBboxPatch(
-                xy=(legend_xloc + 0.35, -0.8),
+                xy=(legend_xloc + 0.35, -1.2),
                 width=0.3,
                 height=0.3,
                 linewidth=edgewidth,
