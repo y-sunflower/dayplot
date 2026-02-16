@@ -67,7 +67,7 @@ fig.text(
 )
 fig.text(
     x=0.75,
-    y=0.08,
+    y=0.05,
     s="made with dayplot",
     size=7,
     ha="right",
@@ -145,7 +145,7 @@ fig.text(
 )
 fig.text(
     x=0.63,
-    y=0.1,
+    y=0.08,
     s="made with dayplot, by Joseph Barbier",
     size=7,
     ha="right",

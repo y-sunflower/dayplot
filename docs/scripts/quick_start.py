@@ -92,4 +92,15 @@ fig.savefig("docs/img/quickstart-github.png", bbox_inches="tight", dpi=300)
 
 ########################################################################
 
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    month_grid=True,
+    ax=ax,
+)
+fig.savefig("docs/img/quickstart-monthgrid.png", bbox_inches="tight", dpi=300)
+
 plt.close("all")
