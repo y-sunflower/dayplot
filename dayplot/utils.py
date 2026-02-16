@@ -67,3 +67,17 @@ def relative_date_add(
     result = date(year, month, day)
 
     return result + timedelta(days=days)
+
+
+def date_range(
+    start: date,
+    stop: date | None = None,
+    *,
+    years: int = 0,
+    months: int = 0,
+    days: int = 0,
+) -> date:
+    cur = start
+    while stop is None or cur <= stop:
+        yield cur
+        cur = relative_date_add(cur, years=years, months=months, days=days)
