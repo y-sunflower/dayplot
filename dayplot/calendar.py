@@ -433,7 +433,7 @@ def calendar(
                 edgecolor=edgecolor,
                 facecolor=color,
                 boxstyle=boxstyle,
-                clip_on=clip_on,
+                clip_on=False,
                 **kwargs,
             )
             ax.add_patch(rect)
