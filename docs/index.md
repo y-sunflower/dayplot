@@ -140,6 +140,27 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     ax.set_facecolor("#0d1117")
     ```
 
+=== "Month Grid"
+
+    ![](img/quickstart-monthgrid.png)
+
+    ```py
+    import matplotlib.pyplot as plt
+    import dayplot as dp
+
+    df = dp.load_dataset("pandas") # can also be "polars", "pyarrow", etc
+
+    fig, ax = plt.subplots(figsize=(15, 6))
+    dp.calendar(
+        dates=df["dates"],
+        values=df["values"],
+        start_date="2024-01-01",
+        end_date="2024-12-31",
+        month_grid=True,
+        ax=ax,
+    )
+    ```
+
 <span style="font-size: 1rem; font-weight: bold;">[See more examples](./tuto/basic-styling.md)</span>
 
 ## Installation
