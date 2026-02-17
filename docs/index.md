@@ -148,7 +148,7 @@ A simple-to-use Python library to build **calendar heatmaps** with ease. It's bu
     import matplotlib.pyplot as plt
     import dayplot as dp
 
-    df = dp.load_dataset("pandas") # can also be "polars", "pyarrow", etc
+    df = dp.load_dataset("pandas")
 
     fig, ax = plt.subplots(figsize=(15, 6))
     dp.calendar(
