@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 import dayplot as dp
 
+from plotjs import PlotJS
+
 df = dp.load_dataset()
 
 ########################################################################
@@ -102,5 +104,18 @@ dp.calendar(
     ax=ax,
 )
 fig.savefig("docs/img/quickstart-monthgrid.png", bbox_inches="tight", dpi=300)
+
+
+########################################################################
+
+fig, ax = plt.subplots(figsize=(15, 6))
+dp.calendar(
+    dates=df["dates"],
+    values=df["values"],
+    start_date="2024-01-01",
+    end_date="2024-12-31",
+    ax=ax,
+)
+PlotJS(fig).add_tooltip(labels=df["values"]).save("docs/img/interactive.html")
 
 plt.close("all")

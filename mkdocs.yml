@@ -40,6 +40,7 @@ nav:
       - tuto/negative-values.md
       - tuto/boxstyle.md
       - tuto/legend.md
+      - tuto/interactive.md
       - tuto/combine-charts.md
       - tuto/fetch-github-contribs.md
       - tuto/advanced.md

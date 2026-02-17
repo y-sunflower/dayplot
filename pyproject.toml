@@ -9,7 +9,7 @@ authors = [
     { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "matplotlib",
     "narwhals>=1.0.0",
@@ -32,6 +32,7 @@ dev = [
     "polars>=1.31.0",
     "ty>=0.0.1a20",
     "pandas>=2.3.0",
+    "plotjs>=0.0.9",
 ]
 
 [build-system]
