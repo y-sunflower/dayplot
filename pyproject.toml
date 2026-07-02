@@ -2,43 +2,53 @@
 name = "dayplot"
 version = "0.5.1"
 description = "Calendar heatmaps with matplotlib"
-license = "MIT"
-license-files = ["LICENSE"]
-keywords = ["matplotlib", "calendar", "heatmap", "github", "plot"]
-authors = [
-    { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
-]
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "matplotlib",
-    "narwhals>=1.0.0",
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Joseph Barbier", email = "joseph.barbierdarnal@gmail.com" },
 ]
+keywords = ["calendar", "github", "heatmap", "matplotlib", "plot"]
+dependencies = [
+  "matplotlib",
+  "narwhals>=1.0.0",
+]
+
+[project.urls]
+Documentation = "https://y-sunflower.github.io/dayplot/reference/calendar/"
+Homepage = "https://y-sunflower.github.io/dayplot/"
+Issues = "https://github.com/y-sunflower/dayplot/issues"
+Repository = "https://github.com/y-sunflower/dayplot"
 
 [project.optional-dependencies]
 data = ["requests"]
 
 [dependency-groups]
 dev = [
-    "dotenv>=0.9.9",
-    "pre-commit>=4.2.0",
-    "pytest>=8.3.5",
-    "ruff>=0.11.13",
-    "mkdocs-matplotlib>=0.10.1",
-    "mkdocs-material>=9.6.9",
-    "mkdocstrings-python>=1.16.5",
-    "coverage>=7.9.1",
-    "genbadge[coverage]>=1.1.2",
-    "polars>=1.31.0",
-    "ty>=0.0.1a20",
-    "pandas>=2.3.0",
-    "plotjs>=0.0.9",
+  "coverage>=7.9.1",
+  "dotenv>=0.9.9",
+  "genbadge[coverage]>=1.1.2",
+  "mkdocs-material>=9.6.9",
+  "mkdocs-matplotlib>=0.10.1",
+  "mkdocstrings-python>=1.16.5",
+  "pandas>=2.3.0",
+  "plotjs>=0.0.9",
+  "polars>=1.31.0",
+  "prek>=0.4.6",
+  "pyrefly>=1.1.1",
+  "pytest>=8.3.5",
+  "ruff>=0.11.13",
+  "ty==0.0.56",
+  "types-markdown>=3.10.2.20260518",
+  "types-requests>=2.33.0.20260518",
+  "zensical>=0.0.46",
 ]
 
 [build-system]
 requires = [
-    "setuptools",
-    "setuptools-scm",
+  "setuptools",
+  "setuptools-scm",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -48,15 +58,12 @@ packages = ["dayplot"]
 [tool.setuptools.package-data]
 mypkg = ["sample.csv"]
 
-[tool.uv.sources]
-dayplot = { workspace = true }
-
-[project.urls]
-Homepage = "https://y-sunflower.github.io/dayplot/"
-Issues = "https://github.com/y-sunflower/dayplot/issues"
-Documentation = "https://y-sunflower.github.io/dayplot/reference/calendar/"
-Repository = "https://github.com/y-sunflower/dayplot"
-
 [tool.ty.src]
 include = ["dayplot"]
 exclude = ["tests"]
+
+[tool.pyrefly]
+project-includes = ["dayplot"]
+
+[tool.uv.sources]
+dayplot = { workspace = true }

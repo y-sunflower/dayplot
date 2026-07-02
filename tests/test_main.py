@@ -3,7 +3,7 @@ import warnings
 import matplotlib
 from matplotlib.patches import PathPatch
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import LinearSegmentedColormap, to_rgba
 from datetime import datetime, timedelta
 import string
 
@@ -211,6 +211,209 @@ def test_diffrerent_df_backends(backend):
 
     patches = ax.patches
     assert len(patches) == 7
+
+
+def test_calendar_categorical_default_colors():
+    """Test categorical values use the default tab10 colors."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
+    values = ["work", "rest", "work"]
+    fig, ax = plt.subplots()
+
+    patches = calendar(dates, values, ax=ax)
+    tab10 = plt.get_cmap("tab10").colors
+
+    assert patches[0].get_facecolor() == to_rgba(tab10[0])
+    assert patches[1].get_facecolor() == to_rgba(tab10[1])
+    assert patches[2].get_facecolor() == to_rgba(tab10[0])
+
+    plt.close("all")
+
+
+def test_calendar_categorical_dict_colors():
+    """Test categorical values can use an explicit category-color mapping."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
+    values = ["work", "rest", "work"]
+    fig, ax = plt.subplots()
+
+    patches = calendar(
+        dates,
+        values,
+        colors={"work": "#0f766e", "rest": "#f59e0b"},
+        ax=ax,
+    )
+
+    assert patches[0].get_facecolor() == to_rgba("#0f766e")
+    assert patches[1].get_facecolor() == to_rgba("#f59e0b")
+    assert patches[2].get_facecolor() == to_rgba("#0f766e")
+
+    plt.close("all")
+
+
+def test_calendar_categorical_list_colors_and_legend_order():
+    """Test list colors are assigned and shown in first-appearance order."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
+    values = ["low", "high", "medium"]
+    fig, ax = plt.subplots()
+
+    rects = calendar(
+        dates,
+        values,
+        colors=["#ef4444", "#22c55e", "#3b82f6"],
+        legend=True,
+        ax=ax,
+    )
+
+    assert rects[0].get_facecolor() == to_rgba("#ef4444")
+    assert rects[1].get_facecolor() == to_rgba("#22c55e")
+    assert rects[2].get_facecolor() == to_rgba("#3b82f6")
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert len(ax.patches) == len(rects)
+    assert [handle.get_facecolor() for handle in legend.legend_handles] == [
+        to_rgba("#ef4444"),
+        to_rgba("#22c55e"),
+        to_rgba("#3b82f6"),
+    ]
+    assert [text.get_text() for text in legend.get_texts()] == [
+        "low",
+        "high",
+        "medium",
+    ]
+
+    plt.close("all")
+
+
+def test_calendar_categorical_duplicate_dates_last_wins():
+    """Test duplicate categorical dates use the last value."""
+    dates = [datetime(2024, 1, 1), datetime(2024, 1, 1)]
+    values = ["work", "rest"]
+    fig, ax = plt.subplots()
+
+    patches = calendar(
+        dates,
+        values,
+        colors={"work": "#0f766e", "rest": "#f59e0b"},
+        ax=ax,
+    )
+
+    assert len(patches) == 1
+    assert patches[0].get_facecolor() == to_rgba("#f59e0b")
+
+    plt.close("all")
+
+
+def test_calendar_categorical_custom_legend_labels():
+    """Test categorical legend labels can be overridden."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(2)]
+    values = ["work", "rest"]
+    fig, ax = plt.subplots()
+
+    calendar(
+        dates,
+        values,
+        colors={"work": "#0f766e", "rest": "#f59e0b"},
+        legend=True,
+        legend_labels=["Working", "Resting"],
+        ax=ax,
+    )
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert [text.get_text() for text in legend.get_texts()] == [
+        "Working",
+        "Resting",
+    ]
+
+    plt.close("all")
+
+
+def test_calendar_categorical_legend_with_long_labels():
+    """Test categorical legends use Matplotlib's layout for long labels."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(4)]
+    values = [
+        "Customer support",
+        "Deep strategy work",
+        "Documentation review",
+        "Release coordination",
+    ]
+    fig, ax = plt.subplots()
+
+    calendar(
+        dates,
+        values,
+        colors=["#0f766e", "#f59e0b", "#2563eb", "#dc2626"],
+        legend=True,
+        ax=ax,
+    )
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert [text.get_text() for text in legend.get_texts()] == values
+    assert len(ax.patches) == len(values)
+
+    plt.close("all")
+
+
+def test_calendar_categorical_legend_kws():
+    """Test categorical legend layout can be customized with legend_kws."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
+    values = ["low", "high", "medium"]
+    fig, ax = plt.subplots()
+
+    rects = calendar(
+        dates,
+        values,
+        colors=["#ef4444", "#22c55e", "#3b82f6"],
+        legend=True,
+        legend_kws={"ncol": 1, "frameon": True, "loc": "lower center"},
+        ax=ax,
+    )
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert len(ax.patches) == len(rects)
+    assert legend.get_frame_on()
+    assert legend._ncols == 1
+    assert legend._loc == 8
+
+    plt.close("all")
+
+
+def test_calendar_categorical_colors_too_short():
+    """Test categorical list colors must cover all observed categories."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(2)]
+    values = ["work", "rest"]
+    fig, ax = plt.subplots()
+
+    with pytest.raises(ValueError, match="at least as many colors"):
+        calendar(dates, values, colors=["#0f766e"], ax=ax)
+
+    plt.close("all")
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"cmap": "Reds"},
+        {"vmin": 0},
+        {"vmax": 10},
+        {"vcenter": 5},
+        {"legend_bins": 3},
+        {"less_label": "Low"},
+        {"more_label": "High"},
+    ],
+)
+def test_calendar_categorical_rejects_numeric_only_arguments(kwargs):
+    """Test numeric-only arguments raise for categorical values."""
+    dates = [datetime(2024, 1, 1)]
+    values = ["work"]
+    fig, ax = plt.subplots()
+
+    with pytest.raises(ValueError, match="categorical data"):
+        calendar(dates, values, ax=ax, **kwargs)
+
+    plt.close("all")
 
 
 @pytest.mark.parametrize("legend", [True, False])

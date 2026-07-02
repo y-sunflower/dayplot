@@ -23,3 +23,5 @@ uv.lock
 *.zip
 
 release.sh
+
+site
