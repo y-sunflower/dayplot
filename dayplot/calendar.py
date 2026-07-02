@@ -267,6 +267,7 @@ def calendar(
     legend_labels: Optional[Union[List, Literal["auto"]]] = None,
     legend_labels_precision: Optional[int] = None,
     legend_labels_kws: Optional[Dict] = None,
+    legend_kws: Optional[Dict] = None,
     less_label: Any = _DEFAULT_LESS_LABEL,
     more_label: Any = _DEFAULT_MORE_LABEL,
     month_grid: bool = False,
@@ -342,6 +343,8 @@ def calendar(
             `legend_labels="auto"`.
         legend_labels_kws: Additional keyword arguments passed to Axes.annotate function when
             rendering legend labels.
+        legend_kws: Additional keyword arguments passed to Axes.legend when rendering
+            categorical legends.
         less_label: Left label used for the legend.
         more_label: Right label used for the legend.
         month_grid: Whether to draw bounding boxes around each month.
@@ -397,6 +400,7 @@ def calendar(
     month_kws = month_kws or {}
     day_kws = day_kws or {}
     legend_labels_kws = legend_labels_kws or {}
+    legend_kws = legend_kws or {}
     ax = ax or plt.gca()
 
     category_order: list[Any] = []
@@ -626,9 +630,7 @@ def calendar(
                         "verticalalignment",
                     }
                 }
-                legend_artist = ax.legend(
-                    handles=legend_handles,
-                    labels=legend_label_values,
+                categorical_legend_kws: dict[str, Any] = dict(
                     loc="upper center",
                     bbox_to_anchor=(0.5, -0.08),
                     ncol=min(len(categories), 3),
@@ -637,6 +639,12 @@ def calendar(
                     handletextpad=0.5,
                     columnspacing=1.2,
                     prop=legend_text_props or None,
+                )
+                categorical_legend_kws.update(legend_kws)
+                legend_artist = ax.legend(
+                    handles=legend_handles,
+                    labels=legend_label_values,
+                    **categorical_legend_kws,
                 )
                 if "color" in legend_labels_kws:
                     for text in legend_artist.get_texts():

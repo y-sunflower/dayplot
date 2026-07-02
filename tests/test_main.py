@@ -355,6 +355,31 @@ def test_calendar_categorical_legend_with_long_labels():
     plt.close("all")
 
 
+def test_calendar_categorical_legend_kws():
+    """Test categorical legend layout can be customized with legend_kws."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
+    values = ["low", "high", "medium"]
+    fig, ax = plt.subplots()
+
+    rects = calendar(
+        dates,
+        values,
+        colors=["#ef4444", "#22c55e", "#3b82f6"],
+        legend=True,
+        legend_kws={"ncol": 1, "frameon": True, "loc": "lower center"},
+        ax=ax,
+    )
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert len(ax.patches) == len(rects)
+    assert legend.get_frame_on()
+    assert legend._ncols == 1
+    assert legend._loc == 8
+
+    plt.close("all")
+
+
 def test_calendar_categorical_colors_too_short():
     """Test categorical list colors must cover all observed categories."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(2)]
