@@ -595,18 +595,61 @@ def calendar(
         ax.add_patch(patch)
 
     if legend:
-        legend_rects = []
         if is_categorical:
-            legend_values = categories
-        else:
-            legend_values = np.linspace(
-                cast(float, vmin), cast(float, vmax), cast(int, legend_bins)
-            )
+            legend_handles = []
+            legend_label_values = []
+            for i, category in enumerate(categories):
+                if legend_labels in (None, "auto"):
+                    legend_label = str(category)
+                else:
+                    legend_label = str(cast(List, legend_labels)[i])
+
+                legend_handles.append(
+                    patches.Patch(
+                        facecolor=color_map[category],
+                        edgecolor=edgecolor,
+                        label=legend_label,
+                    )
+                )
+                legend_label_values.append(legend_label)
+
+            if legend_handles:
+                legend_text_props = {
+                    key: value
+                    for key, value in legend_labels_kws.items()
+                    if key
+                    not in {
+                        "color",
+                        "ha",
+                        "horizontalalignment",
+                        "va",
+                        "verticalalignment",
+                    }
+                }
+                legend_artist = ax.legend(
+                    handles=legend_handles,
+                    labels=legend_label_values,
+                    loc="upper center",
+                    bbox_to_anchor=(0.5, -0.08),
+                    ncol=min(len(categories), 3),
+                    frameon=False,
+                    handlelength=1,
+                    handletextpad=0.5,
+                    columnspacing=1.2,
+                    prop=legend_text_props or None,
+                )
+                if "color" in legend_labels_kws:
+                    for text in legend_artist.get_texts():
+                        text.set_color(legend_labels_kws["color"])
+            return rect_patches
+
+        legend_rects = []
+        legend_values = np.linspace(
+            cast(float, vmin), cast(float, vmax), cast(int, legend_bins)
+        )
 
         for i, val in enumerate(legend_values):
-            if is_categorical:
-                color = color_map[val]
-            elif is_diverging:
+            if is_diverging:
                 color = validated_cmap(norm(cast(float, val)))
             else:
                 color = (
@@ -630,10 +673,8 @@ def calendar(
             ax.add_patch(rect)
             legend_rects.append(rect)
 
-            if is_categorical or legend_labels is not None:
-                if is_categorical and legend_labels in (None, "auto"):
-                    legend_label = str(val)
-                elif legend_labels == "auto":
+            if legend_labels is not None:
+                if legend_labels == "auto":
                     legend_label = round(val, ndigits=legend_labels_precision)
                 else:
                     legend_label = str(cast(List, legend_labels)[i])
@@ -651,26 +692,25 @@ def calendar(
                     **legend_labels_style,
                 )
 
-        if not is_categorical:
-            ax.annotate(
-                less_label,
-                xy=(0, 0.5),
-                xycoords=legend_rects[0],
-                xytext=(-5, 0),
-                textcoords="offset points",
-                va="center",
-                ha="right",
-                size=8,
-            )
-            ax.annotate(
-                more_label,
-                xy=(1, 0.5),
-                xycoords=legend_rects[-1],
-                xytext=(5, 0),
-                textcoords="offset points",
-                va="center",
-                ha="left",
-                size=8,
-            )
+        ax.annotate(
+            less_label,
+            xy=(0, 0.5),
+            xycoords=legend_rects[0],
+            xytext=(-5, 0),
+            textcoords="offset points",
+            va="center",
+            ha="right",
+            size=8,
+        )
+        ax.annotate(
+            more_label,
+            xy=(1, 0.5),
+            xycoords=legend_rects[-1],
+            xytext=(5, 0),
+            textcoords="offset points",
+            va="center",
+            ha="left",
+            size=8,
+        )
 
     return rect_patches

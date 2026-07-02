@@ -35,7 +35,7 @@ Use the `colors` argument to control the color for each category.
 
 The safest option is to pass a dictionary, where each category is explicitly associated with a color.
 
-```py hl_lines="18 19 20 21 22 23 24"
+```py hl_lines="20-26"
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
@@ -100,6 +100,7 @@ dp.calendar(
 For categorical data, `legend=True` displays one box per category.
 
 By default, the labels are the category names. You can override them with `legend_labels`.
+Categorical legends use Matplotlib's regular legend layout, which works better with longer labels.
 
 ```py hl_lines="27"
 # mkdocs: render
@@ -129,7 +130,7 @@ dp.calendar(
         "Admin": "#dc2626",
     },
     legend=True,
-    legend_labels=["Writing day", "Review day", "Focus day", "Admin day", "Meeting day"],
+    legend_labels_kws={"size": 16, "ncol": 5},
     ax=ax,
 )
 ```

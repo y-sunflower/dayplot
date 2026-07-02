@@ -267,13 +267,19 @@ def test_calendar_categorical_list_colors_and_legend_order():
     assert rects[1].get_facecolor() == to_rgba("#22c55e")
     assert rects[2].get_facecolor() == to_rgba("#3b82f6")
 
-    legend_rects = ax.patches[len(rects) :]
-    assert [rect.get_facecolor() for rect in legend_rects] == [
+    legend = ax.get_legend()
+    assert legend is not None
+    assert len(ax.patches) == len(rects)
+    assert [handle.get_facecolor() for handle in legend.legend_handles] == [
         to_rgba("#ef4444"),
         to_rgba("#22c55e"),
         to_rgba("#3b82f6"),
     ]
-    assert [text.get_text() for text in ax.texts[-3:]] == ["low", "high", "medium"]
+    assert [text.get_text() for text in legend.get_texts()] == [
+        "low",
+        "high",
+        "medium",
+    ]
 
     plt.close("all")
 
@@ -312,7 +318,39 @@ def test_calendar_categorical_custom_legend_labels():
         ax=ax,
     )
 
-    assert [text.get_text() for text in ax.texts[-2:]] == ["Working", "Resting"]
+    legend = ax.get_legend()
+    assert legend is not None
+    assert [text.get_text() for text in legend.get_texts()] == [
+        "Working",
+        "Resting",
+    ]
+
+    plt.close("all")
+
+
+def test_calendar_categorical_legend_with_long_labels():
+    """Test categorical legends use Matplotlib's layout for long labels."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(4)]
+    values = [
+        "Customer support",
+        "Deep strategy work",
+        "Documentation review",
+        "Release coordination",
+    ]
+    fig, ax = plt.subplots()
+
+    calendar(
+        dates,
+        values,
+        colors=["#0f766e", "#f59e0b", "#2563eb", "#dc2626"],
+        legend=True,
+        ax=ax,
+    )
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert [text.get_text() for text in legend.get_texts()] == values
+    assert len(ax.patches) == len(values)
 
     plt.close("all")
 
