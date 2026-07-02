@@ -1,6 +1,6 @@
 [project]
 name = "dayplot"
-version = "0.5.1"
+version = "0.6.0"
 description = "Calendar heatmaps with matplotlib"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -52,6 +52,9 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[tool.pyrefly]
+project-includes = ["dayplot"]
+
 [tool.setuptools]
 packages = ["dayplot"]
 
@@ -61,9 +64,6 @@ mypkg = ["sample.csv"]
 [tool.ty.src]
 include = ["dayplot"]
 exclude = ["tests"]
-
-[tool.pyrefly]
-project-includes = ["dayplot"]
 
 [tool.uv.sources]
 dayplot = { workspace = true }

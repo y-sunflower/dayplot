@@ -482,4 +482,4 @@ def test_month_grid(month_grid, month_grid_kws):
 
 
 def dayplot_version():
-    assert dayplot.__version__ == "0.5.1"
+    assert dayplot.__version__ == "0.6.0"
