@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.colors as mcolors
 from matplotlib.path import Path
 from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
 from matplotlib.axes import Axes
@@ -8,9 +9,11 @@ import numpy as np
 from calendar import Calendar, day_name, day_abbr
 
 from collections import defaultdict
+from collections.abc import Mapping, Sequence
 from datetime import date, datetime, timedelta
 from itertools import chain
-from typing import List, Union, Optional, Dict, Any, Literal
+from numbers import Real
+from typing import List, Union, Optional, Dict, Any, Literal, cast
 import warnings
 
 from dayplot.utils import _parse_date, date_range, relative_date_add
@@ -31,6 +34,115 @@ NOT_IMPLEMENTED_BOXSTYLE = [
     "rarrow",
     "darrow",
 ]
+
+_MISSING = object()
+
+
+class _DefaultArg:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return repr(self.value)
+
+
+_DEFAULT_CMAP = _DefaultArg("Greens")
+_DEFAULT_VMIN = _DefaultArg(None)
+_DEFAULT_VMAX = _DefaultArg(None)
+_DEFAULT_VCENTER = _DefaultArg(None)
+_DEFAULT_LEGEND_BINS = _DefaultArg(4)
+_DEFAULT_LESS_LABEL = _DefaultArg("Less")
+_DEFAULT_MORE_LABEL = _DefaultArg("More")
+
+
+def _is_numeric_value(value: Any) -> bool:
+    return isinstance(value, Real) and not isinstance(value, bool)
+
+
+def _is_numeric_values(values) -> bool:
+    return all(_is_numeric_value(value) for value in values)
+
+
+def _unique_values_in_order(values) -> list[Any]:
+    unique_values = []
+    seen = set()
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            unique_values.append(value)
+    return unique_values
+
+
+def _validate_categorical_arguments(
+    cmap: Any,
+    vmin: Any,
+    vmax: Any,
+    vcenter: Any,
+    legend_bins: Any,
+    less_label: Any,
+    more_label: Any,
+) -> None:
+    invalid_args = []
+    if cmap is not _DEFAULT_CMAP:
+        invalid_args.append("cmap")
+    if vmin is not _DEFAULT_VMIN:
+        invalid_args.append("vmin")
+    if vmax is not _DEFAULT_VMAX:
+        invalid_args.append("vmax")
+    if vcenter is not _DEFAULT_VCENTER:
+        invalid_args.append("vcenter")
+    if legend_bins is not _DEFAULT_LEGEND_BINS:
+        invalid_args.append("legend_bins")
+    if less_label is not _DEFAULT_LESS_LABEL:
+        invalid_args.append("less_label")
+    if more_label is not _DEFAULT_MORE_LABEL:
+        invalid_args.append("more_label")
+
+    if invalid_args:
+        invalid_args_text = ", ".join(f"`{arg}`" for arg in invalid_args)
+        raise ValueError(
+            f"{invalid_args_text} cannot be used when `values` contains categorical data."
+        )
+
+
+def _validate_colors(colors: Any, categories: list[Any]) -> dict[Any, Any]:
+    if colors is None:
+        tab10 = plt.get_cmap("tab10")
+        colors = [tab10(i) for i in range(10)]
+
+    if isinstance(colors, Mapping):
+        missing_categories = [
+            category for category in categories if category not in colors
+        ]
+        if missing_categories:
+            missing_text = ", ".join(repr(category) for category in missing_categories)
+            raise ValueError(
+                "`colors` is missing colors for the following categories: "
+                f"{missing_text}."
+            )
+
+        color_map = {category: colors[category] for category in categories}
+    elif isinstance(colors, Sequence) and not isinstance(colors, str):
+        if len(colors) < len(categories):
+            raise ValueError(
+                "`colors` must contain at least as many colors as observed categories."
+            )
+
+        color_map = dict(zip(categories, colors))
+    else:
+        raise ValueError(
+            "`colors` must be a mapping of category to color or a sequence of colors."
+        )
+
+    for category, color in color_map.items():
+        try:
+            mcolors.to_rgba(color)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid color {color!r} for category {category!r}."
+            ) from exc
+
+    return color_map
 
 
 def _validate_inputs(boxstyle, dates, values):
@@ -67,7 +179,7 @@ def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]) -> Colormap:
 
 
 def _get_start_and_end_dates(
-    date_counts: dict[date, float],
+    date_counts: dict[date, Any],
     start_date: Union[datetime, str, date, None],
     end_date: Union[datetime, str, date, None],
 ) -> tuple[date, date]:
@@ -133,29 +245,30 @@ def calendar_week(cal: Calendar, date: date) -> list[date]:
 
 def calendar(
     dates: List[Union[date, datetime, str]],
-    values: List[Union[int, float]],
+    values: List[Any],
     start_date: Optional[Union[date, datetime, str]] = None,
     end_date: Optional[Union[date, datetime, str]] = None,
     color_for_none: Optional[str] = None,
     edgecolor: str = "black",
     edgewidth: float = 0.0,
-    cmap: Union[str, LinearSegmentedColormap] = "Greens",
+    colors: Optional[Union[Dict[Any, Any], List[Any]]] = None,
+    cmap: Any = _DEFAULT_CMAP,
     week_starts_on: str = "Sunday",
     month_kws: Optional[Dict] = None,
     day_kws: Optional[Dict] = None,
     day_x_margin: float = 0.02,
     month_y_margin: float = 0.4,
-    vmin: Optional[float] = None,
-    vmax: Optional[float] = None,
-    vcenter: Optional[float] = None,
+    vmin: Any = _DEFAULT_VMIN,
+    vmax: Any = _DEFAULT_VMAX,
+    vcenter: Any = _DEFAULT_VCENTER,
     boxstyle: Union[str, patches.BoxStyle] = "square",
     legend: bool = False,
-    legend_bins: int = 4,
+    legend_bins: Any = _DEFAULT_LEGEND_BINS,
     legend_labels: Optional[Union[List, Literal["auto"]]] = None,
     legend_labels_precision: Optional[int] = None,
     legend_labels_kws: Optional[Dict] = None,
-    less_label: str = "Less",
-    more_label: str = "More",
+    less_label: Any = _DEFAULT_LESS_LABEL,
+    more_label: Any = _DEFAULT_MORE_LABEL,
     month_grid: bool = False,
     month_grid_kws: Dict = {},
     clip_on: bool = False,
@@ -179,9 +292,9 @@ def calendar(
     Args:
         dates: A list of date-like objects (e.g., datetime.date, datetime.datetime,
             or strings in "YYYY-MM-DD" format). Must have the same length as values.
-        values: A list of numeric values corresponding to each date in dates. These
-            values represent contributions or counts for each day and must have the same
-            length as dates.
+        values: A list of numeric or categorical values corresponding to each date in
+            dates. Numeric values are aggregated by summing duplicate dates. Categorical
+            values use the last value for duplicate dates.
         start_date: The earliest date to display on the chart. Can be a date, datetime,
             or a string in "YYYY-MM-DD" format. If not provided, the minimum date found in
             `dates` will be used.
@@ -193,9 +306,12 @@ def calendar(
             has negative values.
         edgecolor: Color of the edges for each day's rectangle.
         edgewidth: Line width for the edges of each day's rectangle.
+        colors: Colors to use when `values` contains categorical data. Can be a mapping
+            of category to color or a list of colors assigned in first-appearance order.
+            If None, categorical data uses the Matplotlib "tab10" palette.
         cmap: A valid Matplotlib colormap name or a LinearSegmentedColormap instance. The
             colormap is used to determine the fill color intensity of each day's
-            cell based on its value.
+            cell based on its value. This only applies to numeric values.
         week_starts_on: The starting day of the week, which can be specified as a string
             ("Sunday", "Monday", ..., "Saturday").
         month_kws: Additional keyword arguments passed to the matplotlib.axes.Axes.text function
@@ -218,9 +334,10 @@ def calendar(
         boxstyle: The style of each box. This will be passed to `matplotlib.patches.FancyBboxPatch`.
             Available values are: "square", "circle", "ellipse", "larrow"
         legend: Whether to display a legend for the color scale.
-        legend_bins: Number of boxes/steps to display in the legend.
+        legend_bins: Number of boxes/steps to display in the numeric legend.
         legend_labels: Labels for the legend boxes. Can be a list of strings or "auto"
-            to generate labels from the data values.
+            to generate labels from the data values. For categorical legends, None and
+            "auto" display category labels, and a list overrides them in category order.
         legend_labels_precision: Number of decimal places to round legend labels when
             `legend_labels="auto"`.
         legend_labels_kws: Additional keyword arguments passed to Axes.annotate function when
@@ -242,10 +359,39 @@ def calendar(
         A list of `matplotlib.patches.FancyBboxPatch` (one for each cell).
 
     Notes:
-        The function aggregates multiple entries for the same date by summing their values.
+        The function aggregates multiple numeric entries for the same date by summing
+        their values. For categorical data, the last entry for a date is used.
     """
     _validate_inputs(boxstyle, dates, values)
-    validated_cmap = _validate_cmap(cmap)
+    is_categorical = not _is_numeric_values(values)
+
+    if is_categorical:
+        _validate_categorical_arguments(
+            cmap, vmin, vmax, vcenter, legend_bins, less_label, more_label
+        )
+        validated_cmap = _validate_cmap(_DEFAULT_CMAP.value)
+    else:
+        cmap = _DEFAULT_CMAP.value if cmap is _DEFAULT_CMAP else cmap
+        vmin = _DEFAULT_VMIN.value if vmin is _DEFAULT_VMIN else vmin
+        vmax = _DEFAULT_VMAX.value if vmax is _DEFAULT_VMAX else vmax
+        vcenter = _DEFAULT_VCENTER.value if vcenter is _DEFAULT_VCENTER else vcenter
+        legend_bins = (
+            _DEFAULT_LEGEND_BINS.value
+            if legend_bins is _DEFAULT_LEGEND_BINS
+            else legend_bins
+        )
+        less_label = (
+            _DEFAULT_LESS_LABEL.value
+            if less_label is _DEFAULT_LESS_LABEL
+            else less_label
+        )
+        more_label = (
+            _DEFAULT_MORE_LABEL.value
+            if more_label is _DEFAULT_MORE_LABEL
+            else more_label
+        )
+        validated_cmap = _validate_cmap(cmap)
+
     cal = Calendar([*day_name].index(week_starts_on))
 
     month_kws = month_kws or {}
@@ -253,9 +399,21 @@ def calendar(
     legend_labels_kws = legend_labels_kws or {}
     ax = ax or plt.gca()
 
-    date_counts: defaultdict[date, float] = defaultdict(float)
-    for d, v in zip(dates, values):
-        date_counts[_parse_date(d)] += v
+    category_order: list[Any] = []
+    categories: list[Any] = []
+    color_map: dict[Any, Any] = {}
+    is_diverging = False
+    norm: Any = None
+
+    if is_categorical:
+        date_counts = {}
+        category_order = _unique_values_in_order(values)
+        for d, v in zip(dates, values):
+            date_counts[_parse_date(d)] = v
+    else:
+        date_counts = defaultdict(float)
+        for d, v in zip(dates, values):
+            date_counts[_parse_date(d)] += cast(float, v)
 
     start_date, end_date = _get_start_and_end_dates(date_counts, start_date, end_date)
     cal_start_date = calendar_week(cal, start_date)[0]
@@ -268,49 +426,71 @@ def calendar(
     for d in full_range:
         week_index = (d - cal_start_date).days // 7
         day_of_week = (d.weekday() - cal.firstweekday) % 7
-        count = date_counts.get(d, 0)
+        count = date_counts.get(d, _MISSING if is_categorical else 0)
         data_for_plot.append((week_index, day_of_week, count))
 
     total_weeks = (cal_end_date - cal_start_date).days // 7 + 1
 
-    all_counts = np.array(list(date_counts.values()))
-    min_count, max_count = all_counts.min(), all_counts.max()
-
-    if vmin is None:
-        vmin = min_count
-    if vmax is None:
-        vmax = max_count if max_count != 0 else 1
-
-    if vcenter is not None:
-        is_diverging = True
-        norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
+    if is_categorical:
+        observed_categories = {
+            count for _, _, count in data_for_plot if count is not _MISSING
+        }
+        categories = [
+            category for category in category_order if category in observed_categories
+        ]
+        color_map = _validate_colors(colors, categories)
     else:
-        # If we have both negative and positive values, use a diverging
-        # scale with a center of 0. Otherwise, use a simple Normalize.
-        if min_count < 0 < max_count:
+        all_counts = np.array(list(date_counts.values()))
+        min_count, max_count = all_counts.min(), all_counts.max()
+
+        if vmin is None:
+            vmin = min_count
+        if vmax is None:
+            vmax = max_count if max_count != 0 else 1
+
+        if vcenter is not None:
             is_diverging = True
-            norm = TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
+            norm = TwoSlopeNorm(
+                vmin=cast(float, vmin),
+                vcenter=cast(float, vcenter),
+                vmax=cast(float, vmax),
+            )
         else:
-            is_diverging = False
-            norm = Normalize(vmin=vmin, vmax=vmax)
+            # If we have both negative and positive values, use a diverging
+            # scale with a center of 0. Otherwise, use a simple Normalize.
+            if min_count < 0 < max_count:
+                is_diverging = True
+                norm = TwoSlopeNorm(
+                    vmin=cast(float, vmin), vcenter=0, vmax=cast(float, vmax)
+                )
+            else:
+                is_diverging = False
+                norm = Normalize(vmin=cast(float, vmin), vmax=cast(float, vmax))
 
     rect_patches = []
     for week, weekday, count in data_for_plot:
-        if is_diverging:
+        if is_categorical:
+            if count is _MISSING:
+                if color_for_none is None:
+                    color_for_none = "#e8e8e8"
+                face_color = color_for_none
+            else:
+                face_color = color_map[count]
+        elif is_diverging:
             if color_for_none is not None:
                 warnings.warn(
                     "`color_for_none` argument is ignored when `values` "
                     "argument contains negative values.",
                     UserWarning,
                 )
-            face_color = validated_cmap(norm(count))
+            face_color = validated_cmap(norm(cast(float, count)))
         elif not is_diverging:
             if count == 0:
                 if color_for_none is None:
                     color_for_none = "#e8e8e8"
                 face_color = color_for_none
             else:
-                face_color = validated_cmap(norm(count))
+                face_color = validated_cmap(norm(cast(float, count)))
 
         rect = patches.FancyBboxPatch(
             xy=(week + 0.35, weekday + 0.35),
@@ -416,12 +596,24 @@ def calendar(
 
     if legend:
         legend_rects = []
-        legend_values = np.linspace(vmin, vmax, legend_bins)
+        if is_categorical:
+            legend_values = categories
+        else:
+            legend_values = np.linspace(
+                cast(float, vmin), cast(float, vmax), cast(int, legend_bins)
+            )
+
         for i, val in enumerate(legend_values):
-            if is_diverging:
-                color = validated_cmap(norm(val))
+            if is_categorical:
+                color = color_map[val]
+            elif is_diverging:
+                color = validated_cmap(norm(cast(float, val)))
             else:
-                color = color_for_none if val == 0 else validated_cmap(norm(val))
+                color = (
+                    color_for_none
+                    if val == 0
+                    else validated_cmap(norm(cast(float, val)))
+                )
 
             legend_xloc = total_weeks - len(legend_values) + i
             rect = patches.FancyBboxPatch(
@@ -438,11 +630,13 @@ def calendar(
             ax.add_patch(rect)
             legend_rects.append(rect)
 
-            if legend_labels is not None:
-                if legend_labels == "auto":
+            if is_categorical or legend_labels is not None:
+                if is_categorical and legend_labels in (None, "auto"):
+                    legend_label = str(val)
+                elif legend_labels == "auto":
                     legend_label = round(val, ndigits=legend_labels_precision)
                 else:
-                    legend_label = str(legend_labels[i])
+                    legend_label = str(cast(List, legend_labels)[i])
 
                 legend_labels_style: dict[str, Any] = dict(
                     size=7, ha="center", va="bottom"
@@ -457,25 +651,26 @@ def calendar(
                     **legend_labels_style,
                 )
 
-        ax.annotate(
-            less_label,
-            xy=(0, 0.5),
-            xycoords=legend_rects[0],
-            xytext=(-5, 0),
-            textcoords="offset points",
-            va="center",
-            ha="right",
-            size=8,
-        )
-        ax.annotate(
-            more_label,
-            xy=(1, 0.5),
-            xycoords=legend_rects[-1],
-            xytext=(5, 0),
-            textcoords="offset points",
-            va="center",
-            ha="left",
-            size=8,
-        )
+        if not is_categorical:
+            ax.annotate(
+                less_label,
+                xy=(0, 0.5),
+                xycoords=legend_rects[0],
+                xytext=(-5, 0),
+                textcoords="offset points",
+                va="center",
+                ha="right",
+                size=8,
+            )
+            ax.annotate(
+                more_label,
+                xy=(1, 0.5),
+                xycoords=legend_rects[-1],
+                xytext=(5, 0),
+                textcoords="offset points",
+                va="center",
+                ha="left",
+                size=8,
+            )
 
     return rect_patches
