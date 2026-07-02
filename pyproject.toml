@@ -39,7 +39,7 @@ dev = [
   "pyrefly>=1.1.1",
   "pytest>=8.3.5",
   "ruff>=0.11.13",
-  "ty>=0.0.1a20",
+  "ty==0.0.56",
   "types-markdown>=3.10.2.20260518",
   "types-requests>=2.33.0.20260518",
   "zensical>=0.0.46",

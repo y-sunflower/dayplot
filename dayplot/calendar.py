@@ -325,7 +325,7 @@ def calendar(
         ax.add_patch(rect)
         rect_patches.append(rect)
 
-    month_text_style = dict(ha="left", va="top", size=10)
+    month_text_style: dict[str, Any] = dict(ha="left", va="top", size=10)
     month_text_style.update(month_kws)
 
     month_starts = [
@@ -337,7 +337,7 @@ def calendar(
             week_of_month + 0.1,
             7 + month_y_margin,
             m_start.strftime("%b"),
-            **month_text_style,  # type: ignore[invalid-argument-type]
+            **month_text_style,
         )
 
     ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
@@ -348,7 +348,7 @@ def calendar(
     ax.invert_yaxis()
     ax.set_aspect("equal")
 
-    day_text_style = dict(
+    day_text_style: dict[str, Any] = dict(
         transform=ax.get_yaxis_transform(), ha="left", va="center", size=10
     )
     day_text_style.update(day_kws)
@@ -358,7 +358,7 @@ def calendar(
     labels = [day_abbr[(cal.firstweekday + i) % 7] for i in range(7)]
 
     for y_tick, day_label in zip(ticks, labels):
-        ax.text(-day_x_margin, y_tick, day_label, **day_text_style)  # type: ignore[invalid-argument-type]
+        ax.text(-day_x_margin, y_tick, day_label, **day_text_style)
 
     if month_grid:
         # vertical grid around data within each months
@@ -444,7 +444,9 @@ def calendar(
                 else:
                     legend_label = str(legend_labels[i])
 
-                legend_labels_style = dict(size=7, ha="center", va="bottom")
+                legend_labels_style: dict[str, Any] = dict(
+                    size=7, ha="center", va="bottom"
+                )
                 legend_labels_style.update(legend_labels_kws)
                 ax.annotate(
                     legend_label,
@@ -452,7 +454,7 @@ def calendar(
                     xycoords=rect,
                     xytext=(0, 1),
                     textcoords="offset points",
-                    **legend_labels_style,  # type: ignore[invalid-argument-type]
+                    **legend_labels_style,
                 )
 
         ax.annotate(
