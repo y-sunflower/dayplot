@@ -1,4 +1,7 @@
+from typing import Any
+
 import narwhals as nw
+from narwhals.typing import EagerAllowed
 
 
 def fetch_github_contrib(
@@ -6,8 +9,8 @@ def fetch_github_contrib(
     github_token: str,
     start_date: str,
     end_date: str,
-    backend: str = "pandas",
-):
+    backend: EagerAllowed = "pandas",
+) -> Any:
     """
     Fetches GitHub contributions for a given user and date range. It requires
     `requests` and `pandas` to be installed.

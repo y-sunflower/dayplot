@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.path import Path
 from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
-import matplotlib
 from matplotlib.axes import Axes
 from matplotlib.colors import Colormap
 import numpy as np
@@ -43,7 +42,7 @@ def _validate_inputs(boxstyle, dates, values):
                 raise ValueError(
                     f"Invalid `boxstyle` value. Must be in {IMPLEMENTED_BOXSTYLE}"
                 )
-    elif not isinstance(boxstyle, matplotlib.patches.BoxStyle):
+    elif not isinstance(boxstyle, patches.BoxStyle):
         raise ValueError(
             f"`boxstyle` must either be a string or a `matplotlib.patches.BoxStyle`, not {boxstyle}"
         )
@@ -55,9 +54,9 @@ def _validate_inputs(boxstyle, dates, values):
         raise ValueError("`dates` and `values` cannot be empty.")
 
 
-def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]):
+def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]) -> Colormap:
     if isinstance(cmap, str):
-        cmap: Colormap = plt.get_cmap(cmap)
+        return plt.get_cmap(cmap)
     elif not isinstance(cmap, LinearSegmentedColormap):
         raise ValueError(
             "Invalid `cmap` input. It must be either a valid matplotlib colormap string "
@@ -149,7 +148,7 @@ def calendar(
     vmin: Optional[float] = None,
     vmax: Optional[float] = None,
     vcenter: Optional[float] = None,
-    boxstyle: Union[str, matplotlib.patches.BoxStyle] = "square",
+    boxstyle: Union[str, patches.BoxStyle] = "square",
     legend: bool = False,
     legend_bins: int = 4,
     legend_labels: Optional[Union[List, Literal["auto"]]] = None,
@@ -162,7 +161,7 @@ def calendar(
     clip_on: bool = False,
     ax: Optional[Axes] = None,
     **kwargs: Any,
-) -> List[matplotlib.patches.Rectangle]:
+) -> List[patches.FancyBboxPatch]:
     """
     Create a calendar heatmap (GitHub-style) from input dates and values,
     supporting both positive and negative values via a suitable colormap scale.
@@ -195,7 +194,7 @@ def calendar(
         edgecolor: Color of the edges for each day's rectangle.
         edgewidth: Line width for the edges of each day's rectangle.
         cmap: A valid Matplotlib colormap name or a LinearSegmentedColormap instance. The
-        colormap is used to determine the fill color intensity of each day's
+            colormap is used to determine the fill color intensity of each day's
             cell based on its value.
         week_starts_on: The starting day of the week, which can be specified as a string
             ("Sunday", "Monday", ..., "Saturday").
@@ -246,7 +245,7 @@ def calendar(
         The function aggregates multiple entries for the same date by summing their values.
     """
     _validate_inputs(boxstyle, dates, values)
-    cmap = _validate_cmap(cmap)
+    validated_cmap = _validate_cmap(cmap)
     cal = Calendar([*day_name].index(week_starts_on))
 
     month_kws = month_kws or {}
@@ -304,14 +303,14 @@ def calendar(
                     "argument contains negative values.",
                     UserWarning,
                 )
-            face_color = cmap(norm(count))
+            face_color = validated_cmap(norm(count))
         elif not is_diverging:
             if count == 0:
                 if color_for_none is None:
                     color_for_none = "#e8e8e8"
                 face_color = color_for_none
             else:
-                face_color = cmap(norm(count))
+                face_color = validated_cmap(norm(count))
 
         rect = patches.FancyBboxPatch(
             xy=(week + 0.35, weekday + 0.35),
@@ -420,9 +419,9 @@ def calendar(
         legend_values = np.linspace(vmin, vmax, legend_bins)
         for i, val in enumerate(legend_values):
             if is_diverging:
-                color = cmap(norm(val))
+                color = validated_cmap(norm(val))
             else:
-                color = color_for_none if val == 0 else cmap(norm(val))
+                color = color_for_none if val == 0 else validated_cmap(norm(val))
 
             legend_xloc = total_weeks - len(legend_values) + i
             rect = patches.FancyBboxPatch(

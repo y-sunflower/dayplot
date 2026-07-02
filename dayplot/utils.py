@@ -1,7 +1,7 @@
 import os
 import narwhals as nw
 from narwhals.typing import IntoDataFrame
-from typing import Union, Literal
+from typing import Any, Union, Literal
 import calendar
 from datetime import date, datetime, timedelta
 from typing import Generator
@@ -12,7 +12,7 @@ PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def load_dataset(
     backend: Literal["pandas", "polars", "pyarrow", "modin", "cudf"] = "pandas",
-    **kwargs,
+    **kwargs: Any,
 ) -> IntoDataFrame:
     """
     Load a simple dataset with fake daily data. This function is a simple wrapper
