@@ -9,23 +9,21 @@ In this mode, each category gets its own color instead of being mapped through a
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-dates = [
-    "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05",
-    "2024-01-08", "2024-01-09", "2024-01-10", "2024-01-11", "2024-01-12",
-    "2024-01-15", "2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19",
-]
-values = [
-    "office", "office", "remote", "remote", "off",
-    "office", "remote", "office", "remote", "off",
-    "remote", "office", "office", "remote", "off",
-]
+df = dp.load_dataset()
+df["activity"] = df["values"].map({
+    1: "Focus",
+    2: "Meeting",
+    3: "Writing",
+    4: "Review",
+    5: "Admin",
+})
 
-fig, ax = plt.subplots(figsize=(10, 3))
+fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
-    dates=dates,
-    values=values,
+    dates=df["dates"],
+    values=df["activity"],
     start_date="2024-01-01",
-    end_date="2024-01-21",
+    end_date="2024-12-31",
     legend=True,
     ax=ax,
 )
@@ -37,32 +35,32 @@ Use the `colors` argument to control the color for each category.
 
 The safest option is to pass a dictionary, where each category is explicitly associated with a color.
 
-```py hl_lines="24 25 26 27 28"
+```py hl_lines="18 19 20 21 22 23 24"
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-dates = [
-    "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05",
-    "2024-01-08", "2024-01-09", "2024-01-10", "2024-01-11", "2024-01-12",
-    "2024-01-15", "2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19",
-]
-values = [
-    "office", "office", "remote", "remote", "off",
-    "office", "remote", "office", "remote", "off",
-    "remote", "office", "office", "remote", "off",
-]
+df = dp.load_dataset()
+df["activity"] = df["values"].map({
+    1: "Focus",
+    2: "Meeting",
+    3: "Writing",
+    4: "Review",
+    5: "Admin",
+})
 
-fig, ax = plt.subplots(figsize=(10, 3))
+fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
-    dates=dates,
-    values=values,
+    dates=df["dates"],
+    values=df["activity"],
     start_date="2024-01-01",
-    end_date="2024-01-21",
+    end_date="2024-12-31",
     colors={
-        "office": "#2563eb",
-        "remote": "#16a34a",
-        "off": "#f97316",
+        "Focus": "#2563eb",
+        "Meeting": "#f97316",
+        "Writing": "#16a34a",
+        "Review": "#9333ea",
+        "Admin": "#dc2626",
     },
     legend=True,
     ax=ax,
@@ -71,29 +69,27 @@ dp.calendar(
 
 You can also pass a list of colors. Colors are assigned in the order categories first appear in `values`.
 
-```py hl_lines="21"
+```py hl_lines="18"
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-dates = [
-    "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05",
-    "2024-01-08", "2024-01-09", "2024-01-10", "2024-01-11", "2024-01-12",
-    "2024-01-15", "2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19",
-]
-values = [
-    "office", "office", "remote", "remote", "off",
-    "office", "remote", "office", "remote", "off",
-    "remote", "office", "office", "remote", "off",
-]
+df = dp.load_dataset()
+df["activity"] = df["values"].map({
+    1: "Focus",
+    2: "Meeting",
+    3: "Writing",
+    4: "Review",
+    5: "Admin",
+})
 
-fig, ax = plt.subplots(figsize=(10, 3))
+fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
-    dates=dates,
-    values=values,
-    colors=["#2563eb", "#16a34a", "#f97316"],
+    dates=df["dates"],
+    values=df["activity"],
+    colors=["#16a34a", "#9333ea", "#2563eb", "#dc2626", "#f97316"],
     start_date="2024-01-01",
-    end_date="2024-01-21",
+    end_date="2024-12-31",
     legend=True,
     ax=ax,
 )
@@ -105,35 +101,35 @@ For categorical data, `legend=True` displays one box per category.
 
 By default, the labels are the category names. You can override them with `legend_labels`.
 
-```py hl_lines="30"
+```py hl_lines="27"
 # mkdocs: render
 import matplotlib.pyplot as plt
 import dayplot as dp
 
-dates = [
-    "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05",
-    "2024-01-08", "2024-01-09", "2024-01-10", "2024-01-11", "2024-01-12",
-    "2024-01-15", "2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19",
-]
-values = [
-    "office", "office", "remote", "remote", "off",
-    "office", "remote", "office", "remote", "off",
-    "remote", "office", "office", "remote", "off",
-]
+df = dp.load_dataset()
+df["activity"] = df["values"].map({
+    1: "Focus",
+    2: "Meeting",
+    3: "Writing",
+    4: "Review",
+    5: "Admin",
+})
 
-fig, ax = plt.subplots(figsize=(10, 3))
+fig, ax = plt.subplots(figsize=(16, 4))
 dp.calendar(
-    dates=dates,
-    values=values,
+    dates=df["dates"],
+    values=df["activity"],
     start_date="2024-01-01",
-    end_date="2024-01-21",
+    end_date="2024-12-31",
     colors={
-        "office": "#2563eb",
-        "remote": "#16a34a",
-        "off": "#f97316",
+        "Focus": "#2563eb",
+        "Meeting": "#f97316",
+        "Writing": "#16a34a",
+        "Review": "#9333ea",
+        "Admin": "#dc2626",
     },
     legend=True,
-    legend_labels=["Office", "Remote", "Day off"],
+    legend_labels=["Writing day", "Review day", "Focus day", "Admin day", "Meeting day"],
     ax=ax,
 )
 ```
