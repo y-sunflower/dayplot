@@ -47,5 +47,3 @@ pip install dayplot
 - [calplot](https://github.com/tomkwok/calplot)
 - [july](https://github.com/e-hulten/july)
 - [calendarplot](https://github.com/dhowland/calendarplot)
-
-<br><br>
