@@ -50,6 +50,7 @@ _DEFAULT_CMAP = _DefaultArg("Greens")
 _DEFAULT_VMIN = _DefaultArg(None)
 _DEFAULT_VMAX = _DefaultArg(None)
 _DEFAULT_VCENTER = _DefaultArg(None)
+_DEFAULT_LEGEND = _DefaultArg(False)
 _DEFAULT_LEGEND_BINS = _DefaultArg(4)
 _DEFAULT_LESS_LABEL = _DefaultArg("Less")
 _DEFAULT_MORE_LABEL = _DefaultArg("More")
@@ -262,7 +263,7 @@ def calendar(
     vmax: Any = _DEFAULT_VMAX,
     vcenter: Any = _DEFAULT_VCENTER,
     boxstyle: Union[str, patches.BoxStyle] = "square",
-    legend: bool = False,
+    legend: Any = _DEFAULT_LEGEND,
     legend_bins: Any = _DEFAULT_LEGEND_BINS,
     legend_labels: Optional[Union[List, Literal["auto"]]] = None,
     legend_labels_precision: Optional[int] = None,
@@ -334,7 +335,8 @@ def calendar(
             positive values, `vcenter` will default to 0. Providing vcenter overrides this automatic setting.
         boxstyle: The style of each box. This will be passed to `matplotlib.patches.FancyBboxPatch`.
             Available values are: "square", "circle", "ellipse", "larrow"
-        legend: Whether to display a legend for the color scale.
+        legend: Whether to display a legend for the color scale. When omitted,
+            providing another legend argument automatically displays the legend.
         legend_bins: Number of boxes/steps to display in the numeric legend.
         legend_labels: Labels for the legend boxes. Can be a list of strings or "auto"
             to generate labels from the data values. For categorical legends, None and
@@ -366,6 +368,20 @@ def calendar(
         their values. For categorical data, the last entry for a date is used.
     """
     _validate_inputs(boxstyle, dates, values)
+
+    if legend is _DEFAULT_LEGEND:
+        legend = any(
+            (
+                legend_bins is not _DEFAULT_LEGEND_BINS,
+                legend_labels is not None,
+                legend_labels_precision is not None,
+                legend_labels_kws is not None,
+                legend_kws is not None,
+                less_label is not _DEFAULT_LESS_LABEL,
+                more_label is not _DEFAULT_MORE_LABEL,
+            )
+        )
+
     is_categorical = not _is_numeric_values(values)
 
     if is_categorical:
@@ -683,7 +699,7 @@ def calendar(
 
             if legend_labels is not None:
                 if legend_labels == "auto":
-                    legend_label = round(val, ndigits=legend_labels_precision)
+                    legend_label = str(round(val, ndigits=legend_labels_precision))
                 else:
                     legend_label = str(cast(List, legend_labels)[i])
 

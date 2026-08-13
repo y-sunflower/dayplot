@@ -2,6 +2,9 @@
 
 You can add a very simple legend by using `legend=True`:
 
+The `legend` argument can be omitted when another legend option is provided.
+For example, `legend_bins=8` both enables the legend and sets its number of bins.
+
 ```py hl_lines="12"
 # mkdocs: render
 import matplotlib.pyplot as plt
