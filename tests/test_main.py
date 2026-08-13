@@ -451,6 +451,53 @@ def test_legend_works(
     plt.close("all")
 
 
+@pytest.mark.parametrize(
+    "legend_kwargs",
+    [
+        {"legend_bins": 2},
+        {"legend_labels": "auto"},
+        {"legend_labels": "auto", "legend_labels_precision": 1},
+        {"legend_labels": "auto", "legend_labels_kws": {"color": "red"}},
+        {"less_label": "Low"},
+        {"more_label": "High"},
+    ],
+)
+def test_numeric_legend_arguments_enable_legend_when_legend_is_omitted(
+    legend_kwargs,
+):
+    """Test numeric legend options enable the legend without legend=True."""
+    dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
+    values = [1, 2, 3, 4, 5, 6, 7]
+    fig, ax = plt.subplots()
+
+    rects = calendar(dates, values, ax=ax, **legend_kwargs)
+
+    assert len(ax.patches) > len(rects)
+    plt.close("all")
+
+
+@pytest.mark.parametrize(
+    "legend_kwargs",
+    [
+        {"legend_labels": ["Working", "Resting"]},
+        {"legend_labels_kws": {"color": "red"}},
+        {"legend_kws": {"ncol": 1}},
+    ],
+)
+def test_categorical_legend_arguments_enable_legend_when_legend_is_omitted(
+    legend_kwargs,
+):
+    """Test categorical legend options enable the legend without legend=True."""
+    dates = [datetime(2024, 1, 1), datetime(2024, 1, 2)]
+    values = ["work", "rest"]
+    fig, ax = plt.subplots()
+
+    calendar(dates, values, ax=ax, **legend_kwargs)
+
+    assert ax.get_legend() is not None
+    plt.close("all")
+
+
 @pytest.mark.parametrize("month_grid", [True, False])
 @pytest.mark.parametrize(
     "month_grid_kws", [{}, {"edgecolor": (0, 0, 1, 1), "linestyle": "--"}]
