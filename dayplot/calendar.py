@@ -688,7 +688,7 @@ def calendar(
 
             if legend_labels is not None:
                 if legend_labels == "auto":
-                    legend_label = round(val, ndigits=legend_labels_precision)
+                    legend_label = str(round(val, ndigits=legend_labels_precision))
                 else:
                     legend_label = str(cast(list, legend_labels)[i])
 
