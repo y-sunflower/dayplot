@@ -60,18 +60,18 @@ def test_calendar_string_cmap(sample_data):
 
 def test_calendar_invalid_cmap(sample_data):
     """
-    Test that passing an invalid colormap raises a ValueError.
+    Test that passing a colormap with an invalid type raises a TypeError.
     """
     dates, values = sample_data
 
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         _, ax = plt.subplots()
         calendar(dates, values, cmap=123, ax=ax)
 
 
 def test_warning_color_for_none(sample_data):
     """
-    Test that passing an invalid colormap raises a ValueError.
+    Test that color_for_none is ignored with a warning for negative values.
     """
     dates, values = sample_data
     values[0] = -19
@@ -79,9 +79,9 @@ def test_warning_color_for_none(sample_data):
     _, ax = plt.subplots()
     with pytest.warns(
         UserWarning,
-        match="color_for_none argument is ignored when values argument contains negative values",
+        match=r"`color_for_none` argument is ignored when `values` argument contains negative values\.",
     ):
-        calendar(dates, values, ax=ax)
+        calendar(dates, values, color_for_none="#e8e8e8", ax=ax)
 
 
 def test_calendar_all_zeros():
