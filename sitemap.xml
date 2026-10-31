@@ -7,28 +7,28 @@
         <loc>https://y-sunflower.github.io/dayplot/contributing/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/built-in-styles/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/reference/calendar/</loc>
+      </url>
+      <url>
+        <loc>https://y-sunflower.github.io/dayplot/reference/fetch_github_contrib/</loc>
+      </url>
+      <url>
+        <loc>https://y-sunflower.github.io/dayplot/reference/load_dataset/</loc>
+      </url>
+      <url>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/advanced/</loc>
       </url>
       <url>
         <loc>https://y-sunflower.github.io/dayplot/tuto/basic-styling/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/categorical-data/</loc>
-      </url>
-      <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/month-grid/</loc>
-      </url>
-      <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/negative-values/</loc>
-      </url>
-      <url>
         <loc>https://y-sunflower.github.io/dayplot/tuto/boxstyle/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/legend/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/built-in-styles/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/interactive/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/categorical-data/</loc>
       </url>
       <url>
         <loc>https://y-sunflower.github.io/dayplot/tuto/combine-charts/</loc>
@@ -37,15 +37,15 @@
         <loc>https://y-sunflower.github.io/dayplot/tuto/fetch-github-contribs/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/tuto/advanced/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/interactive/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/reference/calendar/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/legend/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/reference/fetch_github_contrib/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/month-grid/</loc>
       </url>
       <url>
-        <loc>https://y-sunflower.github.io/dayplot/reference/load_dataset/</loc>
+        <loc>https://y-sunflower.github.io/dayplot/tuto/negative-values/</loc>
       </url>
 </urlset>
