@@ -1,4 +1,4 @@
-name: Check Static Typing
+name: Check static typing
 
 on:
   push:
