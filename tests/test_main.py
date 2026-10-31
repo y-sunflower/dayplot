@@ -1,17 +1,16 @@
-import pytest
-import warnings
-import matplotlib
-from matplotlib.patches import PathPatch
-import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap, to_rgba
-from datetime import datetime, timedelta
 import string
+from datetime import datetime, timedelta
 
+import matplotlib
+import matplotlib.pyplot as plt
 import pandas as pd
 import polars as pl
+import pytest
+from matplotlib.colors import LinearSegmentedColormap, to_rgba
+from matplotlib.patches import PathPatch
 
-from dayplot import calendar
 import dayplot
+from dayplot import calendar
 
 
 @pytest.fixture
@@ -34,7 +33,7 @@ def test_calendar_mismatched_lengths():
     values = [10]
 
     with pytest.raises(ValueError) as exc_info:
-        fig, ax = plt.subplots()
+        _, ax = plt.subplots()
         calendar(dates, values, ax=ax)
 
     assert "`dates` and `values` must have the same length." in str(exc_info.value)
@@ -46,7 +45,7 @@ def test_calendar_custom_colormap(sample_data):
     """
     dates, values = sample_data
     custom_cmap = LinearSegmentedColormap.from_list("custom", ["white", "blue"])
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, cmap=custom_cmap, ax=ax)
 
 
@@ -55,35 +54,34 @@ def test_calendar_string_cmap(sample_data):
     Test using a valid string colormap name (e.g., "Reds").
     """
     dates, values = sample_data
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, cmap="Reds", ax=ax)
 
 
 def test_calendar_invalid_cmap(sample_data):
     """
-    Test that passing an invalid colormap raises a ValueError.
+    Test that passing a colormap with an invalid type raises a TypeError.
     """
     dates, values = sample_data
 
-    with pytest.raises(ValueError):
-        fig, ax = plt.subplots()
+    with pytest.raises(TypeError):
+        _, ax = plt.subplots()
         calendar(dates, values, cmap=123, ax=ax)
 
 
 def test_warning_color_for_none(sample_data):
     """
-    Test that passing an invalid colormap raises a ValueError.
+    Test that color_for_none is ignored with a warning for negative values.
     """
     dates, values = sample_data
     values[0] = -19
 
-    with pytest.warns(UserWarning):
-        warnings.warn(
-            "color_for_none argument is ignored when values argument contains negative values.",
-            UserWarning,
-        )
-        fig, ax = plt.subplots()
-        calendar(dates, values, ax=ax)
+    _, ax = plt.subplots()
+    with pytest.warns(
+        UserWarning,
+        match=r"`color_for_none` argument is ignored when `values` argument contains negative values\.",
+    ):
+        calendar(dates, values, color_for_none="#e8e8e8", ax=ax)
 
 
 def test_calendar_all_zeros():
@@ -93,7 +91,7 @@ def test_calendar_all_zeros():
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(5)]
     values = [0, 0, 0, 0, 0]
 
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, ax=ax)
 
     patches = ax.patches
@@ -111,7 +109,7 @@ def test_calendar_empty_data():
     values = []
 
     with pytest.raises(ValueError):
-        fig, ax = plt.subplots()
+        _, ax = plt.subplots()
         calendar(dates, values, ax=ax)
 
 
@@ -121,7 +119,7 @@ def test_calendar_custom_date_range(sample_data):
     doesn't cause errors and includes the correct range.
     """
     dates, values = sample_data
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, start_date="2024-01-01", end_date="2024-01-15", ax=ax)
 
     patches = ax.patches
@@ -134,7 +132,7 @@ def test_calendar_inverted_y_axis(sample_data):
     We can check the transform or the order of patches.
     """
     dates, values = sample_data
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, ax=ax)
 
     y_limits = ax.get_ylim()
@@ -146,7 +144,7 @@ def test_calendar_patch_count(sample_data):
     Verify the correct number of day patches are drawn for the date range.
     """
     dates, values = sample_data
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, ax=ax)
     patches = ax.patches
     assert len(patches) == 10, f"Expected 10 patches for 10 days, got {len(patches)}."
@@ -157,7 +155,7 @@ def test_calendar_patch_type(sample_data):
     Verify that the calendar output is an iterable of patches.
     """
     dates, values = sample_data
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     rect_patches = calendar(dates, values, ax=ax)
     for rect_patch in rect_patches:
         assert isinstance(rect_patch, matplotlib.patches.FancyBboxPatch)
@@ -170,7 +168,7 @@ def test_calendar_p90_scaling():
     """
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(5)]
     values = [1, 2, 2, 2, 100]  # Include an outlier
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, cmap="Greens", ax=ax)
 
     patches = ax.patches
@@ -184,7 +182,7 @@ def test_calendar_invalid_week_starts_on():
     """Test that an invalid week_starts_on raises a ValueError."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
     values = [1, 2, 3, 4, 5, 6, 7]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     with pytest.raises(ValueError):
         calendar(dates, values, week_starts_on="InvalidDay", ax=ax)
 
@@ -193,7 +191,7 @@ def test_calendar_week_starts_on_monday():
     """Test when week_starts_on is set to Monday."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
     values = [1, 2, 3, 4, 5, 6, 7]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(dates, values, week_starts_on="Monday", ax=ax)
     patches = ax.patches
     assert len(patches) == 7
@@ -206,7 +204,7 @@ def test_diffrerent_df_backends(backend):
     values = [1, 2, 3, 4, 5, 6, 7]
     df = backend.DataFrame({"dates": dates, "values": values})
 
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(df["dates"], df["values"], ax=ax)
 
     patches = ax.patches
@@ -217,7 +215,7 @@ def test_calendar_categorical_default_colors():
     """Test categorical values use the default tab10 colors."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
     values = ["work", "rest", "work"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     patches = calendar(dates, values, ax=ax)
     tab10 = plt.get_cmap("tab10").colors
@@ -233,7 +231,7 @@ def test_calendar_categorical_dict_colors():
     """Test categorical values can use an explicit category-color mapping."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
     values = ["work", "rest", "work"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     patches = calendar(
         dates,
@@ -253,7 +251,7 @@ def test_calendar_categorical_list_colors_and_legend_order():
     """Test list colors are assigned and shown in first-appearance order."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
     values = ["low", "high", "medium"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     rects = calendar(
         dates,
@@ -288,7 +286,7 @@ def test_calendar_categorical_duplicate_dates_last_wins():
     """Test duplicate categorical dates use the last value."""
     dates = [datetime(2024, 1, 1), datetime(2024, 1, 1)]
     values = ["work", "rest"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     patches = calendar(
         dates,
@@ -307,7 +305,7 @@ def test_calendar_categorical_custom_legend_labels():
     """Test categorical legend labels can be overridden."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(2)]
     values = ["work", "rest"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     calendar(
         dates,
@@ -337,7 +335,7 @@ def test_calendar_categorical_legend_with_long_labels():
         "Documentation review",
         "Release coordination",
     ]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     calendar(
         dates,
@@ -359,7 +357,7 @@ def test_calendar_categorical_legend_kws():
     """Test categorical legend layout can be customized with legend_kws."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(3)]
     values = ["low", "high", "medium"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     rects = calendar(
         dates,
@@ -384,7 +382,7 @@ def test_calendar_categorical_colors_too_short():
     """Test categorical list colors must cover all observed categories."""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(2)]
     values = ["work", "rest"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     with pytest.raises(ValueError, match="at least as many colors"):
         calendar(dates, values, colors=["#0f766e"], ax=ax)
@@ -408,7 +406,7 @@ def test_calendar_categorical_rejects_numeric_only_arguments(kwargs):
     """Test numeric-only arguments raise for categorical values."""
     dates = [datetime(2024, 1, 1)]
     values = ["work"]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     with pytest.raises(ValueError, match="categorical data"):
         calendar(dates, values, ax=ax, **kwargs)
@@ -430,7 +428,7 @@ def test_legend_works(
     values = [1, 2, 3, 4, 5, 6, 7]
     if legend_labels == []:
         legend_labels = list(string.ascii_lowercase)[:legend_bins]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     calendar(
         dates,
         values,
@@ -459,7 +457,7 @@ def test_month_grid(month_grid, month_grid_kws):
     """Test that month_grid and month_grid_kws arguments work"""
     dates = [datetime(2024, 1, 1) + timedelta(days=i) for i in range(7)]
     values = [1, 2, 3, 4, 5, 6, 7]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     rects = calendar(
         dates,
         values,

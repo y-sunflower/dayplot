@@ -32,7 +32,7 @@ def fetch_github_contrib(
     import requests
 
     if not github_token:
-        raise EnvironmentError("invalid github_token")
+        raise OSError("invalid github_token")
     headers = {"Authorization": f"Bearer {github_token}"}
 
     url = "https://api.github.com/graphql"

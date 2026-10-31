@@ -1,7 +1,7 @@
-from .calendar import calendar
-from .github import fetch_github_contrib
-from .utils import load_dataset
-from .styles import styles
+from dayplot.calendar import calendar
+from dayplot.github import fetch_github_contrib
+from dayplot.styles import styles
+from dayplot.utils import load_dataset
 
 __version__ = "0.6.0"
 __all__ = ["calendar", "fetch_github_contrib", "load_dataset", "styles"]

@@ -1,11 +1,11 @@
+import calendar
 import os
+from collections.abc import Generator
+from datetime import date, datetime, timedelta
+from typing import Any, Literal
+
 import narwhals as nw
 from narwhals.typing import IntoDataFrame
-from typing import Any, Union, Literal
-import calendar
-from datetime import date, datetime, timedelta
-from typing import Generator
-
 
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -35,7 +35,7 @@ def load_dataset(
     return df.to_native()
 
 
-def _parse_date(d: Union[datetime, str, date]) -> date:
+def _parse_date(d: datetime | str | date) -> date:
     if isinstance(d, datetime):
         return d.date()
     elif isinstance(d, str):
@@ -72,7 +72,7 @@ def relative_date_add(
 
 def date_range(
     start: date,
-    stop: Union[date, None] = None,
+    stop: date | None = None,
     *,
     years: int = 0,
     months: int = 0,
