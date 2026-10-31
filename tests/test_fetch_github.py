@@ -1,7 +1,8 @@
+from unittest.mock import MagicMock, patch
+
+import pandas as pd
 import pytest
 import requests
-import pandas as pd
-from unittest.mock import patch, MagicMock
 
 from dayplot import fetch_github_contrib
 

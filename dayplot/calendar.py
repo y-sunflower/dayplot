@@ -1,23 +1,21 @@
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import matplotlib.colors as mcolors
-from matplotlib.path import Path
-from matplotlib.colors import LinearSegmentedColormap, Normalize, TwoSlopeNorm
-from matplotlib.axes import Axes
-from matplotlib.colors import Colormap
-import numpy as np
-from calendar import Calendar, day_name, day_abbr
-
+import warnings
+from calendar import Calendar, day_abbr, day_name
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import date, datetime, timedelta
 from itertools import chain
 from numbers import Real
-from typing import List, Union, Optional, Dict, Any, Literal, cast
-import warnings
+from typing import Any, Literal, cast
+
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import patches
+from matplotlib.axes import Axes
+from matplotlib.colors import Colormap, LinearSegmentedColormap, Normalize, TwoSlopeNorm
+from matplotlib.path import Path
 
 from dayplot.utils import _parse_date, date_range, relative_date_add
-
 
 IMPLEMENTED_BOXSTYLE = [
     "square",
@@ -130,7 +128,7 @@ def _validate_colors(colors: Any, categories: list[Any]) -> dict[Any, Any]:
 
         color_map = dict(zip(categories, colors))
     else:
-        raise ValueError(
+        raise TypeError(
             "`colors` must be a mapping of category to color or a sequence of colors."
         )
 
@@ -155,7 +153,7 @@ def _validate_inputs(boxstyle, dates, values):
                     f"Invalid `boxstyle` value. Must be in {IMPLEMENTED_BOXSTYLE}"
                 )
     elif not isinstance(boxstyle, patches.BoxStyle):
-        raise ValueError(
+        raise TypeError(
             f"`boxstyle` must either be a string or a `matplotlib.patches.BoxStyle`, not {boxstyle}"
         )
 
@@ -166,11 +164,11 @@ def _validate_inputs(boxstyle, dates, values):
         raise ValueError("`dates` and `values` cannot be empty.")
 
 
-def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]) -> Colormap:
+def _validate_cmap(cmap: str | LinearSegmentedColormap) -> Colormap:
     if isinstance(cmap, str):
         return plt.get_cmap(cmap)
     elif not isinstance(cmap, LinearSegmentedColormap):
-        raise ValueError(
+        raise TypeError(
             "Invalid `cmap` input. It must be either a valid matplotlib colormap string "
             f"or a matplotlib.colors.LinearSegmentedColormap instance, not {cmap}"
         )
@@ -180,8 +178,8 @@ def _validate_cmap(cmap: Union[str, LinearSegmentedColormap]) -> Colormap:
 
 def _get_start_and_end_dates(
     date_counts: dict[date, Any],
-    start_date: Union[datetime, str, date, None],
-    end_date: Union[datetime, str, date, None],
+    start_date: datetime | str | date | None,
+    end_date: datetime | str | date | None,
 ) -> tuple[date, date]:
     min_data_date = min(date_counts.keys())
     max_data_date = max(date_counts.keys())
@@ -244,38 +242,38 @@ def calendar_week(cal: Calendar, date: date) -> list[date]:
 
 
 def calendar(
-    dates: List[Union[date, datetime, str]],
-    values: List[Any],
-    start_date: Optional[Union[date, datetime, str]] = None,
-    end_date: Optional[Union[date, datetime, str]] = None,
-    color_for_none: Optional[str] = None,
+    dates: list[date | datetime | str],
+    values: list[Any],
+    start_date: date | datetime | str | None = None,
+    end_date: date | datetime | str | None = None,
+    color_for_none: str | None = None,
     edgecolor: str = "black",
     edgewidth: float = 0.0,
-    colors: Optional[Union[Dict[Any, Any], List[Any]]] = None,
+    colors: dict[Any, Any] | list[Any] | None = None,
     cmap: Any = _DEFAULT_CMAP,
     week_starts_on: str = "Sunday",
-    month_kws: Optional[Dict] = None,
-    day_kws: Optional[Dict] = None,
+    month_kws: dict | None = None,
+    day_kws: dict | None = None,
     day_x_margin: float = 0.02,
     month_y_margin: float = 0.4,
     vmin: Any = _DEFAULT_VMIN,
     vmax: Any = _DEFAULT_VMAX,
     vcenter: Any = _DEFAULT_VCENTER,
-    boxstyle: Union[str, patches.BoxStyle] = "square",
+    boxstyle: str | patches.BoxStyle = "square",
     legend: bool = False,
     legend_bins: Any = _DEFAULT_LEGEND_BINS,
-    legend_labels: Optional[Union[List, Literal["auto"]]] = None,
-    legend_labels_precision: Optional[int] = None,
-    legend_labels_kws: Optional[Dict] = None,
-    legend_kws: Optional[Dict] = None,
+    legend_labels: list | Literal["auto"] | None = None,
+    legend_labels_precision: int | None = None,
+    legend_labels_kws: dict | None = None,
+    legend_kws: dict | None = None,
     less_label: Any = _DEFAULT_LESS_LABEL,
     more_label: Any = _DEFAULT_MORE_LABEL,
     month_grid: bool = False,
-    month_grid_kws: Dict = {},
+    month_grid_kws: dict | None = None,
     clip_on: bool = False,
-    ax: Optional[Axes] = None,
+    ax: Axes | None = None,
     **kwargs: Any,
-) -> List[patches.FancyBboxPatch]:
+) -> list[patches.FancyBboxPatch]:
     """
     Create a calendar heatmap (GitHub-style) from input dates and values,
     supporting both positive and negative values via a suitable colormap scale.
@@ -509,7 +507,7 @@ def calendar(
         ax.add_patch(rect)
         rect_patches.append(rect)
 
-    month_text_style: dict[str, Any] = dict(ha="left", va="top", size=10)
+    month_text_style: dict[str, Any] = {"ha": "left", "va": "top", "size": 10}
     month_text_style.update(month_kws)
 
     month_starts = [
@@ -532,9 +530,12 @@ def calendar(
     ax.invert_yaxis()
     ax.set_aspect("equal")
 
-    day_text_style: dict[str, Any] = dict(
-        transform=ax.get_yaxis_transform(), ha="left", va="center", size=10
-    )
+    day_text_style: dict[str, Any] = {
+        "transform": ax.get_yaxis_transform(),
+        "ha": "left",
+        "va": "center",
+        "size": 10,
+    }
     day_text_style.update(day_kws)
 
     ticks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
@@ -592,8 +593,12 @@ def calendar(
         )
 
         path = Path(verts, codes, closed=False)
-        default_month_grid_kws = dict(facecolor="none", clip_on=clip_on)
-        default_month_grid_kws.update(month_grid_kws)
+        default_month_grid_kws: dict[str, Any] = {
+            "facecolor": "none",
+            "clip_on": clip_on,
+        }
+        if month_grid_kws is not None:
+            default_month_grid_kws.update(month_grid_kws)
 
         patch = patches.PathPatch(path, **default_month_grid_kws)
         ax.add_patch(patch)
@@ -606,7 +611,7 @@ def calendar(
                 if legend_labels in (None, "auto"):
                     legend_label = str(category)
                 else:
-                    legend_label = str(cast(List, legend_labels)[i])
+                    legend_label = str(cast(list, legend_labels)[i])
 
                 legend_handles.append(
                     patches.Patch(
@@ -630,16 +635,16 @@ def calendar(
                         "verticalalignment",
                     }
                 }
-                categorical_legend_kws: dict[str, Any] = dict(
-                    loc="upper center",
-                    bbox_to_anchor=(0.5, -0.08),
-                    ncol=min(len(categories), 3),
-                    frameon=False,
-                    handlelength=1,
-                    handletextpad=0.5,
-                    columnspacing=1.2,
-                    prop=legend_text_props or None,
-                )
+                categorical_legend_kws: dict[str, Any] = {
+                    "loc": "upper center",
+                    "bbox_to_anchor": (0.5, -0.08),
+                    "ncol": min(len(categories), 3),
+                    "frameon": False,
+                    "handlelength": 1,
+                    "handletextpad": 0.5,
+                    "columnspacing": 1.2,
+                    "prop": legend_text_props or None,
+                }
                 categorical_legend_kws.update(legend_kws)
                 legend_artist = ax.legend(
                     handles=legend_handles,
@@ -685,11 +690,13 @@ def calendar(
                 if legend_labels == "auto":
                     legend_label = round(val, ndigits=legend_labels_precision)
                 else:
-                    legend_label = str(cast(List, legend_labels)[i])
+                    legend_label = str(cast(list, legend_labels)[i])
 
-                legend_labels_style: dict[str, Any] = dict(
-                    size=7, ha="center", va="bottom"
-                )
+                legend_labels_style: dict[str, Any] = {
+                    "size": 7,
+                    "ha": "center",
+                    "va": "bottom",
+                }
                 legend_labels_style.update(legend_labels_kws)
                 ax.annotate(
                     legend_label,

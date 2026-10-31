@@ -1,5 +1,6 @@
-from dayplot import load_dataset
 import pytest
+
+from dayplot import load_dataset
 
 
 @pytest.mark.parametrize("backend", ["pandas", "polars"])
